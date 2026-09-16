@@ -19,6 +19,7 @@ Tuist/Dependencies/
 
 # Codex CLI
 .codex/
+.worktrees/
 
 # Editors
 .vscode/
