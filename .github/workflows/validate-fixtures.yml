@@ -19,7 +19,7 @@ jobs:
             test_schemes: App
           - fixture: modular
             tuist: 4.206.0
-            test_schemes: App ProfileFeature SharedUI
+            test_schemes: App ProfileFeature SharedUITests
           - fixture: version-mismatch
             tuist: 4.62.0
             test_schemes: App

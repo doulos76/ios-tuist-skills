@@ -36,6 +36,7 @@ explicit without introducing dynamic-linking requirements.
    should change.
 2. Independently run `tuist install`, `tuist generate --no-open`, and an App
    build.
-3. Run the `App`, `ProfileFeature`, and `SharedUI` schemes so all three test
-   targets are exercised.
+3. Run the `App`, `ProfileFeature`, and `SharedUITests` schemes so all three
+   test targets are exercised. Tuist generates the test target's standalone
+   scheme because `SharedUI` itself ends in `UI`.
 4. Restore the fixture with Git before reusing it.
