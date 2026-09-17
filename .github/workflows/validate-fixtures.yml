@@ -23,9 +23,6 @@ jobs:
           - fixture: version-mismatch
             tuist: 4.62.0
             test_schemes: App
-    defaults:
-      run:
-        working-directory: tests/fixtures/${{ matrix.fixture }}
     env:
       XDG_CACHE_HOME: ${{ runner.temp }}/tuist/cache
       XDG_STATE_HOME: ${{ runner.temp }}/tuist/state
@@ -41,21 +38,26 @@ jobs:
           cache: true
 
       - name: Verify Tuist pin
+        working-directory: tests/fixtures/${{ matrix.fixture }}
         run: |
           test "$(mise exec -- tuist version)" = "${{ matrix.tuist }}"
 
       - name: Resolve dependencies
+        working-directory: tests/fixtures/${{ matrix.fixture }}
         run: mise exec -- tuist install
 
       - name: Generate project
+        working-directory: tests/fixtures/${{ matrix.fixture }}
         run: mise exec -- tuist generate --no-open
 
       - name: Build
+        working-directory: tests/fixtures/${{ matrix.fixture }}
         run: >-
           xcodebuild -workspace App.xcworkspace -scheme App
           -destination 'generic/platform=iOS Simulator' build
 
       - name: Test
+        working-directory: tests/fixtures/${{ matrix.fixture }}
         env:
           TEST_SCHEMES: ${{ matrix.test_schemes }}
         run: |
