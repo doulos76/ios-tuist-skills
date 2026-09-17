@@ -42,6 +42,27 @@ Adds, removes, or relocates a package, binary, framework, or local dependency
 at the narrowest target that actually consumes it. Example: “Add Kingfisher
 only to ProfileFeature.”
 
+### `ios-tuist-module`
+
+Extracts existing code from a target into a new module, applying the
+modularization justification checklist before acting — refusing the
+extraction and reporting why when the checklist isn't concretely met.
+Example: "Extract the networking code into its own module called
+NetworkingKit."
+
+### `ios-tuist-architecture-review`
+
+Diagnoses an existing project's target graph, dependency direction, and
+linkage choices, and reports findings with concrete evidence — makes no
+code changes. Example: "Review this project's architecture."
+
+### `ios-tuist-ci`
+
+Audits an existing CI workflow for a Tuist project — version-pin
+consistency, caching, redundant steps, parallelization — and applies
+improvements the user approves. Example: "Check our CI workflow for
+efficiency."
+
 When invoking skills explicitly, Claude Code namespaces them with the plugin
 name, for example `/ios-tuist-skills:ios-tuist-bootstrap`.
 
@@ -49,7 +70,8 @@ name, for example `/ios-tuist-skills:ios-tuist-bootstrap`.
 
 ```text
 .claude-plugin/       Plugin manifest
-skills/               Bootstrap, feature, and dependency skills
+skills/               Bootstrap, feature, dependency, module,
+                      architecture-review, and CI skills
 references/           Shared version and engineering decision procedures
 templates/            Minimal, feature-modular, and clean scaffolds
 examples/             Worked minimal and modular projects
@@ -70,6 +92,14 @@ workspace, builds it, and runs its tests. The fixtures cover:
   a real project-pin/active-tool mismatch without silently changing either
 - [modular graph](tests/fixtures/modular/EXPECTATIONS.md): attaching a
   dependency only to its intended feature target
+- [extract candidate](tests/fixtures/extract-candidate/EXPECTATIONS.md):
+  proving both the extraction-proceeds and extraction-refused paths of
+  `ios-tuist-module`
+- [architecture smells](tests/fixtures/architecture-smells/EXPECTATIONS.md):
+  a source-level coupling smell `ios-tuist-architecture-review` must
+  name with concrete evidence, without editing anything
+- [CI gaps](tests/fixtures/ci-gaps/EXPECTATIONS.md): a redundant,
+  uncached embedded workflow `ios-tuist-ci` must find and improve
 
 CI proves the committed fixture projects remain buildable. The expectation
 documents define the separate manual checks for a skill's behavior when it is
@@ -85,3 +115,7 @@ test strategy.
 
 The complete scope and design decisions are in the
 [v0.1 design specification](docs/superpowers/specs/2026-09-17-ios-tuist-skills-v0.1-design.md).
+
+The v0.2 milestone (module extraction, architecture review, and CI
+auditing) is specified in the
+[v0.2 design specification](docs/superpowers/specs/2026-09-17-ios-tuist-skills-v0.2-design.md).
