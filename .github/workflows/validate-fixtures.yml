@@ -23,6 +23,15 @@ jobs:
           - fixture: version-mismatch
             tuist: 4.62.0
             test_schemes: App
+          - fixture: extract-candidate
+            tuist: 4.206.0
+            test_schemes: App
+          - fixture: architecture-smells
+            tuist: 4.206.0
+            test_schemes: App FeatureA CoreKit
+          - fixture: ci-gaps
+            tuist: 4.206.0
+            test_schemes: App
     env:
       XDG_CACHE_HOME: /tmp/tuist/cache
       XDG_STATE_HOME: /tmp/tuist/state
