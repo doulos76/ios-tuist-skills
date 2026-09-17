@@ -21,6 +21,9 @@ Tuist/Dependencies/
 .codex/
 .worktrees/
 
+# Claude Code superpowers scratch workspace (plans/ledgers, not project output)
+.superpowers/
+
 # Editors
 .vscode/
 .idea/
