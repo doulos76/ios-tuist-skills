@@ -1,0 +1,73 @@
+name: Validate fixtures
+
+on:
+  push:
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: ${{ matrix.fixture }} (Tuist ${{ matrix.tuist }})
+    runs-on: macos-15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - fixture: legacy-tuist
+            tuist: 4.206.0
+            test_schemes: App
+          - fixture: modular
+            tuist: 4.206.0
+            test_schemes: App ProfileFeature SharedUI
+          - fixture: version-mismatch
+            tuist: 4.62.0
+            test_schemes: App
+    defaults:
+      run:
+        working-directory: tests/fixtures/${{ matrix.fixture }}
+    env:
+      XDG_CACHE_HOME: ${{ runner.temp }}/tuist/cache
+      XDG_STATE_HOME: ${{ runner.temp }}/tuist/state
+      XDG_DATA_HOME: ${{ runner.temp }}/tuist/data
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install fixture-pinned Tuist
+        uses: jdx/mise-action@v4
+        with:
+          tool_versions: |
+            tuist ${{ matrix.tuist }}
+          cache: true
+
+      - name: Verify Tuist pin
+        run: |
+          test "$(mise exec -- tuist version)" = "${{ matrix.tuist }}"
+
+      - name: Resolve dependencies
+        run: mise exec -- tuist install
+
+      - name: Generate project
+        run: mise exec -- tuist generate --no-open
+
+      - name: Build
+        run: >-
+          xcodebuild -workspace App.xcworkspace -scheme App
+          -destination 'generic/platform=iOS Simulator' build
+
+      - name: Test
+        env:
+          TEST_SCHEMES: ${{ matrix.test_schemes }}
+        run: |
+          SIMULATOR_ID="$(xcrun simctl list devices available --json | ruby -rjson -e '
+            devices = JSON.parse(STDIN.read).fetch("devices").values.flatten
+            iphone = devices.find { |device| device["isAvailable"] && device["name"].start_with?("iPhone") }
+            abort "No available iPhone simulator found" unless iphone
+            print iphone.fetch("udid")
+          ')"
+          for scheme in $TEST_SCHEMES; do
+            xcodebuild test \
+              -workspace App.xcworkspace \
+              -scheme "$scheme" \
+              -destination "id=$SIMULATOR_ID"
+          done
