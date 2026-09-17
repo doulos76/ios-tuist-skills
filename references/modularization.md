@@ -50,3 +50,33 @@ linkage for a target, inspect:
 
 Document which of these drove the linkage choice in the skill's output
 when linkage is set explicitly.
+
+## Applying this checklist
+
+This checklist is written once and used two ways, by two different
+skills. Neither skill restates it — both link here.
+
+### As an extraction gate (`ios-tuist-module`)
+
+Every item in the pre-module checklist above must have a concrete,
+stated answer before an extraction proceeds. An item answered "no
+benefit," "hypothetical only," or "not yet, but maybe later" is a reason
+to refuse the extraction and report why — it is not a box to check past.
+A refusal is a complete, valid outcome of `ios-tuist-module`, not a
+failure to work around.
+
+### As a diagnostic score (`ios-tuist-architecture-review`)
+
+Apply the same checklist per existing target to produce a finding, not a
+code change. Example findings:
+
+- "Target `X` has no distinct ownership boundary and no reuse beyond its
+  single consumer — candidate to merge back into that consumer."
+- "Target `Y` uses static linkage and shares a dependency already
+  statically linked into `Z` — duplicate-symbol risk; investigate
+  linkage."
+
+Findings from this checklist are always reported, never acted on, by
+`ios-tuist-architecture-review` itself. Acting on a finding is a separate,
+explicit task for `ios-tuist-module`, `ios-tuist-feature`, or
+`ios-tuist-dependency`.
