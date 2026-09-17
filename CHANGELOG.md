@@ -6,6 +6,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-17
+
+### Added
+
+- `ios-tuist-module`: extracts existing code into a new module/target,
+  gated by the modularization justification checklist — refuses
+  extraction and reports why when the checklist isn't concretely met.
+- `ios-tuist-architecture-review`: diagnoses an existing project's
+  target graph and dependency direction against modularization
+  principles; read-only, reports findings only.
+- `ios-tuist-ci`: audits an existing CI workflow for version-pin
+  consistency, caching, and redundant steps; applies user-approved
+  improvements without reducing validation coverage.
+- Extended `references/modularization.md` with an "Applying this
+  checklist" section shared by the extraction-gate and diagnostic-review
+  use cases.
+- `extract-candidate`, `architecture-smells`, and `ci-gaps` fixtures with
+  scenario expectations, wired into the existing fixture-validation CI
+  matrix.
+
 ## [0.1.0] - 2026-09-17
 
 ### Added
