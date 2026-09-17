@@ -24,9 +24,9 @@ jobs:
             tuist: 4.62.0
             test_schemes: App
     env:
-      XDG_CACHE_HOME: ${{ runner.temp }}/tuist/cache
-      XDG_STATE_HOME: ${{ runner.temp }}/tuist/state
-      XDG_DATA_HOME: ${{ runner.temp }}/tuist/data
+      XDG_CACHE_HOME: /tmp/tuist/cache
+      XDG_STATE_HOME: /tmp/tuist/state
+      XDG_DATA_HOME: /tmp/tuist/data
     steps:
       - uses: actions/checkout@v6
 
