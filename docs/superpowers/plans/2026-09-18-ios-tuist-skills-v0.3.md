@@ -657,14 +657,43 @@ entries (`legacy-tuist`, `modular`, `version-mismatch`, `extract-candidate`,
 ```yaml
           - fixture: migrate-candidate
             tuist: 3.42.2
+            workspace: MigrateCandidate
+            resolve_cmd: fetch
             test_schemes: App
 ```
 
 This entry pins `migrate-candidate` at its **starting** version
 (3.42.2), matching spec §4.2 — CI validates the fixture's real
-pre-migration state, not the migration itself. The workflow's existing
-steps (install pinned Tuist, verify pin, `tuist install`, `tuist
-generate`, build, test) apply unchanged; no new step type is needed.
+pre-migration state, not the migration itself.
+
+**Amendment made after implementation (both discovered during the
+post-implementation review, not anticipated when this task was
+originally drafted):**
+
+1. The plan originally said the workflow's existing steps "apply
+   unchanged; no new step type is needed" and assumed a hard-coded
+   `App.xcworkspace` name. `migrate-candidate`'s `Project.swift` names
+   its `Project` `"MigrateCandidate"`, so it generates
+   `MigrateCandidate.xcworkspace`, not `App.xcworkspace`. Fix: add a
+   `workspace:` field to every matrix entry (all six pre-existing
+   fixtures get `workspace: App`, unchanged behavior since their
+   projects really are named `"App"`; the new entry gets `workspace:
+   MigrateCandidate`), and change both `xcodebuild` steps from the
+   hard-coded `App.xcworkspace` to `${{ matrix.workspace }}.xcworkspace`.
+2. The plan also assumed `tuist install` (Tuist 4.x's dependency-resolve
+   subcommand) works unchanged at 3.42.2. It does not —
+   `mise exec tuist@3.42.2 -- tuist install` fails with `Error:
+   Unexpected argument 'install'` (exit 64); Tuist 3.x's equivalent
+   subcommand is `tuist fetch`. Fix: add a `resolve_cmd:` field to every
+   matrix entry (the six 4.x fixtures get `resolve_cmd: install`,
+   unchanged behavior; `migrate-candidate` gets `resolve_cmd: fetch`),
+   and change the "Resolve dependencies" step from the hard-coded
+   `tuist install` to `tuist ${{ matrix.resolve_cmd }}`.
+
+Both amendments follow the same shape: a per-fixture matrix field
+replacing a value this plan incorrectly assumed was universal across
+Tuist's 3.x/4.x CLI surface. Apply both before finalizing this task —
+the entries and steps below already reflect the corrected shape.
 
 - [ ] **Step 3: Verify the workflow YAML is still syntactically valid**
 
@@ -692,7 +721,7 @@ cd tests/fixtures/migrate-candidate
 export XDG_CACHE_HOME=/tmp/tuist-local-validate/cache
 export XDG_STATE_HOME=/tmp/tuist-local-validate/state
 export XDG_DATA_HOME=/tmp/tuist-local-validate/data
-mise exec tuist@3.42.2 -- tuist install
+mise exec tuist@3.42.2 -- tuist fetch
 mise exec tuist@3.42.2 -- tuist generate --no-open
 xcodebuild -workspace MigrateCandidate.xcworkspace -scheme App \
   -destination 'generic/platform=iOS Simulator' build
@@ -705,9 +734,11 @@ SIMULATOR_ID="$(xcrun simctl list devices available --json | ruby -rjson -e '
 xcodebuild test -workspace MigrateCandidate.xcworkspace -scheme App -destination "id=$SIMULATOR_ID"
 ```
 
-Expected: `tuist install` succeeds (no dependencies to resolve, but the
-command must not error), `tuist generate` succeeds, `** BUILD SUCCEEDED
-**`, `** TEST SUCCEEDED **`. Clean up generated artifacts afterward
+Expected: `tuist fetch` succeeds (no dependencies to resolve, but the
+command must not error — this is 3.42.2's equivalent of the 4.x
+fixtures' `tuist install`, per this task's amendment above), `tuist
+generate` succeeds, `** BUILD SUCCEEDED **`, `** TEST SUCCEEDED **`.
+Clean up generated artifacts afterward
 (`rm -rf MigrateCandidate.xcworkspace MigrateCandidate.xcodeproj Derived`
 from the fixture directory) and confirm `git status --short` is clean
 before proceeding — do not commit generated project files.

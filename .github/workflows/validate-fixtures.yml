@@ -17,30 +17,37 @@ jobs:
           - fixture: legacy-tuist
             tuist: 4.206.0
             workspace: App
+            resolve_cmd: install
             test_schemes: App
           - fixture: modular
             tuist: 4.206.0
             workspace: App
+            resolve_cmd: install
             test_schemes: App ProfileFeature SharedUITests
           - fixture: version-mismatch
             tuist: 4.62.0
             workspace: App
+            resolve_cmd: install
             test_schemes: App
           - fixture: extract-candidate
             tuist: 4.206.0
             workspace: App
+            resolve_cmd: install
             test_schemes: App
           - fixture: architecture-smells
             tuist: 4.206.0
             workspace: App
+            resolve_cmd: install
             test_schemes: App FeatureA CoreKit
           - fixture: ci-gaps
             tuist: 4.206.0
             workspace: App
+            resolve_cmd: install
             test_schemes: App
           - fixture: migrate-candidate
             tuist: 3.42.2
             workspace: MigrateCandidate
+            resolve_cmd: fetch
             test_schemes: App
     env:
       XDG_CACHE_HOME: /tmp/tuist/cache
@@ -63,7 +70,7 @@ jobs:
 
       - name: Resolve dependencies
         working-directory: tests/fixtures/${{ matrix.fixture }}
-        run: mise exec -- tuist install
+        run: mise exec -- tuist ${{ matrix.resolve_cmd }}
 
       - name: Generate project
         working-directory: tests/fixtures/${{ matrix.fixture }}
