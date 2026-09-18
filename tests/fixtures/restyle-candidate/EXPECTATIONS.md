@@ -15,7 +15,7 @@
   omitted from compilation by its `.glob(excluding:)` pattern — proving
   the exclusion is real and load-bearing, not decorative.
 
-## `CleanFeature`: the checklist-clear conversion candidate
+## `CleanFeature`: the "proceed, with a reported residual risk" candidate
 
 - Plain `sources: ["CleanFeature/Sources/**"]` and
   `resources: ["CleanFeature/Resources/**"]` — no exclude patterns, no
@@ -30,22 +30,25 @@
   plain committed file.
 - **Note on the static-framework + resources checklist item:**
   `CleanFeature`'s `product:` is `.staticFramework` and it DOES declare
-  `resources:` — the exact combination tuist/tuist#8547 flags as a real,
-  currently-open defect (buildable-folder resources landing on the
-  framework instead of the consuming app's generated bundle). This
-  fixture deliberately keeps that combination so `ios-tuist-restyle`
-  must reason about this checklist item explicitly (checked, not
-  skipped) rather than never encountering it. Verified live: converting
-  `CleanFeature` to `buildableFolders: ["CleanFeature/Sources",
-  "CleanFeature/Resources"]` still generates, builds, and passes
-  `xcodebuild test -scheme CleanFeature` successfully in this fixture's
-  specific case — tuist/tuist#8547 is about resource *runtime
-  placement* inside the built bundle, not generate/build/test success,
-  so this fixture cannot itself prove the bug is absent or present; a
-  real invocation of `ios-tuist-restyle` against a project where this
-  matters should still report the risk per the skill's Decision Rules,
-  it just doesn't happen to manifest as a build/test failure in this
-  fixture's minimal case.
+  `resources:` — exactly the combination the skill's checklist calls
+  out as having a real regression history in Tuist (the original defect,
+  tuist/tuist#8547, was fixed around Tuist 4.100.0, but the same
+  resource-bundle path regressed again at least twice afterward:
+  tuist/tuist#9156 and tuist/tuist#9289). Per `ios-tuist-restyle`'s
+  checklist wording, this is never an automatic pass just because the
+  pinned version is newer than 4.100.0 — this fixture deliberately keeps
+  the combination so the skill must reason about it explicitly (report
+  it as checked-with-residual-risk, not silently skip it) rather than
+  never encountering it. Verified live: converting `CleanFeature` to
+  `buildableFolders: ["CleanFeature/Sources", "CleanFeature/Resources"]`
+  still generates, builds, and passes `xcodebuild test -scheme
+  CleanFeature` successfully in this fixture's specific case — none of
+  the cited defects manifest as a build/test failure here (they're about
+  resource *runtime* placement inside the built bundle), so this fixture
+  proves the conversion is buildable, not that the risk is absent. A
+  real invocation of `ios-tuist-restyle` against `CleanFeature` is
+  expected to convert it while explicitly naming this residual risk in
+  its Output Contract, not report it as unconditionally clear.
 
 ## `ExcludeFeature`: the checklist-failing conversion candidate
 

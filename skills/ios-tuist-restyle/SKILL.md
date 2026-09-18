@@ -3,9 +3,9 @@ name: ios-tuist-restyle
 description: >
   Converts one or more explicitly user-named targets' folder integration
   from array-based sources:/resources: declarations to buildableFolders,
-  gated by a per-target safety checklist grounded in real, currently-open
-  Tuist defects. Never sweeps a whole project, never bundles a version
-  bump, never silently drops an exclusion.
+  gated by a per-target safety checklist grounded in real Tuist defects
+  and their regression history. Never sweeps a whole project, never
+  bundles a version bump, never silently drops an exclusion.
 ---
 
 # Core Rule
@@ -123,15 +123,25 @@ valid, complete outcome for that target.
   source/resource directories (rather than depending on the target as a
   whole)? Tuist's buildable-folders implementation can fail to add such
   a file to the right build phase once the owning target is converted —
-  this is a real, currently-open Tuist defect (tuist/tuist#8337), not a
-  hypothetical.
+  a real Tuist defect (tuist/tuist#8337, closed as "not planned," i.e.
+  the limitation itself is acknowledged and intentionally left as-is,
+  not a bug awaiting a fix), not a hypothetical.
 - **Static framework + resources:** Is the target's `product:`
   `.staticFramework` (or `.staticLibrary`) AND does it declare
-  `resources:`? A currently-open Tuist defect (tuist/tuist#8547) can
-  place buildable-folder resources on the framework instead of the
-  consuming app's generated bundle for static products — refuse if both
-  conditions hold, unless the project-pinned Tuist version's changelog
-  confirms this specific defect is fixed.
+  `resources:`? Buildable-folder resource placement for static products
+  has a real history of breakage in Tuist — the original defect
+  (tuist/tuist#8547) was fixed in ~4.100.0, but the same resource-bundle
+  path has regressed at least twice since (tuist/tuist#9156, a
+  `BundleNotFound` crash introduced in 4.128.2; tuist/tuist#9289, a
+  missed resource-bundle copy introduced in 4.133.1) — so "fixed once"
+  does not mean "stable," and no single version floor can be cited as
+  safe going forward. Never wave this item through solely because the
+  project-pinned version is newer than 4.100.0. Instead: check Tuist's
+  release notes for the project-pinned version and any versions between
+  it and the nearest prior stable point for a static-framework-resources
+  regression; if none is found, note this item as checked-with-residual-
+  risk (not "clear") in the Output Contract rather than silently
+  treating absence of a known issue as proof of safety.
 - **Directory-level overlap:** Would the resulting `buildableFolders`
   paths overlap with another target's `buildableFolders` or
   `sources`/`resources` paths (e.g. two targets both claiming a parent

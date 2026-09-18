@@ -13,13 +13,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `ios-tuist-restyle`: converts explicitly user-named targets' folder
   integration from array-based sources:/resources: declarations to
   buildableFolders, gated by a per-target safety checklist grounded in
-  real, currently-open Tuist defects (tuist/tuist#8337,
-  tuist/tuist#8547). Never sweeps a whole project, never bundles a
+  real Tuist defects and their regression history (tuist/tuist#8337;
+  tuist/tuist#8547 and its later regressions tuist/tuist#9156,
+  tuist/tuist#9289). Never sweeps a whole project, never bundles a
   version bump, never silently drops an exclusion pattern.
 - `restyle-candidate` fixture: a real Tuist 4.206.0 project with a
-  checklist-clear target (CleanFeature) and a checklist-failing target
-  (ExcludeFeature, with a genuine `.glob(excluding:)` exclusion pattern),
-  wired into the existing fixture-validation CI matrix.
+  proceed-with-residual-risk target (CleanFeature) and a
+  checklist-failing target (ExcludeFeature, with a genuine
+  `.glob(excluding:)` exclusion pattern), wired into the existing
+  fixture-validation CI matrix.
 
 ## [0.3.0] - 2026-09-18
 
