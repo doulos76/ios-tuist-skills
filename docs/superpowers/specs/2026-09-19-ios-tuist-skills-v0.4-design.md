@@ -156,12 +156,15 @@ conversion and report why; it is not a box to check past. A refusal is a
 valid, complete outcome for that target.
 
 - **Exclude patterns:** Does the target's current `sources:`/
-  `resources:` arrays use an exclusion pattern (e.g.
-  `sources: ["Sources/**", "!Sources/Generated/**"]`) or any per-file
-  compiler flag/setting? `buildableFolders` has no supported equivalent
-  for excluding specific files or paths within an included folder as of
-  the project-pinned version — a target relying on exclusion cannot be
-  safely converted without silently losing that exclusion.
+  `resources:` arrays use Tuist's real exclusion mechanism — the
+  `.glob(pattern:excluding:)` case (e.g. `sources: [.glob("Sources/**",
+  excluding: ["Sources/Generated/**"])]`, verified live: this compiles
+  and `tuist generate` correctly omits the excluded path from the
+  built target) — or any per-file compiler flag/setting?
+  `buildableFolders` has no supported equivalent for excluding specific
+  files or paths within an included folder as of the project-pinned
+  version — a target relying on exclusion cannot be safely converted
+  without silently losing that exclusion.
 - **Cross-target file references:** Does any *other* target's manifest
   reference an individual file that lives inside this target's
   source/resource directories (rather than depending on the target as a
@@ -272,8 +275,8 @@ Checklist Results:
   directory overlap with any other target; no generated/derived sources.
   Clear.
 - SharedUI: sources array uses an exclude pattern
-  (`sources: ["Sources/**", "!Sources/Preview/**"]`) with no
-  buildableFolders equivalent. Risk found — refused.
+  (`sources: [.glob("Sources/**", excluding: ["Sources/Preview/**"])]`)
+  with no buildableFolders equivalent. Risk found — refused.
 
 Targets Converted:
 - FeatureA: Project.swift — `sources: ["FeatureA/Sources/**"],
