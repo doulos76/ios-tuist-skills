@@ -1,0 +1,1 @@
+placeholder resource proving CleanFeature's resources: array is real
