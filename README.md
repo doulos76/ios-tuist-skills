@@ -63,6 +63,15 @@ consistency, caching, redundant steps, parallelization — and applies
 improvements the user approves. Example: "Check our CI workflow for
 efficiency."
 
+### `ios-tuist-migrate`
+
+Moves a project's pinned Tuist version forward to a user-specified
+target version, updating version-pin sources and the minimum manifest
+syntax the target version actually requires — the only skill in this
+repository permitted to change a project's Tuist version pin, and only
+on explicit request. Example: "Migrate this project from Tuist 3 to
+Tuist 4."
+
 When invoking skills explicitly, Claude Code namespaces them with the plugin
 name, for example `/ios-tuist-skills:ios-tuist-bootstrap`.
 
@@ -71,7 +80,7 @@ name, for example `/ios-tuist-skills:ios-tuist-bootstrap`.
 ```text
 .claude-plugin/       Plugin manifest
 skills/               Bootstrap, feature, dependency, module,
-                      architecture-review, and CI skills
+                      architecture-review, CI, and migration skills
 references/           Shared version and engineering decision procedures
 templates/            Minimal, feature-modular, and clean scaffolds
 examples/             Worked minimal and modular projects
@@ -100,6 +109,9 @@ workspace, builds it, and runs its tests. The fixtures cover:
   name with concrete evidence, without editing anything
 - [CI gaps](tests/fixtures/ci-gaps/EXPECTATIONS.md): a redundant,
   uncached embedded workflow `ios-tuist-ci` must find and improve
+- [migrate candidate](tests/fixtures/migrate-candidate/EXPECTATIONS.md):
+  a real Tuist 3.42.2 project with a genuine breaking-change surface
+  `ios-tuist-migrate` must detect and fix moving to Tuist 4.206.0
 
 CI proves the committed fixture projects remain buildable. The expectation
 documents define the separate manual checks for a skill's behavior when it is
@@ -119,3 +131,6 @@ The complete scope and design decisions are in the
 The v0.2 milestone (module extraction, architecture review, and CI
 auditing) is specified in the
 [v0.2 design specification](docs/superpowers/specs/2026-09-17-ios-tuist-skills-v0.2-design.md).
+
+The v0.3 milestone (Tuist version migration) is specified in the
+[v0.3 design specification](docs/superpowers/specs/2026-09-18-ios-tuist-skills-v0.3-design.md).
