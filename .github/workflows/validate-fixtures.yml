@@ -49,6 +49,11 @@ jobs:
             workspace: MigrateCandidate
             resolve_cmd: fetch
             test_schemes: App
+          - fixture: restyle-candidate
+            tuist: 4.206.0
+            workspace: RestyleCandidate
+            resolve_cmd: install
+            test_schemes: App
     env:
       XDG_CACHE_HOME: /tmp/tuist/cache
       XDG_STATE_HOME: /tmp/tuist/state
