@@ -72,6 +72,14 @@ repository permitted to change a project's Tuist version pin, and only
 on explicit request. Example: "Migrate this project from Tuist 3 to
 Tuist 4."
 
+### `ios-tuist-restyle`
+
+Converts explicitly user-named targets' folder integration from
+array-based sources/resources declarations to buildableFolders, gated by
+a per-target safety checklist — refuses any named target where an
+exclusion pattern, cross-target file reference, or other real risk would
+be silently lost. Example: "Convert FeatureA to buildableFolders."
+
 When invoking skills explicitly, Claude Code namespaces them with the plugin
 name, for example `/ios-tuist-skills:ios-tuist-bootstrap`.
 
@@ -80,7 +88,8 @@ name, for example `/ios-tuist-skills:ios-tuist-bootstrap`.
 ```text
 .claude-plugin/       Plugin manifest
 skills/               Bootstrap, feature, dependency, module,
-                      architecture-review, CI, and migration skills
+                      architecture-review, CI, migration, and
+                      restyle skills
 references/           Shared version and engineering decision procedures
 templates/            Minimal, feature-modular, and clean scaffolds
 examples/             Worked minimal and modular projects
@@ -112,6 +121,9 @@ workspace, builds it, and runs its tests. The fixtures cover:
 - [migrate candidate](tests/fixtures/migrate-candidate/EXPECTATIONS.md):
   a real Tuist 3.42.2 project with a genuine breaking-change surface
   `ios-tuist-migrate` must detect and fix moving to Tuist 4.206.0
+- [restyle candidate](tests/fixtures/restyle-candidate/EXPECTATIONS.md):
+  a checklist-clear target and a checklist-failing target (real
+  exclusion pattern) `ios-tuist-restyle` must tell apart correctly
 
 CI proves the committed fixture projects remain buildable. The expectation
 documents define the separate manual checks for a skill's behavior when it is
@@ -134,3 +146,7 @@ auditing) is specified in the
 
 The v0.3 milestone (Tuist version migration) is specified in the
 [v0.3 design specification](docs/superpowers/specs/2026-09-18-ios-tuist-skills-v0.3-design.md).
+
+The v0.4 milestone (folder-integration restyle to buildableFolders) is
+specified in the
+[v0.4 design specification](docs/superpowers/specs/2026-09-19-ios-tuist-skills-v0.4-design.md).
