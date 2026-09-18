@@ -8,6 +8,7 @@
 *.xcworkspace
 xcuserdata/
 DerivedData/
+Derived/
 .build/
 .swiftpm/
 Tuist/.build/

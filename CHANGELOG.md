@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-09-18
+
+### Added
+
+- `ios-tuist-migrate`: moves a project's pinned Tuist version forward to
+  a user-specified target version, updating version-pin sources and the
+  minimum manifest syntax the target version actually requires. The only
+  skill in this repository permitted to change a project's Tuist version
+  pin, and only on explicit request — never bundles a structural/style
+  migration into a version bump.
+- `migrate-candidate` fixture: a real Tuist 3.42.2 project with a
+  verified breaking-change surface (the Tuist 4.0 `Config.swift` ->
+  `Tuist.swift` rename and `Target(...)`/`platform:` ->
+  `.target(...)`/`destinations:` manifest API change), wired into the
+  existing fixture-validation CI matrix at its starting version.
+
 ## [0.2.0] - 2026-09-17
 
 ### Added
