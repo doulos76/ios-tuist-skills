@@ -89,6 +89,16 @@ test action. Refuses when a test target of the requested kind already
 exists. Generates a single labeled placeholder test only — never real
 coverage. Example: "Add a unit test target for FeatureA."
 
+### `ios-tuist-scaffold`
+
+Authors one explicitly user-named `tuist scaffold` template — its
+`Tuist/Templates/<name>/<name>.swift` manifest plus the `.stencil`
+file(s) it references — matching a shape the user describes or points
+at in existing files, and verifies it by actually running `tuist
+scaffold` in a scratch location. Never runs the template against the
+real project tree. Example: "Turn this LoginFeature folder into a
+scaffold template named `feature`."
+
 When invoking skills explicitly, Claude Code namespaces them with the plugin
 name, for example `/ios-tuist-skills:ios-tuist-bootstrap`.
 
@@ -97,8 +107,8 @@ name, for example `/ios-tuist-skills:ios-tuist-bootstrap`.
 ```text
 .claude-plugin/       Plugin manifest
 skills/               Bootstrap, feature, dependency, module,
-                      architecture-review, CI, migration, restyle, and
-                      test-target skills
+                      architecture-review, CI, migration, restyle,
+                      test-target, and scaffold skills
 references/           Shared version and engineering decision procedures
 templates/            Minimal, feature-modular, and clean scaffolds
 examples/             Worked minimal and modular projects
@@ -137,6 +147,10 @@ workspace, builds it, and runs its tests. The fixtures cover:
   a target that already has a unit test target and a target that
   doesn't, plus a custom scheme `ios-tuist-test-target` must enroll the
   new target into correctly
+- [scaffold candidate](tests/fixtures/scaffold-candidate/EXPECTATIONS.md):
+  a minimal buildable project with a committed `tuist scaffold`
+  template `ios-tuist-scaffold` must be able to author and run
+  correctly
 
 CI proves the committed fixture projects remain buildable. The expectation
 documents define the separate manual checks for a skill's behavior when it is
@@ -167,3 +181,7 @@ specified in the
 The v0.5 milestone (test-target creation and scheme enrollment) is
 specified in the
 [v0.5 design specification](docs/superpowers/specs/2026-09-20-ios-tuist-skills-v0.5-design.md).
+
+The v0.6 milestone (tuist scaffold template authoring) is specified in
+the
+[v0.6 design specification](docs/superpowers/specs/2026-09-20-ios-tuist-skills-v0.6-design.md).
