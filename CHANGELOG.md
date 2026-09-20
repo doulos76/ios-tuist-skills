@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-09-20
+
+### Added
+
+- `ios-tuist-test-target`: creates a new unit, integration, or UI test
+  target for one explicitly user-named existing target and enrolls it
+  in the relevant scheme's test action, following the project's own
+  testing and naming conventions. Represents "integration test" as a
+  named `.unitTests` target since Tuist has no distinct product case for
+  it. Generates a single labeled placeholder test only — never real
+  coverage. Refuses when a test target of the requested kind already
+  exists.
+- `test-target-candidate` fixture: a real Tuist 4.206.0 project with a
+  target that already has a unit test target (FeatureA) and a target
+  that doesn't (FeatureB), plus a custom scheme bundling the existing
+  test target, wired into the existing fixture-validation CI matrix.
+
 ## [0.4.0] - 2026-09-19
 
 ### Added
