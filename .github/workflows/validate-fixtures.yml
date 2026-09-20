@@ -9,7 +9,10 @@ on:
 jobs:
   validate:
     name: ${{ matrix.fixture }} (Tuist ${{ matrix.tuist }})
-    runs-on: macos-15
+    # TEMP: self-hosted while repo is private and GH Actions credit is
+    # exhausted (see CHANGELOG / project memory). Revert to
+    # `runs-on: macos-15` when the repo goes public.
+    runs-on: [self-hosted, self-hosted-ios-tuist]
     strategy:
       fail-fast: false
       matrix:
@@ -52,6 +55,11 @@ jobs:
           - fixture: restyle-candidate
             tuist: 4.206.0
             workspace: RestyleCandidate
+            resolve_cmd: install
+            test_schemes: App
+          - fixture: test-target-candidate
+            tuist: 4.206.0
+            workspace: TestTargetCandidate
             resolve_cmd: install
             test_schemes: App
     env:
