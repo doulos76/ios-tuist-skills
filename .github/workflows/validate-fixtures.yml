@@ -62,6 +62,11 @@ jobs:
             workspace: TestTargetCandidate
             resolve_cmd: install
             test_schemes: App
+          - fixture: scaffold-candidate
+            tuist: 4.206.0
+            workspace: ScaffoldCandidate
+            resolve_cmd: install
+            test_schemes: App
     env:
       XDG_CACHE_HOME: /tmp/tuist/cache
       XDG_STATE_HOME: /tmp/tuist/state
