@@ -220,7 +220,13 @@ documented surface, not assumed from memory):
   generate — see §3.4).
 - `Template.Item.file(path: String, templatePath: Path)` — renders the
   `.stencil` file at `templatePath` through Stencil and writes the
-  result to `path` relative to the invocation directory.
+  result to `path` relative to the invocation directory. **`path:`
+  itself is a plain Swift `String`, not rendered through Stencil** —
+  Tuist's own documented pattern for a dynamic file name is ordinary
+  Swift string interpolation of the attribute in the manifest (e.g.
+  `path: "Sources/\(nameAttribute)Label.swift"`), never `{{ name }}`
+  syntax inside `path:`. `{{ name }}` substitution is verified only for
+  `.stencil` file *contents*.
 - `Template.Item.string(path: String, contents: String)` and
   `Template.Item.directory(path: String, sourcePath: Path)` also exist,
   but are not this skill's generated output — see §3.4.
