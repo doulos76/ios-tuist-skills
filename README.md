@@ -80,6 +80,15 @@ a per-target safety checklist — refuses any named target where an
 exclusion pattern, cross-target file reference, or other real risk would
 be silently lost. Example: "Convert FeatureA to buildableFolders."
 
+### `ios-tuist-test-target`
+
+Creates a new unit, integration, or UI test target for one explicitly
+user-named existing target, following the project's own testing and
+naming conventions, and enrolls the new target in the relevant scheme's
+test action. Refuses when a test target of the requested kind already
+exists. Generates a single labeled placeholder test only — never real
+coverage. Example: "Add a unit test target for FeatureA."
+
 When invoking skills explicitly, Claude Code namespaces them with the plugin
 name, for example `/ios-tuist-skills:ios-tuist-bootstrap`.
 
@@ -88,8 +97,8 @@ name, for example `/ios-tuist-skills:ios-tuist-bootstrap`.
 ```text
 .claude-plugin/       Plugin manifest
 skills/               Bootstrap, feature, dependency, module,
-                      architecture-review, CI, migration, and
-                      restyle skills
+                      architecture-review, CI, migration, restyle, and
+                      test-target skills
 references/           Shared version and engineering decision procedures
 templates/            Minimal, feature-modular, and clean scaffolds
 examples/             Worked minimal and modular projects
@@ -124,6 +133,10 @@ workspace, builds it, and runs its tests. The fixtures cover:
 - [restyle candidate](tests/fixtures/restyle-candidate/EXPECTATIONS.md):
   a checklist-clear target and a checklist-failing target (real
   exclusion pattern) `ios-tuist-restyle` must tell apart correctly
+- [test-target candidate](tests/fixtures/test-target-candidate/EXPECTATIONS.md):
+  a target that already has a unit test target and a target that
+  doesn't, plus a custom scheme `ios-tuist-test-target` must enroll the
+  new target into correctly
 
 CI proves the committed fixture projects remain buildable. The expectation
 documents define the separate manual checks for a skill's behavior when it is
@@ -150,3 +163,7 @@ The v0.3 milestone (Tuist version migration) is specified in the
 The v0.4 milestone (folder-integration restyle to buildableFolders) is
 specified in the
 [v0.4 design specification](docs/superpowers/specs/2026-09-19-ios-tuist-skills-v0.4-design.md).
+
+The v0.5 milestone (test-target creation and scheme enrollment) is
+specified in the
+[v0.5 design specification](docs/superpowers/specs/2026-09-20-ios-tuist-skills-v0.5-design.md).
