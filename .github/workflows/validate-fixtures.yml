@@ -9,10 +9,7 @@ on:
 jobs:
   validate:
     name: ${{ matrix.fixture }} (Tuist ${{ matrix.tuist }})
-    # TEMP: self-hosted while repo is private and GH Actions credit is
-    # exhausted (see CHANGELOG / project memory). Revert to
-    # `runs-on: macos-15` when the repo goes public.
-    runs-on: [self-hosted, self-hosted-ios-tuist]
+    runs-on: macos-15
     strategy:
       fail-fast: false
       matrix:
