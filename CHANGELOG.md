@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Skill effectiveness benchmark (Phase 1): baseline-vs-with-skill
+  comparison across all 14 fixture scenarios, with real
+  `tuist generate`/build/test verification and independent rubric
+  scoring, in `docs/superpowers/benchmarks/2026-09-20-skill-effectiveness/`.
+
+### Changed
+
+- Repository is now public.
+- Fixture-validation CI now runs on GitHub-hosted `macos-15` runners
+  instead of the temporary self-hosted runner used while the repo was
+  private.
+
 ## [0.6.0] - 2026-09-20
 
 ### Added
