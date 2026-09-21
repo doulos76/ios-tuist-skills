@@ -154,7 +154,16 @@ workspace, builds it, and runs its tests. The fixtures cover:
 
 CI proves the committed fixture projects remain buildable. The expectation
 documents define the separate manual checks for a skill's behavior when it is
-run against each scenario.
+run against each scenario. Workflow runs use GitHub-hosted `macos-15` runners.
+
+## Skill effectiveness benchmark
+
+A baseline-vs-with-skill comparison across all 14 fixture scenarios — real
+`tuist generate`/build/test verification and independent rubric scoring, not
+just fixture CI — lives in
+[`docs/superpowers/benchmarks/2026-09-20-skill-effectiveness/`](docs/superpowers/benchmarks/2026-09-20-skill-effectiveness/AGGREGATE-SUMMARY.md).
+It also documents a real methodology finding about baseline isolation inside
+this repository, worth reading before re-running or extending the benchmark.
 
 ## Non-goals
 
