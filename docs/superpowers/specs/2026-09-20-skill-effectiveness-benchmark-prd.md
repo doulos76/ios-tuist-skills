@@ -120,8 +120,19 @@ happens to favor whichever condition ran first).
 
 Each row runs as **one task prompt per documented scenario** — e.g.
 `ios-tuist-test-target` and `ios-tuist-restyle` each run twice (their
-two documented paths), everything else once — for **12 total
-comparisons** (24 individual runs: 12 baseline + 12 with-skill).
+two documented paths), everything else once. `ios-tuist-module`
+(`extract-candidate`) also has two documented scenarios (networking
+extraction proceeds, `SettingsRow` extraction is refused — see its own
+`EXPECTATIONS.md`), which this table's "Both ... paths" cell already
+implies. Counting correctly: 8 skills run once + 3 skills
+(`ios-tuist-module`, `ios-tuist-restyle`, `ios-tuist-test-target`) run
+twice = **14 total comparisons** (28 individual runs: 14 baseline + 14
+with-skill) — this corrects an earlier draft of this section, which
+undercounted at "12 total comparisons / 24 runs" by missing that
+`extract-candidate` also has two scenarios, not one. See the Phase 1
+execution guide
+(`docs/superpowers/benchmarks/2026-09-20-skill-effectiveness/EXECUTION-GUIDE.md`)
+for the authoritative per-run table.
 
 ### 4.3 Task prompt discipline
 
@@ -217,13 +228,13 @@ finding worth surfacing rather than averaging away.
 ## 6. Deliverables
 
 1. **This PRD**, committed to `docs/superpowers/specs/`.
-2. **One report file per skill comparison** (12 files, or one combined
-   file with 12 sections — see Task breakdown), each containing: the
+2. **One report file per skill comparison** (14 files, or one combined
+   file with 14 sections — see Task breakdown), each containing: the
    task prompt used, both responses (or faithful excerpts), the rubric
    scores with brief justification per item, the BUILD/TEST/REFUSAL
    pass-fail results with actual command output, and a one-paragraph
    verdict.
-3. **One aggregate summary** — a table of all 12 comparisons' rubric
+3. **One aggregate summary** — a table of all 14 comparisons' rubric
    totals and pass/fail results, plus the known-limitations caveat
    (N=1 per condition, single grading pass) stated explicitly, mirroring
    `evidence-driven-engineering/tests/rubric.md`'s own "Known
@@ -264,7 +275,7 @@ is a separate future session's task, not part of today's deliverable.
 
 ## 8. Acceptance criteria for Phase 1
 
-- All 12 comparisons (24 runs) captured with real transcripts, real
+- All 14 comparisons (28 runs) captured with real transcripts, real
   diffs, and real command output — no run's BUILD/TEST/REFUSAL result
   is asserted without the actual command output backing it.
 - Every comparison scored on both axes (§5.1, §5.2), independently,
