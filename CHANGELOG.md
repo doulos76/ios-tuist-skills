@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-09-20
+
+### Added
+
+- `ios-tuist-scaffold`: authors one explicitly user-named `tuist
+  scaffold` template — its `Tuist/Templates/<name>/<name>.swift`
+  manifest plus the `.stencil` file(s) it references — matching a shape
+  the user describes or points at in existing files. Generates
+  `Template.Item.file` + `.stencil` (attribute-substitution-only)
+  output; never `.string`/`.directory` items or Stencil control-flow
+  syntax. Verifies every authored template by actually running `tuist
+  scaffold` in a scratch location, never against the real project tree.
+- `scaffold-candidate` fixture: a minimal real Tuist 4.206.0 project
+  with a committed `feature` scaffold template, wired into the existing
+  fixture-validation CI matrix.
+
 ## [0.5.0] - 2026-09-20
 
 ### Added

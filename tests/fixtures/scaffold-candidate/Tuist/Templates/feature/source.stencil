@@ -1,0 +1,3 @@
+public enum {{ name }}Label {
+    public static let text = "{{ name }}"
+}
