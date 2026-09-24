@@ -201,3 +201,9 @@ specified in the
 The v0.6 milestone (tuist scaffold template authoring) is specified in
 the
 [v0.6 design specification](docs/superpowers/specs/2026-09-20-ios-tuist-skills-v0.6-design.md).
+
+The v0.7 milestone (Claude Code plugin marketplace distribution) added
+[`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json) so
+this repository can be installed with `/plugin marketplace add` instead
+of a session-scoped `--plugin-dir` load; see the
+[Install the plugin](#install-the-plugin) section above.
