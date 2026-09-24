@@ -6,9 +6,18 @@ and Swift context; preserve established repository conventions; generate
 compatible manifests; and verify meaningful changes with generate, build, and
 test commands instead of silently assuming the latest syntax.
 
-## Load the plugin
+## Install the plugin
 
-Clone this repository, then load it directly for local use or development:
+This repository is also a Claude Code plugin marketplace
+([`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json)). Add
+the marketplace once, then install the plugin from it:
+
+```
+/plugin marketplace add doulos76/ios-tuist-skills
+/plugin install ios-tuist-skills@doulos76-plugins
+```
+
+For local development, load the working copy directly instead:
 
 ```sh
 claude --plugin-dir /path/to/ios-tuist-skills
@@ -16,10 +25,8 @@ claude --plugin-dir /path/to/ios-tuist-skills
 
 Claude Code discovers the plugin through
 [`.claude-plugin/plugin.json`](.claude-plugin/plugin.json). Direct loading is
-session-scoped; run `/reload-plugins` after editing the plugin. For persistent
-team distribution, publish it through a Claude Code plugin marketplace and use
-`/plugin install`. See the official
-[Claude Code plugin documentation](https://code.claude.com/docs/en/plugins)
+session-scoped; run `/reload-plugins` after editing the plugin. See the
+official [Claude Code plugin documentation](https://code.claude.com/docs/en/plugins)
 for the current marketplace flow.
 
 ## Skills

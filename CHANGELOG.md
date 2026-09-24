@@ -6,12 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-09-24
+
 ### Added
 
 - Skill effectiveness benchmark (Phase 1): baseline-vs-with-skill
   comparison across all 14 fixture scenarios, with real
   `tuist generate`/build/test verification and independent rubric
   scoring, in `docs/superpowers/benchmarks/2026-09-20-skill-effectiveness/`.
+- `.claude-plugin/marketplace.json` so this repository can be installed
+  as a Claude Code plugin marketplace via `/plugin marketplace add`.
 
 ### Changed
 
@@ -19,6 +23,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Fixture-validation CI now runs on GitHub-hosted `macos-15` runners
   instead of the temporary self-hosted runner used while the repo was
   private.
+- README install instructions now lead with `/plugin marketplace add`
+  and `/plugin install`; `--plugin-dir` is documented as the
+  local-development path.
 
 ## [0.6.0] - 2026-09-20
 
