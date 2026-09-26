@@ -1,16 +1,19 @@
 # ios-tuist-skills
 
-`ios-tuist-skills` is a Claude Code plugin for safe, version-aware work on
-Tuist-based iOS projects. Its skills inspect the project's real Tuist, Xcode,
-and Swift context; preserve established repository conventions; generate
-compatible manifests; and verify meaningful changes with generate, build, and
-test commands instead of silently assuming the latest syntax.
+`ios-tuist-skills` is a Claude Code / Codex CLI plugin for safe,
+version-aware work on Tuist-based iOS projects. Its skills inspect the
+project's real Tuist, Xcode, and Swift context; preserve established
+repository conventions; generate compatible manifests; and verify
+meaningful changes with generate, build, and test commands instead of
+silently assuming the latest syntax.
 
 ## Install the plugin
 
-This repository is also a Claude Code plugin marketplace
-([`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json)). Add
-the marketplace once, then install the plugin from it:
+This repository is also a plugin marketplace
+([`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json)), and
+the same marketplace works from either CLI.
+
+**Claude Code:**
 
 ```
 /plugin marketplace add doulos76/ios-tuist-skills
@@ -28,6 +31,16 @@ Claude Code discovers the plugin through
 session-scoped; run `/reload-plugins` after editing the plugin. See the
 official [Claude Code plugin documentation](https://code.claude.com/docs/en/plugins)
 for the current marketplace flow.
+
+**Codex CLI:**
+
+```
+codex plugin marketplace add doulos76/ios-tuist-skills
+codex plugin add ios-tuist-skills@doulos76-plugins
+```
+
+`codex plugin list` shows it as `installed, enabled` afterward. Run
+`codex plugin --help` for the current plugin flow.
 
 ## Skills
 
