@@ -6,12 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.7.1] - 2026-09-26
+
 ### Added
 
 - README: Codex CLI installation instructions (`codex plugin marketplace
   add` / `codex plugin add`), confirmed working against the existing
   `.claude-plugin/marketplace.json` — no marketplace or plugin manifest
   changes were needed.
+- README: note the v0.7 (marketplace-distribution) milestone alongside
+  the existing v0.1-v0.6 list.
 
 ## [0.7.0] - 2026-09-24
 
