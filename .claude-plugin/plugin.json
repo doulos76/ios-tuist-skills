@@ -1,7 +1,7 @@
 {
   "name": "ios-tuist-skills",
   "description": "Version-aware iOS engineering skills for Tuist-based projects: safe bootstrap, feature addition, dependency management, module extraction, architecture review, CI auditing, explicit version migration, folder-integration restyling, test-target creation, and tuist scaffold template authoring that detect the project's real Tuist/Xcode/Swift versions and preserve existing conventions.",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "author": {
     "name": "doulos76"
   },
