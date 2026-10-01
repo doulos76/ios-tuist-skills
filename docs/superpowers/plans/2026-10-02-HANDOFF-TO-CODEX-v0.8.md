@@ -43,6 +43,12 @@ If the plan and the spec conflict, the spec wins; report the conflict.
 - One branch + one PR per workstream: `feature/v0.8-ws1` … `ws7`, then
   `chore/release-0.8.0`. Order: WS1 → WS2 → WS3 → WS4 → WS5 → WS6 → WS7;
   WS6 needs WS3 merged first.
+- **GitHub account:** this repo uses the personal account `doulos76`
+  (other repos on this machine use a different, company account). The
+  local clone's `origin` is HTTPS with a repo-local `gh` credential
+  helper. Do not switch it back to SSH (the SSH key authenticates as the
+  other account and pushes get denied), and don't change global git
+  config. Check with `git remote -v` and `gh auth status`.
 - **Required status checks are a manual list on the protection rule.**
   Task 3 adds a new `check-pins` job; it will not gate merges unless the
   user adds it to the rule. Do not change branch protection yourself —
