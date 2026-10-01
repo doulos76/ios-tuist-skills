@@ -1,7 +1,7 @@
 #!/bin/bash
 # Reproduces .github/workflows/validate-fixtures.yml locally, fixture by
-# fixture, driven by the workflow file's own matrix — not a duplicated
-# fixture list — so this script never drifts from CI as fixtures are
+# fixture, driven by tests/fixtures/ci-matrix.json, the same file the CI reads
+# — not a duplicated fixture list — so this script never drifts from CI as fixtures are
 # added or the matrix's fields change.
 #
 # Use this while GitHub Actions credit is exhausted on this repo's
@@ -10,7 +10,7 @@
 set -uo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-WORKFLOW_FILE="$REPO_ROOT/.github/workflows/validate-fixtures.yml"
+MATRIX_FILE="$REPO_ROOT/tests/fixtures/ci-matrix.json"
 export XDG_CACHE_HOME=/tmp/tuist-local-validate/cache
 export XDG_STATE_HOME=/tmp/tuist-local-validate/state
 export XDG_DATA_HOME=/tmp/tuist-local-validate/data
@@ -19,10 +19,8 @@ mkdir -p "$XDG_CACHE_HOME" "$XDG_STATE_HOME" "$XDG_DATA_HOME"
 # Only run one fixture (e.g. `./scripts/validate-fixtures-locally.sh migrate-candidate`).
 ONLY_FIXTURE="${1:-}"
 
-MATRIX_TSV="$(ruby -ryaml -e '
-  workflow = YAML.load_file(ARGV[0])
-  matrix = workflow.fetch("jobs").fetch("validate").fetch("strategy").fetch("matrix").fetch("include")
-  matrix.each do |entry|
+MATRIX_TSV="$(ruby -rjson -e '
+  JSON.parse(File.read(ARGV[0])).each do |entry|
     puts [
       entry.fetch("fixture"),
       entry.fetch("tuist").to_s,
@@ -31,10 +29,10 @@ MATRIX_TSV="$(ruby -ryaml -e '
       entry.fetch("test_schemes"),
     ].join("\t")
   end
-' "$WORKFLOW_FILE")"
+' "$MATRIX_FILE")"
 
 if [ -z "$MATRIX_TSV" ]; then
-  echo "Could not read any matrix entries from $WORKFLOW_FILE" >&2
+  echo "Could not read any matrix entries from $MATRIX_FILE" >&2
   exit 1
 fi
 
