@@ -1,10 +1,19 @@
 name: Validate fixtures
 
 on:
+  # Branch pushes are covered by the pull_request event; running both
+  # doubled every PR's macOS jobs. Push only runs on the long-lived branches.
   push:
+    branches: [main, develop]
   pull_request:
     branches: [main, develop]
   workflow_dispatch:
+
+# A new push to a PR supersedes the previous run. Pushes to main/develop
+# are never cancelled, so every merged commit keeps its own result.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   validate:
