@@ -18,6 +18,7 @@
 
 ## Global Constraints
 
+- CI prerequisite: `docs/superpowers/plans/2026-10-02-ci-speedup.md` Tasks 1–2 (CI-1, CI-2) land **before** any v0.8 task (Task 3 depends on them; the rest benefit from fewer macOS runs). PRs that only touch docs/skills then run no fixture jobs.
 - Order (Addendum A1): WS1 → WS2 → WS3 → WS4 coexistence (README + body rules) → WS4 descriptions → WS5 → WS6 → WS7. Priorities: P0 = WS1–WS5 (WS5 raised from P1; description routing is its own P0 item), P1 = WS6, WS7. WS6 requires WS3 merged. WS4's two parts may share one branch but **must be separate commits** (Task 4).
 - Both models reading the same PRD agreeing is not verification (Addendum §0.4): every piece of evidence is re-checked against real files and command output.
 - **[미검증] items** (Addendum §9) are checked before implementing; if unconfirmed, the item is not implemented and is reported as "Unverified" in the PR (exact fallbacks are in each task).
@@ -311,11 +312,13 @@ git commit -m "feat: classify version evidence by axis and report conflicts"
 
 Branch: `feature/v0.8-ws3`
 
+**Prerequisite (CI speedup plan, `docs/superpowers/plans/2026-10-02-ci-speedup.md`):** its Tasks 1–2 land first. They move the fixture matrix from `validate-fixtures.yml` to `tests/fixtures/ci-matrix.json` and create `.github/workflows/lint.yml`, which this task relies on. If `tests/fixtures/ci-matrix.json` does not exist yet, stop and report.
+
 **Files:**
 - Create: `tests/fixtures/{architecture-smells,ci-gaps,extract-candidate,restyle-candidate,scaffold-candidate,test-target-candidate}/.tool-versions` (content `tuist 4.206.0`)
 - Create: `tests/fixtures/migrate-candidate/.tool-versions` (content `tuist 3.42.2`)
 - Create: `scripts/check-fixture-pins.sh`
-- Modify: `.github/workflows/validate-fixtures.yml` (add `check-pins` job)
+- Modify: `.github/workflows/lint.yml` (add `check-pins` job; the file is created by CI plan Task 2)
 - Modify: `tests/fixtures/migrate-candidate/EXPECTATIONS.md:53` ("Update whatever version-pin source names 3.42.2…")
 
 **Interfaces:**
@@ -329,13 +332,13 @@ Existing `.tool-versions` files (`legacy-tuist`, `modular`, `version-mismatch`) 
 ```bash
 #!/bin/bash
 # Fails when a fixture's .tool-versions tuist pin differs from the
-# validate-fixtures.yml matrix. Fixtures are copied out of the repo for
+# tests/fixtures/ci-matrix.json. Fixtures are copied out of the repo for
 # isolated benchmarks, so the pin must live inside each fixture, and CI
 # must not drift from it.
 set -uo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-WORKFLOW_FILE="$REPO_ROOT/.github/workflows/validate-fixtures.yml"
+MATRIX_FILE="$REPO_ROOT/tests/fixtures/ci-matrix.json"
 status=0
 
 while IFS=$'\t' read -r fixture tuist; do
@@ -350,12 +353,11 @@ while IFS=$'\t' read -r fixture tuist; do
     echo "MISMATCH $fixture: matrix=$tuist .tool-versions=${pinned:-none}"
     status=1
   fi
-done < <(ruby -ryaml -e '
-  YAML.load_file(ARGV[0]).fetch("jobs").fetch("validate").fetch("strategy")
-      .fetch("matrix").fetch("include").each do |e|
+done < <(ruby -rjson -e '
+  JSON.parse(File.read(ARGV[0])).each do |e|
     puts [e.fetch("fixture"), e.fetch("tuist").to_s].join("\t")
   end
-' "$WORKFLOW_FILE")
+' "$MATRIX_FILE")
 
 [ "$status" -eq 0 ] && echo "All fixture pins match the CI matrix."
 exit "$status"
@@ -383,7 +385,7 @@ printf 'tuist 3.42.2\n' > tests/fixtures/migrate-candidate/.tool-versions
 for d in tests/fixtures/*/; do [ "$d" = "tests/fixtures/new-project/" ] && continue; test -f "$d/.tool-versions" || echo "MISSING $d"; done   # no output
 ```
 
-- [ ] **Step 5: Add CI job** to `.github/workflows/validate-fixtures.yml` (sibling of `validate:`; same indentation as `validate:`):
+- [ ] **Step 5: Add CI job** to `.github/workflows/lint.yml` (sibling of `ci-scripts:`; same indentation). It is a non-macOS check, so it belongs in the ubuntu `Lint` workflow, not in `validate-fixtures.yml` (CI plan, CI-4):
 
 ```yaml
   check-pins:
@@ -394,7 +396,7 @@ for d in tests/fixtures/*/; do [ "$d" = "tests/fixtures/new-project/" ] && conti
       - name: Compare .tool-versions with matrix
         run: ./scripts/check-fixture-pins.sh
 ```
-Validate YAML: `ruby -ryaml -e 'YAML.load_file(".github/workflows/validate-fixtures.yml")'` (no error).
+Validate YAML: `ruby -ryaml -e 'YAML.load_file(".github/workflows/lint.yml")'` (no error). Because `ci-matrix.json` and `.tool-versions` changes do not select every fixture by themselves, also confirm `tests/ci/test-select-fixtures.sh` still passes (editing `.tool-versions` inside a fixture selects just that fixture, which is the intended behaviour).
 
 - [ ] **Step 6: Update `migrate-candidate/EXPECTATIONS.md:53`** so the sentence names the in-fixture `.tool-versions` as the pin source to update. Read L50-58 first and edit only that clause. Then re-read `ci-gaps/EXPECTATIONS.md` "What must NOT happen" ("version pin (4.206.0) changed"): now `.tool-versions` also holds 4.206.0, so add "(in `ci.yml` or `.tool-versions`)".
 
@@ -403,7 +405,7 @@ Validate YAML: `ruby -ryaml -e 'YAML.load_file(".github/workflows/validate-fixtu
 - [ ] **Step 8: Commit**
 
 ```bash
-git add tests/fixtures scripts/check-fixture-pins.sh .github/workflows/validate-fixtures.yml
+git add tests/fixtures scripts/check-fixture-pins.sh .github/workflows/lint.yml
 git commit -m "test: pin Tuist inside every fixture and check against CI matrix"
 ```
 
@@ -632,7 +634,7 @@ Branch: `feature/v0.8-ws7`
 
 **Files (exact contents depend on the research gate):**
 - Create: `.agents/plugins/marketplace.json`, `.codex-plugin/plugin.json`, `scripts/sync-codex-manifest.sh`
-- Modify: `.github/workflows/validate-fixtures.yml` (sync check job) or a new small workflow
+- Modify: `.github/workflows/lint.yml` (sync check job; ubuntu, no macOS needed)
 - Modify: `README.md` Codex install instructions
 
 **Interfaces:** Consumes `.claude-plugin/plugin.json` (source of truth: name, description, version).

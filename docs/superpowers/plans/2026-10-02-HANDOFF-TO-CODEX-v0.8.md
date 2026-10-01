@@ -35,6 +35,14 @@ source; migrate's "only skill … permitted to change a pin" and
 rewrite; benchmark work is Phase 1 only; release notes must call the
 new output format a breaking change.
 
+## Do this first: the CI speedup work
+
+`docs/superpowers/plans/2026-10-02-HANDOFF-TO-CODEX-ci-speedup.md` (plan:
+`2026-10-02-ci-speedup.md`) comes **before** any v0.8 task. Its Tasks 1–2 create
+`tests/fixtures/ci-matrix.json` and `.github/workflows/lint.yml`, which v0.8
+Task 3 (WS3) uses; the v0.8 plan was updated accordingly. Skip nothing else in
+this handoff.
+
 ## Where things stand
 
 - Base: `develop` at `492fd7e` (v0.7.1) plus one docs commit that adds
