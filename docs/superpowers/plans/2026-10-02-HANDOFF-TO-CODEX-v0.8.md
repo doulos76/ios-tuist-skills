@@ -13,12 +13,27 @@ no implementation was attempted. You start Task 1 from a clean slate.
    `docs/superpowers/specs/2026-10-01-ios-tuist-skills-v0.8-design.md`
    (the PRD; §0 holds the working rules: verify evidence first, one
    workstream per branch, no scope creep).
-2. **Plan** (task-by-task steps, exact replacement text, exact commands):
+2. **Addendum 1** (amends the PRD; **wins over the PRD on conflict**, but
+   PRD §0 working rules still apply):
+   `docs/superpowers/specs/2026-10-01-ios-tuist-skills-v0.8-design-addendum-1.md`
+3. **Plan** (task-by-task steps, exact replacement text, exact commands;
+   already incorporates the addendum):
    `docs/superpowers/plans/2026-10-02-ios-tuist-skills-v0.8.md`
-3. **This file** — repo state, delivery mechanics, and what Codex cannot
+4. **This file** — repo state, delivery mechanics, and what Codex cannot
    do itself.
 
-If the plan and the spec conflict, the spec wins; report the conflict.
+If the plan and the spec/addendum conflict, the spec/addendum wins;
+report the conflict.
+
+What the addendum changed (all already reflected in the plan): WS5 is now
+P0 and description routing is its own P0 item (Task 4 Part B, separate
+commit from Part A); version-safety evidence is classified per axis
+(Tool / Xcode / Swift / Manifest) and only the Tool axis decides the
+effective Tuist version; `Package.swift` is no longer a Tuist-version
+source; migrate's "only skill … permitted to change a pin" and
+"explicit, version-specific request" wording must survive the description
+rewrite; benchmark work is Phase 1 only; release notes must call the
+new output format a breaking change.
 
 ## Where things stand
 
@@ -78,10 +93,17 @@ Never write "passes" without the pasted output.
 
 | Gate | Task | If the source disagrees with the PRD |
 |---|---|---|
-| Is `Package.swift` / `Tuist/Package.swift` a Tuist **CLI** version source? | Task 2 Step 1 | Stop; report; keep the source and link the doc |
+| `.xcode-version` / `.swift-version` consumed by Tuist? (Addendum §9) | Task 2 Step 1 | Keep them with the "Tuist does not consume" label; report "Unverified" |
+| `tuist init` supports existing projects? (Addendum §9) | Task 5 Step 2 | Don't mention it in bootstrap; point only to the official `migrate` skill |
 | Additional mise config paths | Task 2 Step 1 | Include only what the mise docs confirm |
-| Max `description` length (Agent Skills spec) | Task 4 Step 1 | If unconfirmable, ≤ 500 chars and mark Unverified |
+| Max `description` length (Agent Skills spec) | Task 4 Part B Step B1 | If unconfirmable, ceiling = longest existing description (493 chars, measured 2026-10-02) and mark Unverified. Note the addendum's migrate example is ~560 chars, so it must be shortened |
 | Codex plugin/marketplace manifest spec | Task 7 Step 1 | Defer WS7 to v0.8.x; don't guess field names |
+
+Resolved by the addendum (no research needed): `Package.swift` and
+`Tuist/Package.swift` are **not** Tuist CLI version sources; their
+`swift-tools-version` goes under Swift Evidence. If you find a skill body,
+fixture or EXPECTATIONS that uses them as Tuist-version evidence, report
+the location; don't edit it.
 
 ## Judgment calls already made (change only with the user's OK)
 
@@ -92,10 +114,11 @@ Never write "passes" without the pasted output.
 - Benchmark harness is `prep` + `collect` subcommands so no unverified
   `claude` flags are baked in.
 - `check-pins` is its own ubuntu job, not a step in the macOS matrix.
+- The `ios-tuist-ci` rule "Never remove a validation step…" is **not** changed in v0.8 (Addendum A6); Jev/decision models are out of scope (A7).
 
 ## Out of scope (do not do)
 
-New skills (`ios-tuist-adopt`), external decision-model integration,
+New skills (`ios-tuist-adopt`), external decision-model integration (also no docs for it), benchmark Phases 2–3 beyond documentation (N≥3 runs, blind scoring),
 relaxing `ios-tuist-ci`'s "never remove a validation step", re-running
 all 14 baseline measurements, editing any existing benchmark score
 (footnote only, Task 8).
@@ -110,7 +133,7 @@ user's decision; bring it back to them rather than doing it.
 ## Ledger template (copy into your progress notes)
 
 ```text
-Task | Branch | PR | Verified (what ran) | Unverified | Notes
+Task | Branch | PR | Verified (what ran) | Unverified (incl. Addendum §9 items) | Notes
 1    |        |    |                     |            |
 ...
 ```
