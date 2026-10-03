@@ -532,6 +532,8 @@ Branch: `ci/ci-5-schedule`. Depends on Task 2.
 
 ### Task 5: CI-6 — concurrency-limit decision (measure first; may produce only a document)
 
+> **Outcome 2026-10-03: decided (a) keep as is; numbers in baseline §9. Document only, no code.**
+
 Branch: `ci/ci-6-concurrency` — create only if the decision needs code.
 
 - [ ] **Step 1: Measure after Task 2 landed** (hand-off): `scripts/ci-measure.py` over ≥ 3 runs of each kind — a docs-only PR (no jobs; record wall time of `changes`+`fixtures-ok`), a 1-fixture PR, and a `develop` push (all 10). Append "## 8. After CI-2" to the baseline doc.
