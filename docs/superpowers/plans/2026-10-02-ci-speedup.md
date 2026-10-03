@@ -441,6 +441,8 @@ git commit -m "ci: run only the fixtures a change affects and aggregate via fixt
 
 ### Task 3: CI-3 — remove redundant compilation and pre-boot the simulator (conditional)
 
+> **Outcome 2026-10-03: implemented (#34), measured no gain, reverted. See baseline §8. Do not redo without a new hypothesis for the pre-app-launch gap.**
+
 Branch: `ci/ci-3-fixture-time`. **Gate:** only proceed with each change if its Step-1 measurement supports it; otherwise write the measurement into the baseline doc and stop.
 
 **Files:**
