@@ -61,3 +61,13 @@ required, and the branch must be up to date with `develop` (every
 ```text
 Task | Branch | PR | Verified (what ran) | Unverified | Before/after numbers
 ```
+
+## Update 2026-10-03 — Task 3 ready
+
+Tasks 1–2 are merged (#27, #29, #30). Task 3 Step 1 is done by Claude (baseline
+§7: 4 jobs, silent gap 57–402 s before the app launches). Start at Step 2:
+branch `ci/ci-3-fixture-time`, commit pre-boot (Step 3) **separately** from the
+Build+Test merge (Step 4). Step 5 evidence is still required; timing is judged
+by `scripts/ci-measure.py` before/after, and with n this small a result inside
+noise means revert, not "good enough". Gap cause (simulator boot) is an
+inference — report what the `Pre-boot simulator` step duration actually shows.

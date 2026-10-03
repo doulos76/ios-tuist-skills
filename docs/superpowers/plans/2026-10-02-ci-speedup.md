@@ -448,7 +448,7 @@ Branch: `ci/ci-3-fixture-time`. **Gate:** only proceed with each change if its S
 - Modify: `.github/workflows/validate-fixtures.yml` (the `validate` job's steps), `scripts/ci-select-fixtures.sh` already lists `ci-pick-simulator.sh` as an "everything" path (Task 2)
 - Modify: `docs/superpowers/ci/2026-10-baseline.md` (append "## 7. CI-3 evidence")
 
-- [ ] **Step 1: Re-verify F6 on other fixtures (hand-off, needs `gh`).** For `modular`, `architecture-smells` and `migrate-candidate`, take a recent successful job log (`gh run view --job <id> --log`) and record, per job: the timestamp of the last compile line in the Test step, the timestamp of `Test Suite 'All tests' started`, and the `IDETestOperationsObserverDebug: … elapsed` value. Baseline had one sample (extract-candidate: ~139 s gap). Write the three results into the baseline doc. **If the gap is < 30 s in all three, skip change 2 below** and report.
+- [x] **Step 1 (done 2026-10-03, baseline §7): F6 reconfirmed on 4 jobs (gap 57–402 s, all > 30 s) → change 2 (pre-boot) proceeds.** Original instruction: Re-verify F6 on other fixtures (hand-off, needs `gh`). For `modular`, `architecture-smells` and `migrate-candidate`, take a recent successful job log (`gh run view --job <id> --log`) and record, per job: the timestamp of the last compile line in the Test step, the timestamp of `Test Suite 'All tests' started`, and the `IDETestOperationsObserverDebug: … elapsed` value. Baseline had one sample (extract-candidate: ~139 s gap). Write the three results into the baseline doc. **If the gap is < 30 s in all three, skip change 2 below** and report.
 
 - [ ] **Step 2: Create `scripts/ci-pick-simulator.sh`** (moves the inline ruby from the Test step):
 
@@ -465,7 +465,7 @@ xcrun simctl list devices available --json | ruby -rjson -e '
 '
 ```
 
-- [ ] **Step 3: Pre-boot (change 2).** Insert before `Resolve dependencies`:
+- [ ] **Step 3: Pre-boot (change 2) — do this first; it is the primary change (likely larger than change 1's ≤ 29 s). Ship it as its own commit so its effect can be measured separately from Step 4.** Insert before `Resolve dependencies`:
 
 ```yaml
       - name: Pre-boot simulator
