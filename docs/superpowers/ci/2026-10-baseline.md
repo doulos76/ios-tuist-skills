@@ -102,7 +102,7 @@ PR #34(사전 부팅 + `build-for-testing`/`test-without-building`)를 전체 �
 
 ## 9. CI-6 결정 — 동시 실행 한도 (옵션 (a): 현상 유지)
 
-측정: `validate-fixtures.yml` 성공 run 24건(2026-09 ~ 10-03) 중 CI-2 이후(PR #30 병합 뒤) 6건. wall = run 생성~종료, max_queue = run 생성~가장 늦게 시작한 job.
+측정: `validate-fixtures.yml` 성공 run 24건(2026-09 ~ 10-03) 중 CI-2 이후(PR #30 병합 뒤) 8건. wall = run 생성~종료, max_queue = run 생성~가장 늦게 시작한 job.
 
 | 종류 (CI-2 이후) | run | wall | max_queue |
 |---|---|---|---|
