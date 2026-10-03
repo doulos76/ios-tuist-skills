@@ -61,12 +61,6 @@ jobs:
         run: |
           test "$(mise exec -- tuist version)" = "${{ matrix.tuist }}"
 
-      - name: Pre-boot simulator
-        run: |
-          SIMULATOR_ID="$(./scripts/ci-pick-simulator.sh)"
-          echo "SIMULATOR_ID=$SIMULATOR_ID" >> "$GITHUB_ENV"
-          xcrun simctl boot "$SIMULATOR_ID" || true
-
       - name: Resolve dependencies
         working-directory: tests/fixtures/${{ matrix.fixture }}
         run: mise exec -- tuist ${{ matrix.resolve_cmd }}
@@ -75,18 +69,25 @@ jobs:
         working-directory: tests/fixtures/${{ matrix.fixture }}
         run: mise exec -- tuist generate --no-open
 
-      - name: Build and test
+      - name: Build
+        working-directory: tests/fixtures/${{ matrix.fixture }}
+        run: >-
+          xcodebuild -workspace ${{ matrix.workspace }}.xcworkspace -scheme App
+          -destination 'generic/platform=iOS Simulator' build
+
+      - name: Test
         working-directory: tests/fixtures/${{ matrix.fixture }}
         env:
           TEST_SCHEMES: ${{ matrix.test_schemes }}
         run: |
-          xcrun simctl bootstatus "$SIMULATOR_ID" -b
+          SIMULATOR_ID="$(xcrun simctl list devices available --json | ruby -rjson -e '
+            devices = JSON.parse(STDIN.read).fetch("devices").values.flatten
+            iphone = devices.find { |device| device["isAvailable"] && device["name"].start_with?("iPhone") }
+            abort "No available iPhone simulator found" unless iphone
+            print iphone.fetch("udid")
+          ')"
           for scheme in $TEST_SCHEMES; do
-            xcodebuild build-for-testing \
-              -workspace "${{ matrix.workspace }}.xcworkspace" \
-              -scheme "$scheme" \
-              -destination "id=$SIMULATOR_ID"
-            xcodebuild test-without-building \
+            xcodebuild test \
               -workspace "${{ matrix.workspace }}.xcworkspace" \
               -scheme "$scheme" \
               -destination "id=$SIMULATOR_ID"
