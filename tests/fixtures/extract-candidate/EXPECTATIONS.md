@@ -27,8 +27,10 @@ and, separately (reset the fixture between the two):
 **For the networking extraction:**
 - The checklist in `references/modularization.md` is applied concretely
   (not hypothetically) before any file is touched.
-- A new `NetworkingKit` target is created; `App` depends on it instead of
-  owning the code.
+- A new `NetworkingKit` target is created; `App` gets **no** dependency edge
+  on it: after the move nothing in `App/Sources` references
+  `APIRequestBuilder` (usage site: none), and the only other reference,
+  `App/Tests/AppTests.swift`, moves with the code.
 - The moved test (`requestBuilderComposesProfilePath`) travels with the
   code into `NetworkingKit`'s own test target.
 - `tuist generate` succeeds; `NetworkingKit` and `App` both build; the
@@ -46,6 +48,7 @@ and, separately (reset the fixture between the two):
 - `SettingsRow` extracted into its own target anyway "because it was
   asked for."
 - The extracted networking code's public behavior changed while moving.
+- An `App -> NetworkingKit` edge added without a usage site.
 - Any change to `SettingsRow.swift` when the networking extraction is the
   one being exercised (the two prompts are independent — only the
   targeted code should move).

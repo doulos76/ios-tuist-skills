@@ -84,11 +84,16 @@ manifest syntax for the pinned version, not the active one.
      target-naming convention.
    - Move the identified code; update imports in the source target and
      any other consumers that referenced it.
-   - Wire the source target (and other consumers) to depend on the new
-     target.
+   - Add a dependency edge to the new target **only from targets with a
+     verified usage site** — an `import` of the new module plus a
+     reference to a moved symbol — found by searching the whole project
+     after the move. The source target is not automatically a consumer:
+     if nothing left in it references the moved symbols, it gets no edge.
    - Move the extracted code's existing tests with it. Do not leave
      orphaned tests behind in the old target, and do not invent new tests
-     beyond what already existed for that code.
+     beyond what already existed for that code. If that leaves the
+     original test target with no test files, do not delete it; report it
+     under Risks / Follow-up and let the user decide.
 6. **Validate** — generate; build the new target, the original
    (now-slimmer) target, and any other now-dependent consumers; run the
    moved tests.
@@ -102,6 +107,11 @@ manifest syntax for the pinned version, not the active one.
   code actually uses, per
   [dependencies](../../references/dependencies.md)'s narrowest-target
   spirit.
+- Add a dependency edge to the new target only from targets with a
+  verified usage site; record the evidence (`file:line`) for each added
+  edge under `Dependency Changes` in the Output Contract. "No edge added
+  (no usage site found)" is a valid, reportable result. Apply the
+  [dependencies](../../references/dependencies.md) narrowest-target rule.
 - Never change the extracted code's public behavior while moving it —
   this is a structural move, not a logic refactor.
 - Never migrate the surrounding project's unrelated conventions (folder
@@ -146,6 +156,8 @@ Risks / Follow-up
 
 Example (extraction proceeds):
 
+`Dependency Changes` must give, per added edge, the usage-site evidence.
+
 ```text
 Tuist: 4.x.y (project-pinned, matches active)
 Xcode: 2x.x
@@ -153,8 +165,11 @@ Swift: 6.x
 
 Changed:
 - created NetworkingKit target (extracted from App/Sources/Networking)
-- App now depends on NetworkingKit instead of owning the code directly
 - moved NetworkingKitTests with the extracted code
+
+Dependency Changes:
+- FeatureX -> NetworkingKit (usage: FeatureX/Sources/Api.swift:12)
+- App: no edge added (no usage site found)
 
 Validation:
 - tuist generate: success
