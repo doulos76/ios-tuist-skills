@@ -66,3 +66,19 @@ fixture별 평균 job 시간 (s, n=6): architecture-smells 459, modular 370, leg
 
 - `ci/reduce-duplicate-runs` 병합 후 PR run 3건 이상으로 같은 표를 다시 채워 CI-1의 전후를 비교한다 (이 문서는 "전" 기준).
 - CI-2 적용 후: 문서 전용 PR(macOS 0 job)과 fixture 1개 PR의 run 시간을 기록.
+
+## 7. CI-3 근거 — F6 재확인 (n=4)
+
+출처: `develop` push run 36931777728 (2026-10-01, 전체 매트릭스). 각 job의 Test 스텝 로그에서 마지막 컴파일·서명 로그(`Validate …App.app`)와 앱 프로세스 첫 로그(`load_eligibility_plist`) 사이의 무로그 구간을 계산했다.
+
+| job | 무로그 구간 | Test 스텝 전체 | 비고 |
+|---|---|---|---|
+| modular (`App` 스킴) | 57 s | 63 s | |
+| architecture-smells (`App` 스킴) | 106 s | 123 s | |
+| extract-candidate | 338 s | 345 s | 이전 측정(run 36887896322)은 139 s — 편차 큼 |
+| migrate-candidate | 402 s | 413 s | Tuist 3.42.2 |
+
+- **확인됨**: 4개 job 모두 무로그 구간이 30 s를 넘고, 테스트 실행 자체는 1 s 미만. 같은 job의 두 번째 스킴은 구간이 짧다(약 35~70 s로 `IDETestOperationsObserverDebug` elapsed 기준 읽음).
+- **확인됨**: Test 스텝이 `App` 타깃을 다시 컴파일·서명한다(F5, 위 job에서도 CodeSign 로그 존재).
+- **추정**: 구간의 정체는 시뮬레이터 부팅·앱 설치 대기. 로그에 "Booting"이 명시되지 않아 직접 증명은 못 했다. 편차(57~402 s)의 원인은 미확인(러너 부하 가능성).
+- **판정**: 계획서 Task 3의 게이트(30 s 미만이면 변경 2 생략)를 넘으므로 사전 부팅(변경 2)을 진행한다. 효과는 구현 후 `scripts/ci-measure.py` 전/후 Test 스텝 평균으로 판정하고, 노이즈 수준이면 되돌린다.
