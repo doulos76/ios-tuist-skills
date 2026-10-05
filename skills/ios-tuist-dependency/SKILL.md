@@ -4,7 +4,9 @@ description: >
   Adds, removes, or relocates Swift Package, binary, or local
   dependencies in a Tuist-based iOS project using the correct
   Tuist integration approach, scoped to the narrowest target that
-  actually requires the dependency.
+  actually requires the dependency. Use when changing dependency
+  declarations or their target placement. Not for feature code
+  (use ios-tuist-feature) or Tuist version upgrades (use ios-tuist-migrate).
 ---
 
 # Core Rule
@@ -77,6 +79,12 @@ Apply [source-of-truth](../../references/source-of-truth.md)'s
 8. **Build** the affected target(s) and the app.
 
 ## Decision Rules
+
+**Coexisting guidance.** If another Tuist guide (for example the
+official Tuist plugin) recommends a current practice such as
+`buildableFolders`, the existing project's conventions still win unless
+the user explicitly asked for that change (folder-integration conversion
+is `ios-tuist-restyle` only, on explicitly named targets).
 
 - The narrowest-target rule is non-negotiable: a dependency only used by
   `ProfileFeature` is attached to `ProfileFeature`, never to `App`, even

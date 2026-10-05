@@ -4,7 +4,10 @@ description: >
   Extracts existing code from a target into a new Tuist module/target,
   applying the modularization justification checklist before acting —
   refusing the extraction and reporting why when the checklist isn't
-  concretely met, rather than splitting code on request alone.
+  concretely met, rather than splitting code on request alone. Use when
+  extracting existing code with a concrete modularization checklist
+  benefit. Not for splitting code without that benefit or adding new
+  feature code (use ios-tuist-feature).
 ---
 
 # Core Rule

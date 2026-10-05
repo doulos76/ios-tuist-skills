@@ -2,13 +2,13 @@
 name: ios-tuist-scaffold
 description: >
   Authors one explicitly user-named tuist scaffold template — its
-  Tuist/Templates/<name>/<name>.swift manifest plus the .stencil
-  file(s) it references — matching a file/content shape the user
-  describes or that already exists as hand-written files in the
-  project, and verifies it by actually running tuist scaffold in a
-  scratch location. Never authors more than one template per
-  invocation, never generates Stencil control-flow syntax, never runs
-  tuist scaffold against the real project tree.
+  Tuist/Templates/<name>/<name>.swift manifest plus the referenced
+  .stencil files — and verifies it by running tuist scaffold in a scratch
+  location. Use when turning a user-described file/content shape or
+  existing hand-written project files into a reusable template. Not for
+  using a template to generate real project files. Never authors more
+  than one template per invocation, never generates Stencil control-flow
+  syntax, never runs tuist scaffold against the real project tree.
 ---
 
 # Core Rule

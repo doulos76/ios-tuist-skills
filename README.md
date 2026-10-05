@@ -42,6 +42,29 @@ codex plugin add ios-tuist-skills@doulos76-plugins
 `codex plugin list` shows it as `installed, enabled` afterward. Run
 `codex plugin --help` for the current plugin flow.
 
+## Relationship to the official Tuist plugin
+
+The [official Tuist plugin](https://github.com/tuist/agent-plugin)
+provides current best practices, platform data, and the `migrate` skill
+for converting existing Xcode projects to Tuist. This plugin focuses on
+safe manifest changes that preserve an existing project's Tuist version
+and conventions.
+
+Both plugins can be installed together. If their guidance conflicts,
+the existing project's conventions win unless the user explicitly asks
+for a change. For example, the official `generated-projects` skill
+recommends `buildableFolders` instead of `sources` and `resources` globs;
+here, that conversion belongs to `ios-tuist-restyle`, on explicitly
+named targets and subject to its version and safety checks.
+
+| Request | Use |
+|---|---|
+| Convert this Xcode project to Tuist | official `migrate` |
+| Upgrade Tuist 3 → 4 in this project | `ios-tuist-migrate` |
+| Add `LoginFeature` | `ios-tuist-feature` |
+| Convert named target to `buildableFolders` | `ios-tuist-restyle` |
+| Debug a generated project / flaky tests | official skills (the flaky-test skill relies on Tuist's server test insights at tuist.dev) |
+
 ## Skills
 
 ### `ios-tuist-bootstrap`

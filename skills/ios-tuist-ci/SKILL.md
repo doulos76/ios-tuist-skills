@@ -3,8 +3,10 @@ name: ios-tuist-ci
 description: >
   Audits an existing CI workflow for a Tuist-based iOS project —
   version-pin consistency, caching, unnecessary full-graph rebuilds,
-  parallelization — and applies improvements the user approves. Does
-  not author a net-new CI pipeline for a project with none.
+  parallelization — and applies improvements the user approves. Use
+  when reviewing or improving an existing Tuist CI workflow. Not for
+  creating a pipeline from scratch. Does not author a net-new CI
+  pipeline for a project with none.
 ---
 
 # Core Rule
