@@ -50,10 +50,7 @@
 - Leave `App/Sources/MigrateCandidateApp.swift` and
   `App/Tests/AppTests.swift` byte-identical — no breaking change in this
   jump touches source files, only manifests.
-- Update whatever version-pin source names 3.42.2 for this fixture (this
-  repository's own `.github/workflows/validate-fixtures.yml` matrix
-  entry, if the fixture is migrated in place — see that file's
-  `migrate-candidate` entry) to 4.206.0.
+- Update the in-fixture `.tool-versions` pin from 3.42.2 to 4.206.0.
 
 ## What must NOT change
 
