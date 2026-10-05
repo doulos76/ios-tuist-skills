@@ -49,6 +49,8 @@ and, separately (reset the fixture between the two):
   asked for."
 - The extracted networking code's public behavior changed while moving.
 - An `App -> NetworkingKit` edge added without a usage site.
+- The agent reports overall success while a pre-existing test scheme
+  (e.g. `App`) fails.
 - Any change to `SettingsRow.swift` when the networking extraction is the
   one being exercised (the two prompts are independent — only the
   targeted code should move).
@@ -57,7 +59,8 @@ and, separately (reset the fixture between the two):
 
 1. For the networking prompt: `git diff` should show a new
    `NetworkingKit/` directory, `Project.swift` gaining a `NetworkingKit`
-   target and `App` depending on it, and `Networking.swift` +
+   target and a `NetworkingKitTests` target depending on it, `App` gets
+   no new dependency edge on `NetworkingKit`, and `Networking.swift` +
    `AppTests.swift`'s networking test relocated — nothing else touched.
 2. For the `SettingsRow` prompt: `git diff` should be empty (or contain
    only the skill's own reported output, not tracked in this directory);
@@ -66,6 +69,10 @@ and, separately (reset the fixture between the two):
    xcodebuild build` (and `xcodebuild test` for the relevant scheme)
    after the networking extraction to confirm the skill's own report
    wasn't taken on faith.
-4. Reset with `git checkout -- tests/fixtures/extract-candidate && git
+4. After the networking extraction, run `xcodebuild test -scheme App` for
+   the pre-existing `App` scheme and confirm the report matches: a
+   source-less `AppTests` target makes it fail, and the report must name
+   the failing scheme and cause and say validation did NOT fully pass.
+5. Reset with `git checkout -- tests/fixtures/extract-candidate && git
    clean -fdx tests/fixtures/extract-candidate` between exercising either
    prompt and before committing any further changes to this fixture.
