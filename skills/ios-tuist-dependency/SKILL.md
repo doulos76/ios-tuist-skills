@@ -4,7 +4,9 @@ description: >
   Adds, removes, or relocates Swift Package, binary, or local
   dependencies in a Tuist-based iOS project using the correct
   Tuist integration approach, scoped to the narrowest target that
-  actually requires the dependency.
+  actually requires the dependency. Use when changing dependency
+  declarations or their target placement. Not for feature code
+  (use ios-tuist-feature) or Tuist version upgrades (use ios-tuist-migrate).
 ---
 
 # Core Rule

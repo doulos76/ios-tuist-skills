@@ -4,7 +4,9 @@ description: >
   Diagnoses an existing Tuist project's target graph, dependency
   direction, and linkage choices against modularization principles and
   reports findings with concrete evidence — never edits code or
-  manifests.
+  manifests. Use when reviewing an existing project's architecture.
+  Not for making code or manifest edits (use the appropriate editing
+  skill).
 ---
 
 # Core Rule

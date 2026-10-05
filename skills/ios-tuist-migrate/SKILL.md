@@ -5,7 +5,10 @@ description: >
   target version, updating version-pin sources and the minimum manifest
   syntax the target version actually requires. The only skill in this
   repository permitted to change a project's Tuist version pin, and only
-  on an explicit, version-specific request.
+  on an explicit, version-specific request. Use when requesting Tuist
+  version migration only, with a specified target version. Not for
+  converting an Xcode project to Tuist (use Tuist's official migration
+  workflow) or vague "update/modernize" requests with no target version.
 ---
 
 # Core Rule

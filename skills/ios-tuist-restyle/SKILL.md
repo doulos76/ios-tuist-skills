@@ -4,8 +4,10 @@ description: >
   Converts one or more explicitly user-named targets' folder integration
   from array-based sources:/resources: declarations to buildableFolders,
   gated by a per-target safety checklist grounded in real Tuist defects
-  and their regression history. Never sweeps a whole project, never
-  bundles a version bump, never silently drops an exclusion.
+  and their regression history. Use when explicitly requesting this
+  conversion for named targets. Not for project-wide conversion or Tuist
+  version upgrades. Never sweeps a whole project, never bundles a version
+  bump, never silently drops an exclusion.
 ---
 
 # Core Rule

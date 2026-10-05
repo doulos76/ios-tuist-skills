@@ -3,7 +3,10 @@ name: ios-tuist-feature
 description: >
   Adds or modifies features in an existing Tuist-based iOS project
   while preserving project architecture, dependency conventions,
-  Tuist version compatibility, and validation requirements.
+  Tuist version compatibility, and validation requirements. Use when
+  implementing or changing feature code and its required manifest wiring.
+  Not for new projects (use ios-tuist-bootstrap), dependency-only changes
+  (use ios-tuist-dependency), or module extraction (use ios-tuist-module).
 ---
 
 # Core Rule

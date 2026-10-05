@@ -5,7 +5,9 @@ description: >
   profile, detecting the actual local Tuist/Xcode/Swift versions,
   generating only the minimum required manifests, and validating the
   result through tuist generate, build, and test before reporting
-  completion.
+  completion. Use when starting a new project in an empty directory.
+  Not for existing Tuist projects (use ios-tuist-feature) or existing
+  Xcode projects (use the official Tuist migrate skill).
 ---
 
 # Core Rule
