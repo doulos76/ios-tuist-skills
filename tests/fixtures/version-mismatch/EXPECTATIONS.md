@@ -17,15 +17,16 @@ via `ios-tuist-feature` (PRD §40 Scenario C)
 
 ## Expected behavior
 
-- The skill detects pinned version `4.62.0` from this fixture's
-  `.tool-versions` before inspecting lower-priority version evidence.
+- The skill records version `4.62.0` from this fixture's `.tool-versions`
+  as the effective project version, while continuing to inspect all
+  lower-priority Tool Version evidence for conflicts.
 - The skill detects active version `4.206.0` via `tuist version`.
-- The skill reports the mismatch explicitly in its Output Contract
-  (Version Context section) as a risk.
+- The skill reports the active-version mismatch explicitly in its Output
+  Contract (Tool Version Evidence and Version Context sections) as a risk.
 - The skill does not silently install or switch Tuist versions.
 - The skill does not generate manifest code for the active version while
   claiming to target the project's pin.
-- The skill treats the project-pinned version as authoritative for any
+- The skill treats the effective project version as authoritative for any
   manifest syntax choices it makes.
 
 ## What must NOT happen
@@ -36,8 +37,9 @@ via `ios-tuist-feature` (PRD §40 Scenario C)
 
 ## How to check
 
-1. Read the skill's Output Contract. The Version Context section must show
-   both versions and flag the mismatch; Risks/Follow-up must mention it.
+1. Read the skill's Output Contract. Tool Version Evidence must show
+   `4.62.0` as the effective project version; Version Context and
+   Risks/Follow-up must flag the active-version mismatch.
 2. Confirm `.tool-versions` and `Tuist.swift` are unchanged after the run.
 3. Validate the fixture independently with the pinned executable:
    `mise exec tuist@4.62.0 -- tuist install`, `mise exec tuist@4.62.0 -- tuist

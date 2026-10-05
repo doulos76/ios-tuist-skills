@@ -140,7 +140,7 @@ Risks / Follow-up
 Example:
 
 ```text
-Tuist: 4.x.y (project-pinned via Tuist.swift)
+Effective project version: 4.x.y (from Tool Version Evidence)
 Active Tuist: 4.x.y (matches)
 Xcode: 16.x
 Swift: 6.x
