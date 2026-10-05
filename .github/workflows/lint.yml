@@ -19,3 +19,11 @@ jobs:
       - uses: actions/checkout@v6
       - name: Fixture selection unit tests
         run: ./tests/ci/test-select-fixtures.sh
+
+  check-pins:
+    name: fixture pins match matrix
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Compare .tool-versions with matrix
+        run: ./scripts/check-fixture-pins.sh
