@@ -19,7 +19,7 @@
 # from — it never crosses into the other one). After it prints the
 # prompt, start the session yourself:
 #   - baseline worktree:    claude
-#   - with-skill worktree:  claude --plugin-dir /Users/dave/Documents/GitHub/ios-tuist-skills
+#   - with-skill worktree:  claude --plugin-dir "${PLUGIN_DIR:-$REPO_ROOT}" (PLUGIN_DIR env overrides repo root)
 # then paste the printed prompt verbatim.
 set -uo pipefail
 
@@ -103,7 +103,7 @@ echo
 echo "Next steps:"
 echo "  cd \"$FIXTURE_DIR\""
 if [ "$CONDITION" = "with-skill" ]; then
-  echo "  claude --plugin-dir /Users/dave/Documents/GitHub/ios-tuist-skills"
+  echo "  claude --plugin-dir \"${PLUGIN_DIR:-$REPO_ROOT}\""
 else
   echo "  claude"
 fi
