@@ -83,6 +83,10 @@ manifest syntax for the pinned version, not the active one.
    transitive graph, resources, extensions, binaries before choosing;
    never default to a single linkage type across the project.
 5. **Extract:**
+   - Before changing files, run the pre-existing test schemes (at least
+     those covering the original target) to record which passed before
+     extraction. If this is not possible, state that a baseline could
+     not be established.
    - Create the new target, naming it to match the repo's existing
      target-naming convention.
    - Move the identified code; update imports in the source target and
@@ -99,7 +103,12 @@ manifest syntax for the pinned version, not the active one.
      under Risks / Follow-up and let the user decide.
 6. **Validate** — generate; build the new target, the original
    (now-slimmer) target, and any other now-dependent consumers; run the
-   moved tests.
+   moved tests. Re-run every pre-existing test scheme that passed before
+   extraction, including those covering the original target. If any fails,
+   do not claim success: report the failing scheme and cause under
+   Risks / Follow-up and state plainly that validation did NOT fully pass.
+   If a source-less test target's bundle can no longer load, leave the
+   decision to remove the target or add tests to the user.
 
 ## Decision Rules
 
@@ -131,6 +140,13 @@ passed and extraction proceeded):
 3. The original (now-slimmer) target and any other now-dependent
    consumers build.
 4. The extracted code's tests run and pass in their new location.
+5. Every pre-existing test scheme that passed before extraction is re-run
+   and passes (at least those covering the original target). Establish
+   this baseline before changing files; if that is not possible, state
+   that a baseline could not be established. If a scheme fails, report
+   the scheme and cause under Risks / Follow-up and state that validation
+   did NOT fully pass. A source-less test target whose bundle cannot load
+   is a failure; leave removal of the target or adding tests to the user.
 
 When extraction is refused, no build/test validation applies — the
 Output Contract states "Changes Made: none — extraction refused" instead.
@@ -151,6 +167,7 @@ Changes Made
 Files Changed
 Dependency Changes
 Validation Performed
+- Pre-existing test scheme(s): <scheme>: success|FAILED - <cause>
 Build Result
 Test Result
 Unverified Items
@@ -179,6 +196,7 @@ Validation:
 - NetworkingKit build: success
 - App build: success
 - NetworkingKitTests: success
+- App test scheme (pre-existing): success
 
 Risks / Follow-up:
 - none
