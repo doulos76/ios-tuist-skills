@@ -177,6 +177,13 @@ target's declaration.
 
 ## Decision Rules
 
+**Coexisting guidance.** If another Tuist guide (for example the
+official Tuist plugin) recommends a current practice such as
+`buildableFolders`, the existing project's conventions still win;
+an explicit restyle request is what authorises the conversion
+(folder-integration conversion is `ios-tuist-restyle` only, on explicitly
+named targets).
+
 - Never convert a target the user didn't name.
 - Never sweep "the whole project" in one run — even if multiple targets
   are named, evaluate and report each one's checklist result

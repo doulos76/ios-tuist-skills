@@ -90,6 +90,12 @@ active one.
 
 ## Decision Rules
 
+**Coexisting guidance.** If another Tuist guide (for example the
+official Tuist plugin) recommends a current practice such as
+`buildableFolders`, the existing project's conventions still win unless
+the user explicitly asked for that change (folder-integration conversion
+is `ios-tuist-restyle` only, on explicitly named targets).
+
 - Never introduce a new architecture style inside one feature (e.g. don't
   bring MVVM into a repo that is consistently VIPER, even if MVVM is "the
   skill's opinion" — it has none).

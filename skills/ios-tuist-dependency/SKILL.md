@@ -78,6 +78,12 @@ Apply [source-of-truth](../../references/source-of-truth.md)'s
 
 ## Decision Rules
 
+**Coexisting guidance.** If another Tuist guide (for example the
+official Tuist plugin) recommends a current practice such as
+`buildableFolders`, the existing project's conventions still win unless
+the user explicitly asked for that change (folder-integration conversion
+is `ios-tuist-restyle` only, on explicitly named targets).
+
 - The narrowest-target rule is non-negotiable: a dependency only used by
   `ProfileFeature` is attached to `ProfileFeature`, never to `App`, even
   if `App` transitively depends on `ProfileFeature` and "it would still
