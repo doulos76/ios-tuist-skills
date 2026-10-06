@@ -4,7 +4,10 @@ description: >
   Extracts existing code from a target into a new Tuist module/target,
   applying the modularization justification checklist before acting —
   refusing the extraction and reporting why when the checklist isn't
-  concretely met, rather than splitting code on request alone.
+  concretely met, rather than splitting code on request alone. Use when
+  extracting existing code with a concrete modularization checklist
+  benefit. Not for splitting code without that benefit or adding new
+  feature code (use ios-tuist-feature).
 ---
 
 # Core Rule
@@ -80,18 +83,32 @@ manifest syntax for the pinned version, not the active one.
    transitive graph, resources, extensions, binaries before choosing;
    never default to a single linkage type across the project.
 5. **Extract:**
+   - Before changing files, run the pre-existing test schemes (at least
+     those covering the original target) to record which passed before
+     extraction. If this is not possible, state that a baseline could
+     not be established.
    - Create the new target, naming it to match the repo's existing
      target-naming convention.
    - Move the identified code; update imports in the source target and
      any other consumers that referenced it.
-   - Wire the source target (and other consumers) to depend on the new
-     target.
+   - Add a dependency edge to the new target **only from targets with a
+     verified usage site** — an `import` of the new module plus a
+     reference to a moved symbol — found by searching the whole project
+     after the move. The source target is not automatically a consumer:
+     if nothing left in it references the moved symbols, it gets no edge.
    - Move the extracted code's existing tests with it. Do not leave
      orphaned tests behind in the old target, and do not invent new tests
-     beyond what already existed for that code.
+     beyond what already existed for that code. If that leaves the
+     original test target with no test files, do not delete it; report it
+     under Risks / Follow-up and let the user decide.
 6. **Validate** — generate; build the new target, the original
    (now-slimmer) target, and any other now-dependent consumers; run the
-   moved tests.
+   moved tests. Re-run every pre-existing test scheme that passed before
+   extraction, including those covering the original target. If any fails,
+   do not claim success: report the failing scheme and cause under
+   Risks / Follow-up and state plainly that validation did NOT fully pass.
+   If a source-less test target's bundle can no longer load, leave the
+   decision to remove the target or add tests to the user.
 
 ## Decision Rules
 
@@ -102,6 +119,11 @@ manifest syntax for the pinned version, not the active one.
   code actually uses, per
   [dependencies](../../references/dependencies.md)'s narrowest-target
   spirit.
+- Add a dependency edge to the new target only from targets with a
+  verified usage site; record the evidence (`file:line`) for each added
+  edge under `Dependency Changes` in the Output Contract. "No edge added
+  (no usage site found)" is a valid, reportable result. Apply the
+  [dependencies](../../references/dependencies.md) narrowest-target rule.
 - Never change the extracted code's public behavior while moving it —
   this is a structural move, not a logic refactor.
 - Never migrate the surrounding project's unrelated conventions (folder
@@ -118,6 +140,13 @@ passed and extraction proceeded):
 3. The original (now-slimmer) target and any other now-dependent
    consumers build.
 4. The extracted code's tests run and pass in their new location.
+5. Every pre-existing test scheme that passed before extraction is re-run
+   and passes (at least those covering the original target). Establish
+   this baseline before changing files; if that is not possible, state
+   that a baseline could not be established. If a scheme fails, report
+   the scheme and cause under Risks / Follow-up and state that validation
+   did NOT fully pass. A source-less test target whose bundle cannot load
+   is a failure; leave removal of the target or adding tests to the user.
 
 When extraction is refused, no build/test validation applies — the
 Output Contract states "Changes Made: none — extraction refused" instead.
@@ -138,6 +167,7 @@ Changes Made
 Files Changed
 Dependency Changes
 Validation Performed
+- Pre-existing test scheme(s): <scheme>: success|FAILED - <cause>
 Build Result
 Test Result
 Unverified Items
@@ -146,6 +176,8 @@ Risks / Follow-up
 
 Example (extraction proceeds):
 
+`Dependency Changes` must give, per added edge, the usage-site evidence.
+
 ```text
 Tuist: 4.x.y (project-pinned, matches active)
 Xcode: 2x.x
@@ -153,14 +185,18 @@ Swift: 6.x
 
 Changed:
 - created NetworkingKit target (extracted from App/Sources/Networking)
-- App now depends on NetworkingKit instead of owning the code directly
 - moved NetworkingKitTests with the extracted code
+
+Dependency Changes:
+- FeatureX -> NetworkingKit (usage: FeatureX/Sources/Api.swift:12)
+- App: no edge added (no usage site found)
 
 Validation:
 - tuist generate: success
 - NetworkingKit build: success
 - App build: success
 - NetworkingKitTests: success
+- App test scheme (pre-existing): success
 
 Risks / Follow-up:
 - none

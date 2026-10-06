@@ -181,3 +181,112 @@ git branch -D benchmark/baseline-scratch benchmark/with-skill-scratch
 
 Keep `.worktrees/benchmark-report` until its PR is merged, then remove
 it the same way.
+
+## Isolated runs
+
+Use this procedure for v0.8 runs in place of the historical worktree
+procedure above. Each `prep` copies only the fixture to a fresh temporary
+directory under `${TMPDIR:-/tmp}`, checks its physical path and ancestors
+for repository context, and commits the starting copy for diff measurement.
+An isolation violation prints `ISOLATION VIOLATION: ...`, exits 1, and removes
+only the temporary directory created by that prep, leaving no new state file.
+It preserves dotfiles, including the fixture's `.tool-versions`.
+
+| Phase | Content | v0.8 scope | Prerequisite |
+|---|---|---|---|
+| 0 | Fixture self-containment | WS3 | — |
+| 1 | Isolation harness + one trial comparison | WS6 | Phase 0 |
+| 2 | Repeated measurement (release evaluation N≥3, model version recorded) | Documented only, not implemented in v0.8 | Phase 1 |
+| 3 | Blind scoring + deterministic metrics first | Documented only, not implemented in v0.8 | Phase 2 |
+
+On 2026-10-05, Claude Code v2.1.289 was verified to support `--plugin-dir`
+and `--setting-sources`. A plain session loads the user-scope installed
+`ios-tuist-skills` plugin even outside this repository. Both conditions
+therefore use `--setting-sources project` to prevent that installed plugin
+from leaking into the baseline; with-skill additionally uses `--plugin-dir`.
+Manual baseline check: in the session ask **"list the skills whose name
+contains 'tuist'"** and expect **NONE**. Record the result with the transcript;
+if skills appear, stop and resolve contamination before the task prompt.
+
+1. From the plugin repository root, prepare the baseline:
+
+   ```bash
+   ./scripts/benchmark-isolated-run.sh prep extract-candidate baseline 1
+   ```
+
+   The script prints the workdir, the exact `cd ... && claude
+   --setting-sources project` command, and the matching `collect` command.
+   Run that session command, perform the baseline skill check above, then
+   paste this prompt verbatim:
+
+   ```text
+   Extract the networking code into its own module called NetworkingKit.
+   ```
+
+2. After the response finishes, collect from a separate terminal:
+
+   ```bash
+   export BENCH_DIR=2026-10-05-ws6-smoke
+   export BENCH_MODEL='<exact model/version used in the session>'
+   ./scripts/benchmark-isolated-run.sh collect extract-candidate baseline 1
+   ```
+
+   `BENCH_DIR` is required and names the benchmark directory beneath
+   `docs/superpowers/benchmarks/`; `BENCH_MODEL` defaults to `unrecorded`.
+   The report is `raw/extract-candidate-baseline-run1.md`. It includes date,
+   condition, Claude CLI version, model, physical workdir, plugin repo/revision,
+   diff statistics, changed-file count including untracked files, manifest
+   edge changes, and resolve/generate/build/test results (`pass`, `fail`, `skipped`).
+   Baseline reports record `Plugin repo: none (baseline)` and
+   `Plugin revision: n/a`; with-skill reports record the plugin path/revision.
+   Collection uses fixture resolution command, workspace, and test schemes
+   from `ci-matrix.json`, with the validator's build/test invocations. It runs
+   `mise exec -- tuist "$resolve_cmd"` before generation, exercising the copied
+   fixture's `.tool-versions` pin. Missing matrix entries (such as `new-project`)
+   skip resolve/build/test without guessed commands or schemes; generation
+   still runs using the copied project's tool configuration. A failed resolve
+   skips generate/build/test and exits non-zero. A failed generate skips
+   build/test; a failed build skips tests; unavailable simulators skip tests.
+
+3. Prepare a fresh with-skill copy (the plugin path is explicit or supplied
+   through the `PLUGIN_DIR` environment variable):
+
+   ```bash
+   ./scripts/benchmark-isolated-run.sh prep extract-candidate with-skill 1 --plugin-dir "$PWD"
+   ```
+
+   Run the printed `cd ... && claude --setting-sources project --plugin-dir
+   ...` command and paste the same networking prompt. Then collect:
+
+   ```bash
+   ./scripts/benchmark-isolated-run.sh collect extract-candidate with-skill 1
+   ```
+
+   Confirm the with-skill Tool Version Evidence table can be filled from
+   **in-fixture pins alone** (`.tool-versions` and in-fixture CI files).
+   Citing the plugin repository's root CI matrix/workflow as version evidence
+   fails Phase 0 acceptance: record this in the raw result and return to WS3.
+   The collector's use of the CI matrix for workspace/schemes is separate
+   from the session's version-safety evidence.
+
+4. Attach both raw reports and save the full session transcripts, diffs, and
+   manual isolation/Phase 0 findings alongside them. Confirm both recorded
+   physical workdirs are outside the plugin repository. The harness retains
+   the temporary copies and state so these remain inspectable. Run `collect`
+   in a terminal with the same `TMPDIR` as `prep`: state lives at
+   `<TMPDIR>/state-<fixture>-<condition>-run<N>`, with the plugin path in a
+   companion `.plugin-dir` file. Existing state is not overwritten; use a
+   fresh run number for another comparison/scenario. Save reports before
+   collecting the same run again, which replaces its report.
+
+PR smoke policy is N=1 per condition. Release evaluation policy is N≥3 per
+condition with the model/version recorded via `BENCH_MODEL` on every run;
+repeated evaluation is **documented, not implemented in v0.8**. Give distinct
+run numbers to different scenarios sharing a fixture, and record each exact
+prompt in the corresponding transcript.
+
+Scoring principles are **documented, not implemented in v0.8**: the grader
+must be blind to condition (prepare grading copies without condition labels,
+plugin/session metadata, or filenames that reveal it), and deterministic
+metrics take precedence over LLM scoring. This harness collects evidence;
+it does not implement grading or revise historical scores.

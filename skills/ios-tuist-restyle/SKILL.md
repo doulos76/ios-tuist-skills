@@ -4,8 +4,10 @@ description: >
   Converts one or more explicitly user-named targets' folder integration
   from array-based sources:/resources: declarations to buildableFolders,
   gated by a per-target safety checklist grounded in real Tuist defects
-  and their regression history. Never sweeps a whole project, never
-  bundles a version bump, never silently drops an exclusion.
+  and their regression history. Use when explicitly requesting this
+  conversion for named targets. Not for project-wide conversion or Tuist
+  version upgrades. Never sweeps a whole project, never bundles a version
+  bump, never silently drops an exclusion.
 ---
 
 # Core Rule
@@ -176,6 +178,13 @@ retain `sources:`/`resources:` alongside `buildableFolders:` in the same
 target's declaration.
 
 ## Decision Rules
+
+**Coexisting guidance.** If another Tuist guide (for example the
+official Tuist plugin) recommends a current practice such as
+`buildableFolders`, the existing project's conventions still win;
+an explicit restyle request is what authorises the conversion
+(folder-integration conversion is `ios-tuist-restyle` only, on explicitly
+named targets).
 
 - Never convert a target the user didn't name.
 - Never sweep "the whole project" in one run — even if multiple targets

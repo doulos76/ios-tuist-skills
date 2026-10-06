@@ -5,7 +5,10 @@ description: >
   target version, updating version-pin sources and the minimum manifest
   syntax the target version actually requires. The only skill in this
   repository permitted to change a project's Tuist version pin, and only
-  on an explicit, version-specific request.
+  on an explicit, version-specific request. Use when requesting Tuist
+  version migration only, with a specified target version. Not for
+  converting an Xcode project to Tuist (use Tuist's official migration
+  workflow) or vague "update/modernize" requests with no target version.
 ---
 
 # Core Rule
@@ -18,7 +21,7 @@ the target version's real breaking changes force, nothing more.
 
 Move a project's pinned Tuist version forward to a user-specified target
 version: update the version-pin sources
-([version-safety](../../references/version-safety.md) detection order)
+([version-safety](../../references/version-safety.md) evidence collection)
 and the minimum set of manifest syntax changes the target version
 actually requires.
 
@@ -52,22 +55,22 @@ The request must name or clearly imply a specific target version.
 An existing Tuist project is present and readable; a target Tuist
 version is specified; the current project-pinned version is
 determinable via [version-safety](../../references/version-safety.md)'s
-detection order.
+evidence collection.
 
 ## Version Safety
 
 This is the one skill in the repository permitted to change the outcome
-of [version-safety](../../references/version-safety.md)'s detection
-order — every other skill treats the project-pinned version as fixed;
+of [version-safety](../../references/version-safety.md)'s evidence
+collection — every other skill treats the project-pinned version as fixed;
 this skill's entire job is changing it, deliberately and visibly. Still
-apply the full detection procedure first: an accurate starting point is
+apply the full evidence collection first: an accurate starting point is
 required to know what actually needs to change between the two versions.
 
 ## Workflow
 
 1. **Establish current and target versions** — run
-   [version-safety](../../references/version-safety.md)'s detection
-   order for the current project-pinned version; take the target
+   [version-safety](../../references/version-safety.md)'s evidence
+   collection for the current project-pinned version; take the target
    version from the user's request. If the request doesn't name one
    plainly (e.g. "the latest" without a resolved number), resolve it to
    an exact version via `tuist version` output, Tuist's own release

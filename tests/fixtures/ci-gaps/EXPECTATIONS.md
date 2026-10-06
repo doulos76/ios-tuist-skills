@@ -34,7 +34,7 @@ The embedded workflow deliberately:
 
 ## What must NOT happen
 
-- The Tuist version pin (`4.206.0`) changed.
+- The Tuist version pin (`4.206.0`) changed (in `ci.yml` or `.tool-versions`).
 - A validation step (build or test) removed to "speed things up."
 - A new CI provider introduced.
 - The change applied without first presenting the diff for approval.

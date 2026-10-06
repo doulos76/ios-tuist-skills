@@ -5,7 +5,9 @@ description: >
   profile, detecting the actual local Tuist/Xcode/Swift versions,
   generating only the minimum required manifests, and validating the
   result through tuist generate, build, and test before reporting
-  completion.
+  completion. Use when starting a new project in an empty directory.
+  Not for existing Tuist projects (use ios-tuist-feature) or existing
+  Xcode projects (use the official Tuist migrate skill).
 ---
 
 # Core Rule
@@ -13,7 +15,9 @@ description: >
 Do not generate a single manifest before establishing a Tuist Context
 (see [version-safety](../../references/version-safety.md)) and confirming
 this is genuinely a new project (no existing `Project.swift`,
-`Tuist.swift`, or `Workspace.swift` at the target path).
+`Tuist.swift`, or `Workspace.swift` at the target path, and no
+`*.xcodeproj` or `*.xcworkspace` at the target path or in any directory
+one level below it).
 
 ## Purpose
 
@@ -32,6 +36,9 @@ just a pile of generated files.
 - The target directory already contains a Tuist project
   (`Project.swift`/`Tuist.swift`/`Workspace.swift` present) — that is
   `ios-tuist-feature`'s job, not this skill's.
+- The target path, or any directory one level below it, contains an
+  existing Xcode project (`*.xcodeproj`/`*.xcworkspace`) — Xcode→Tuist
+  conversion belongs to the official Tuist `migrate` skill, not this one.
 - The request is only to add a dependency to an existing project — that
   is `ios-tuist-dependency`.
 
@@ -40,6 +47,12 @@ just a pile of generated files.
 1. Confirm no `Project.swift`, `Tuist.swift`, or `Workspace.swift` exists
    at the target path. If one does, stop and hand off to
    `ios-tuist-feature` reasoning instead.
+   Also stop if the target path, or any directory one level below it,
+   contains a `*.xcodeproj` or `*.xcworkspace`: this is an existing Xcode
+   project, not a new one. Report what was found and that converting an
+   Xcode project to Tuist is the official Tuist `migrate` skill's job;
+   generate nothing. An empty directory with none of these markers is
+   not refused by this precondition.
 2. Environment inspection: run the live-command portion of
    [version-safety](../../references/version-safety.md) (`tuist version`,
    `xcodebuild -version`, `swift --version`) to know what's actually

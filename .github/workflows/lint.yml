@@ -1,0 +1,29 @@
+name: Lint
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  ci-scripts:
+    name: ci scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Fixture selection unit tests
+        run: ./tests/ci/test-select-fixtures.sh
+
+  check-pins:
+    name: fixture pins match matrix
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Compare .tool-versions with matrix
+        run: ./scripts/check-fixture-pins.sh

@@ -3,7 +3,10 @@ name: ios-tuist-feature
 description: >
   Adds or modifies features in an existing Tuist-based iOS project
   while preserving project architecture, dependency conventions,
-  Tuist version compatibility, and validation requirements.
+  Tuist version compatibility, and validation requirements. Use when
+  implementing or changing feature code and its required manifest wiring.
+  Not for new projects (use ios-tuist-bootstrap), dependency-only changes
+  (use ios-tuist-dependency), or module extraction (use ios-tuist-module).
 ---
 
 # Core Rule
@@ -90,6 +93,12 @@ active one.
 
 ## Decision Rules
 
+**Coexisting guidance.** If another Tuist guide (for example the
+official Tuist plugin) recommends a current practice such as
+`buildableFolders`, the existing project's conventions still win unless
+the user explicitly asked for that change (folder-integration conversion
+is `ios-tuist-restyle` only, on explicitly named targets).
+
 - Never introduce a new architecture style inside one feature (e.g. don't
   bring MVVM into a repo that is consistently VIPER, even if MVVM is "the
   skill's opinion" — it has none).
@@ -140,7 +149,7 @@ Risks / Follow-up
 Example:
 
 ```text
-Tuist: 4.x.y (project-pinned via Tuist.swift)
+Effective project version: 4.x.y (from Tool Version Evidence)
 Active Tuist: 4.x.y (matches)
 Xcode: 16.x
 Swift: 6.x

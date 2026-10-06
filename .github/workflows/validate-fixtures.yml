@@ -1,69 +1,52 @@
 name: Validate fixtures
 
 on:
+  # Branch pushes are covered by the pull_request event; running both
+  # doubled every PR's macOS jobs. Push only runs on the long-lived branches.
   push:
+    branches: [main, develop]
   pull_request:
     branches: [main, develop]
   workflow_dispatch:
+  # Weekly full matrix: catches gaps in the path-selection rules in
+  # scripts/ci-select-fixtures.sh. Kept separate from any "latest Tuist"
+  # drift check (v0.9 WS-D): a failure here means a regression, not external change.
+  schedule:
+    - cron: "0 18 * * 0"
+
+# A new push to a PR supersedes the previous run. Pushes to main/develop
+# are never cancelled, so every merged commit keeps its own result.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  changes:
+    name: changes
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.select.outputs.matrix }}
+      has_fixtures: ${{ steps.select.outputs.has_fixtures }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Select fixtures
+        id: select
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: ./scripts/ci-select-fixtures.sh --event "$EVENT_NAME" --base "$BASE_SHA" --head "$HEAD_SHA" --github-output
+
   validate:
     name: ${{ matrix.fixture }} (Tuist ${{ matrix.tuist }})
+    needs: changes
+    if: needs.changes.outputs.has_fixtures == 'true'
     runs-on: macos-15
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - fixture: legacy-tuist
-            tuist: 4.206.0
-            workspace: App
-            resolve_cmd: install
-            test_schemes: App
-          - fixture: modular
-            tuist: 4.206.0
-            workspace: App
-            resolve_cmd: install
-            test_schemes: App ProfileFeature SharedUITests
-          - fixture: version-mismatch
-            tuist: 4.62.0
-            workspace: App
-            resolve_cmd: install
-            test_schemes: App
-          - fixture: extract-candidate
-            tuist: 4.206.0
-            workspace: App
-            resolve_cmd: install
-            test_schemes: App
-          - fixture: architecture-smells
-            tuist: 4.206.0
-            workspace: App
-            resolve_cmd: install
-            test_schemes: App FeatureA CoreKit
-          - fixture: ci-gaps
-            tuist: 4.206.0
-            workspace: App
-            resolve_cmd: install
-            test_schemes: App
-          - fixture: migrate-candidate
-            tuist: 3.42.2
-            workspace: MigrateCandidate
-            resolve_cmd: fetch
-            test_schemes: App
-          - fixture: restyle-candidate
-            tuist: 4.206.0
-            workspace: RestyleCandidate
-            resolve_cmd: install
-            test_schemes: App
-          - fixture: test-target-candidate
-            tuist: 4.206.0
-            workspace: TestTargetCandidate
-            resolve_cmd: install
-            test_schemes: App
-          - fixture: scaffold-candidate
-            tuist: 4.206.0
-            workspace: ScaffoldCandidate
-            resolve_cmd: install
-            test_schemes: App
+      matrix: ${{ fromJSON(needs.changes.outputs.matrix) }}
     env:
       XDG_CACHE_HOME: /tmp/tuist/cache
       XDG_STATE_HOME: /tmp/tuist/state
@@ -114,3 +97,21 @@ jobs:
               -scheme "$scheme" \
               -destination "id=$SIMULATOR_ID"
           done
+
+  fixtures-ok:
+    name: fixtures-ok
+    if: always()
+    needs: [changes, validate]
+    runs-on: ubuntu-latest
+    env:
+      CHANGES_RESULT: ${{ needs.changes.result }}
+      VALIDATE_RESULT: ${{ needs.validate.result }}
+    steps:
+      - name: Aggregate fixture results
+        run: |
+          echo "changes=$CHANGES_RESULT validate=$VALIDATE_RESULT"
+          test "$CHANGES_RESULT" = "success"
+          case "$VALIDATE_RESULT" in
+            success|skipped) ;;
+            *) exit 1 ;;
+          esac
