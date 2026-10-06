@@ -6,6 +6,89 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-10-06
+
+### Added
+
+- WS3 (#40): every fixture in the CI matrix has its own `.tool-versions` pin
+  (the manual `new-project` and `existing-xcode` scenarios have none);
+  `scripts/check-fixture-pins.sh` and `lint.yml`'s `check-pins` job enforce equality
+  with `tests/fixtures/ci-matrix.json`.
+- WS6 (#43): `scripts/benchmark-isolated-run.sh` adds prep/collect, an isolation guard
+  and a dependency-edge snapshot. `benchmark-prep-run.sh` drops hard-coded `/Users/...`
+  paths; EXECUTION-GUIDE adds "Isolated runs" (Phases 2-3 documented only). Baseline and
+  with-skill sessions use `--setting-sources project`: plain `claude` loads a user-scope
+  installed plugin.
+
+### Changed
+
+- WS2 (#39): version-safety collects evidence from every source by Tool Version / Xcode /
+  Swift / Manifest compatibility axis. Only Tool Version determines the effective Tuist
+  version; conflicts are reported, never fixed, and commands record their cwd.
+  `Package.swift` / `Tuist/Package.swift` are no longer Tuist-version sources:
+  `swift-tools-version` is Swift evidence.
+- WS4 (#41): "Coexisting guidance" in `ios-tuist-feature`, `ios-tuist-dependency` and
+  `ios-tuist-restyle`, plus README's "Relationship to the official Tuist plugin" section.
+  All 10 descriptions state what the skill does, when to use it and "Not for ...",
+  preserving every existing prohibition.
+- WS5 (#42): `ios-tuist-bootstrap` stops if the target path or a directory one level below
+  contains a `*.xcodeproj` / `*.xcworkspace`, pointing to the official Tuist `migrate` skill.
+  `tests/fixtures/existing-xcode/` is a manual scenario, outside the CI matrix.
+- CI (#27, #29, #30, #37): duplicate-run handling, a measurement helper, fixture matrix in
+  `tests/fixtures/ci-matrix.json`, path-based selection, `lint.yml`, `fixtures-ok` aggregate
+  and a weekly full run. No behavior change for skill users. CI-3 was reverted for no gain
+  (#34, #35); evidence and decision records are in #33 and #36.
+
+### Fixed
+
+- WS1 (#38): `ios-tuist-module` adds an edge to the new target only from targets with a
+  verified usage site (import + moved-symbol reference), with file:line evidence under
+  Dependency Changes; "no edge added" is valid. An emptied original test target is
+  reported, never deleted. The `App -> NetworkingKit` defect was a spec contradiction
+  across SKILL.md, EXPECTATIONS.md and the rubric, not an agent rule violation.
+- WS1 follow-up (#44): baseline the project's pre-existing test schemes before moving code,
+  re-run them afterwards and never claim success while one fails. A source-less `AppTests`
+  left the `App` scheme failing/unstable while old validation said "all passed".
+  Updated extract-candidate EXPECTATIONS and fixed the leftover `App` → `NetworkingKit`
+  dependency contradiction.
+
+### Breaking changes
+
+- Version-safety output now uses per-axis evidence tables, a `Conflicts` line and cwd for
+  live commands; `Effective project version` replaces the single detected version.
+  Workflows that parse skill output may be affected.
+
+### Verification gates
+
+- `.xcode-version` / `.swift-version`: no Tuist consumption found (grep of `cli/Sources`
+  on tuist/tuist main `9365e96` returned 0 hits); docs not confirmed. The "Tuist does not
+  consume this" labels are kept.
+- Agent Skills `description` limit: 1024 characters ([specification](https://agentskills.io/specification));
+  longest description in this repo is 548.
+- `tuist init --help` (4.206.0): "Get started with Tuist in your project." with only
+  `--path`. Existing-project support is not clearly documented; bootstrap does not mention
+  `tuist init`.
+- Official plugin, tuist/agent-plugin `038e54c` (2026-08-18): `generated-projects` still says
+  "Use `buildableFolders` instead of `sources` and `resources` globs"; `migrate` converts
+  Xcode projects to Tuist.
+- Codex: codex-cli 0.160.0 in an isolated CODEX_HOME installed the plugin from
+  `.claude-plugin/` alone via `codex plugin marketplace add` + `codex plugin add`
+  ("installed, enabled", 10 skills). WS7's generated Codex manifest was not implemented.
+  Not verified: Codex invokes the skills at runtime.
+
+### Known limitations
+
+- `swiftVersion` in `Tuist.swift` / `Config.swift` is consumed by Tuist 3.42.2 (`tuist fetch`),
+  only stored in the 4.62.0 and 4.184.0 sources that were checked, and deprecated/ignored
+  from 4.184.1. The Swift axis does not yet label this per version.
+- `.tuist-version` is unused by current Tuist (3.x behavior not verified) and is not a
+  Tool Version source.
+- On `extract-candidate`, with-skill outcomes varied (extracted / refused / extracted).
+  The `App` scheme with a source-less test target is not deterministic: harness `Test: pass`
+  does not prove tests ran; changed-file counts include Tuist generation artifacts.
+- The 2026-09-20 benchmark's baseline isolation is unverified. Models were not recorded in
+  the WS6 acceptance run; evidence: `docs/superpowers/benchmarks/2026-10-06-ws6-smoke/`.
+
 ## [0.7.1] - 2026-09-26
 
 ### Added

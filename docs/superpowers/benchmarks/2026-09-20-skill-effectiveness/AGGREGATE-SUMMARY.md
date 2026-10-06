@@ -190,6 +190,9 @@ scope-creep defect (rubric items 2 and 6), not a contamination
 artifact, since nothing about baseline's restraint here depends on
 prior exposure to this repo.
 
+† Expected result corrected in v0.8 (WS1): `App` should not gain an edge to `NetworkingKit`. Scores above are unchanged.
+‡ Not verified: whether this benchmark's baseline condition was isolated from an installed copy of the plugin (in v0.8 a plain `claude` session was found to load a user-scope installed plugin; the v0.8 isolated harness uses `--setting-sources project`). Scores above are unchanged.
+
 ### A genuine ambiguity, not a defect either way
 
 **scaffold-candidate** has no clean winner: the fixture's own
