@@ -281,3 +281,11 @@ Risks / Follow-up:
 - If you want additional unit coverage, that's ios-tuist-feature adding
   test cases to the existing FeatureATests target, not a new target.
 ```
+
+### Machine-readable result
+
+After the sections above, end the response with exactly one
+`ios-tuist-result` block as defined in
+[references/output-contract.md](references/output-contract.md#ios-tuist-result-block),
+with `skill: ios-tuist-test-target`. The block repeats facts from the sections above for
+tools; it never replaces them and never adds a claim they do not support.

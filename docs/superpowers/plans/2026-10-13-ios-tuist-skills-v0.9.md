@@ -2205,6 +2205,7 @@ git commit -m "feat(skills): run bundled version-evidence and consumer-edge scri
 **Files:**
 - Modify: `references/output-contract.md` (created by Task 3) — append section `## ios-tuist-result block`
 - Modify: all 10 `skills/*/SKILL.md` — append `### Machine-readable result` at the end of the `## Output Contract` section (it is the last `## ` section in all 10 files, verified 2026-10-13)
+- Modify: `scripts/skill-resources.manifest` — register `references/output-contract.md` for the 7 skills that lack it (Step 6)
 - Regenerate: `skills/*/references/output-contract.md` via `scripts/sync-skill-resources.sh` (Task 3)
 - Create: `scripts/parse-skill-result.sh`, `scripts/compare-skill-result.sh`
 - Create: `tests/output-contract/test-parse-skill-result.sh`, `tests/output-contract/test-compare-skill-result.sh`, `tests/output-contract/samples/{valid.md,valid-module.md,missing.md,malformed.md,invalid-enum.md,two-blocks.md,report.md,edges.json,compare.expected.txt}`
@@ -2225,7 +2226,7 @@ for f in skills/*/SKILL.md; do n=$(grep -n '^## Output Contract' "$f" | cut -d: 
 # expect 10 lines ending "Output Contract is last"
 test -f references/output-contract.md && echo present          # expect: present (Task 3)
 grep -n 'Changed files (excluding generated)\|Tests executed' scripts/benchmark-isolated-run.sh   # expect matches (Task 1)
-grep -n 'echo "Report: $REPORT"' scripts/benchmark-isolated-run.sh                                 # expect exactly one line
+grep -nF 'echo "Report: $REPORT"' scripts/benchmark-isolated-run.sh                                 # expect exactly one line
 ```
 
 - [ ] **Step 1: Write the samples and failing tests**
@@ -2657,6 +2658,27 @@ with `skill: <name>`. The block repeats facts from the sections above for
 tools; it never replaces them and never adds a claim they do not support.
 MD
 done
+```
+
+Register `references/output-contract.md` for the 7 skills whose manifest block lacks it (the new link would otherwise fail `check-skill-links.sh`; found 2026-10-13 — Task 3 registered it only for bootstrap, dependency, feature):
+
+```bash
+ruby - <<'RUBY'
+# Adds `<skill> references/output-contract.md` for every skill that lacks it, keeping each skill's block sorted.
+path = "scripts/skill-resources.manifest"
+lines = File.readlines(path, chomp: true)
+skills = Dir.glob("skills/*/SKILL.md").map { |f| File.basename(File.dirname(f)) }.sort
+skills.each do |skill|
+  entry = "#{skill} references/output-contract.md"
+  next if lines.include?(entry)
+  block = lines.each_index.select { |i| lines[i].start_with?("#{skill} ") }
+  abort "no manifest block for #{skill}" if block.empty?
+  at = block.find { |i| lines[i] > entry } || (block.last + 1)
+  lines.insert(at, entry)
+end
+File.write(path, lines.join("\n") + "\n")
+RUBY
+grep -c 'references/output-contract.md' scripts/skill-resources.manifest   # expect 10
 ```
 
 Then refresh the synced copies and check links:

@@ -155,3 +155,11 @@ Unverified Items:
 - Resource ownership per target not inspected (no resources present in
   this project).
 ```
+
+### Machine-readable result
+
+After the sections above, end the response with exactly one
+`ios-tuist-result` block as defined in
+[references/output-contract.md](references/output-contract.md#ios-tuist-result-block),
+with `skill: ios-tuist-architecture-review`. The block repeats facts from the sections above for
+tools; it never replaces them and never adds a claim they do not support.
