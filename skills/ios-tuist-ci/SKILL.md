@@ -44,11 +44,22 @@ step).
 
 ## Version Safety
 
-Apply [version-safety](../../references/version-safety.md) in full. The
+Apply [version-safety](references/version-safety.md) in full. The
 project-pinned Tuist version is the source of truth the CI workflow's
 installed version must match. A workflow pinning a different version
 than the project is a finding to report, not something this skill
 silently reconciles by picking one side.
+
+**Evidence script.** Collect the evidence with this skill's bundled
+script, run from the project root:
+`"${CLAUDE_SKILL_DIR}/scripts/collect-version-evidence.sh"` in Claude
+Code; other agents run `scripts/collect-version-evidence.sh` resolved
+against the directory that contains this SKILL.md. It only reads files
+and runs the version commands. Use its output as the Tool Version, Xcode
+and Swift evidence and add the Manifest compatibility axis yourself. If
+the script cannot run, follow the manual procedure in
+[version-safety](references/version-safety.md) and list "evidence script
+not used: <reason>" under Unverified Items.
 
 ## Workflow
 
@@ -57,7 +68,7 @@ silently reconciles by picking one side.
    caching configuration (or its absence).
 2. **Cross-check version consistency** — the workflow-installed Tuist
    version vs. the project-pinned version
-   ([version-safety](../../references/version-safety.md)). Report any
+   ([version-safety](references/version-safety.md)). Report any
    mismatch as a risk.
 3. **Identify improvement candidates**, each backed by concrete evidence
    from the workflow file (never generic CI best-practice advice
@@ -99,7 +110,7 @@ Required before declaring success:
 
 ## Failure Handling
 
-Evidence-Driven Debugging, same procedure as the other skills. First
+Apply [Evidence-Driven Debugging](references/evidence-driven-debugging.md). First
 hypothesis to consider here specifically: a caching key that doesn't
 account for the Tuist version or lockfile, causing stale cache hits that
 mask the real state of resolved dependencies.

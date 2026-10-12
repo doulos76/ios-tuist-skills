@@ -47,7 +47,7 @@ The request must name one or more specific targets.
   convention change into a folder-integration request.
 - The request is really a version migration ("upgrade Tuist and
   modernize the folder structure") — the version part belongs to
-  [`ios-tuist-migrate`](../ios-tuist-migrate/SKILL.md); if the user
+  `ios-tuist-migrate`; if the user
   wants both, they are two separate, sequential requests, not one
   combined operation.
 - No existing Tuist project, or the named target doesn't exist in the
@@ -62,7 +62,7 @@ declares `sources:` and/or `resources:` as literal arrays (not already
 
 ## Version Safety
 
-Full [version-safety](../../references/version-safety.md) procedure,
+Full [version-safety](references/version-safety.md) procedure,
 Existing Project Mode. `buildableFolders` requires **Tuist 4.62.0 or
 later** (introduced in that release, mapping to Xcode 16's
 synchronized-groups feature). If the project-pinned Tuist version is
@@ -71,6 +71,17 @@ proceed, and do not silently suggest a version bump (that decision
 belongs to `ios-tuist-migrate`, on a separate explicit request per the
 Non-Trigger Conditions above).
 
+**Evidence script.** Collect the evidence with this skill's bundled
+script, run from the project root:
+`"${CLAUDE_SKILL_DIR}/scripts/collect-version-evidence.sh"` in Claude
+Code; other agents run `scripts/collect-version-evidence.sh` resolved
+against the directory that contains this SKILL.md. It only reads files
+and runs the version commands. Use its output as the Tool Version, Xcode
+and Swift evidence and add the Manifest compatibility axis yourself. If
+the script cannot run, follow the manual procedure in
+[version-safety](references/version-safety.md) and list "evidence script
+not used: <reason>" under Unverified Items.
+
 ## Workflow
 
 1. **Resolve the target list** — the specific target name(s) named in
@@ -78,7 +89,7 @@ Non-Trigger Conditions above).
    and currently declares `sources:`/`resources:` arrays (not already
    `buildableFolders`).
 2. **Confirm the Tuist version floor** — project-pinned version ≥ 4.62.0
-   ([version-safety](../../references/version-safety.md)). Below the
+   ([version-safety](references/version-safety.md)). Below the
    floor: refuse all named targets, report why, stop.
 3. **Apply the per-target safety checklist** (below) to each named
    target independently — one target's refusal does not block another
@@ -214,7 +225,7 @@ identical generated output before and after).
 
 ## Failure Handling
 
-Evidence-Driven Debugging, same procedure as the other skills. First
+Apply [Evidence-Driven Debugging](references/evidence-driven-debugging.md). First
 hypothesis to consider here specifically: a file under the converted
 target's directory that was previously excluded by an array pattern is
 now silently included (or a file expected inside is missing from the

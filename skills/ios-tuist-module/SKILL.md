@@ -14,7 +14,7 @@ description: >
 
 Do not extract code into a new target before applying the full
 modularization checklist in
-[modularization](../../references/modularization.md). A refusal to
+[modularization](references/modularization.md). A refusal to
 extract, with the failed checklist items stated, is a valid and complete
 outcome of this skill.
 
@@ -49,19 +49,30 @@ family).
 
 ## Version Safety
 
-Apply [version-safety](../../references/version-safety.md) in full. This
+Apply [version-safety](references/version-safety.md) in full. This
 is **Existing Project Mode**
-(see [source-of-truth](../../references/source-of-truth.md)): the
+(see [source-of-truth](references/source-of-truth.md)): the
 project-pinned version is authoritative. If the active version differs
 from the pinned version, report the mismatch as a risk and generate
 manifest syntax for the pinned version, not the active one.
+
+**Evidence script.** Collect the evidence with this skill's bundled
+script, run from the project root:
+`"${CLAUDE_SKILL_DIR}/scripts/collect-version-evidence.sh"` in Claude
+Code; other agents run `scripts/collect-version-evidence.sh` resolved
+against the directory that contains this SKILL.md. It only reads files
+and runs the version commands. Use its output as the Tool Version, Xcode
+and Swift evidence and add the Manifest compatibility axis yourself. If
+the script cannot run, follow the manual procedure in
+[version-safety](references/version-safety.md) and list "evidence script
+not used: <reason>" under Unverified Items.
 
 ## Workflow
 
 1. **Identify the extraction candidate** — the code, files, or region
    the request names, and its current target.
 2. **Apply the modularization checklist**
-   ([modularization](../../references/modularization.md), "Applying this
+   ([modularization](references/modularization.md), "Applying this
    checklist" — extraction-gate mode). Answer every item concretely using
    the actual codebase: real usage sites, the real dependency graph, real
    resource ownership. Never answer an item hypothetically.
@@ -78,11 +89,15 @@ manifest syntax for the pinned version, not the active one.
                  code changes
    ```
 4. **If proceeding, choose linkage** per
-   [modularization](../../references/modularization.md)'s
+   [modularization](references/modularization.md)'s
    linkage-is-a-graph-decision rule — inspect existing convention,
    transitive graph, resources, extensions, binaries before choosing;
    never default to a single linkage type across the project.
 5. **Extract:**
+   - Record the pre-change state for the edge check in step 6: if the
+     project is a git work tree whose `Project.swift` files have no
+     uncommitted changes, note `git rev-parse HEAD`; otherwise copy every
+     `Project.swift` (keeping relative paths) into a temporary directory.
    - Before changing files, run the pre-existing test schemes (at least
      those covering the original target) to record which passed before
      extraction. If this is not possible, state that a baseline could
@@ -109,6 +124,15 @@ manifest syntax for the pinned version, not the active one.
    Risks / Follow-up and state plainly that validation did NOT fully pass.
    If a source-less test target's bundle can no longer load, leave the
    decision to remove the target or add tests to the user.
+   Then run the bundled edge check from the project root —
+   `"${CLAUDE_SKILL_DIR}/scripts/check-consumer-edges.sh" --before <rev-or-dir>`
+   in Claude Code (other agents: `scripts/check-consumer-edges.sh`
+   resolved against this SKILL.md's directory) — and put its per-edge
+   result in Dependency Changes. Report a `no usage found` edge under
+   Risks / Follow-up; never remove it automatically (the search is static
+   and can miss `@_exported` imports, macros and resource-only use). If
+   the script cannot run, rely on the usage-site search from step 5 and
+   say so under Unverified Items.
 
 ## Decision Rules
 
@@ -117,13 +141,13 @@ manifest syntax for the pinned version, not the active one.
   the checklist doesn't concretely support it.
 - Never widen the new target's dependencies beyond what the extracted
   code actually uses, per
-  [dependencies](../../references/dependencies.md)'s narrowest-target
+  [dependencies](references/dependencies.md)'s narrowest-target
   spirit.
 - Add a dependency edge to the new target only from targets with a
   verified usage site; record the evidence (`file:line`) for each added
   edge under `Dependency Changes` in the Output Contract. "No edge added
   (no usage site found)" is a valid, reportable result. Apply the
-  [dependencies](../../references/dependencies.md) narrowest-target rule.
+  [dependencies](references/dependencies.md) narrowest-target rule.
 - Never change the extracted code's public behavior while moving it —
   this is a structural move, not a logic refactor.
 - Never migrate the surrounding project's unrelated conventions (folder
@@ -153,7 +177,7 @@ Output Contract states "Changes Made: none — extraction refused" instead.
 
 ## Failure Handling
 
-Evidence-Driven Debugging, same procedure as the v0.1 skills (Observed
+Apply [Evidence-Driven Debugging](references/evidence-driven-debugging.md) (Observed
 Facts -> Hypotheses -> Contradiction Search -> Minimal Change). First
 hypothesis to consider here specifically: a circular dependency
 introduced between the new target and its former host (the extracted

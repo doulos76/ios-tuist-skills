@@ -13,8 +13,8 @@ description: >
 
 Do not create a feature before inspecting the project's Tuist version,
 neighboring feature structure, target graph, and test conventions. See
-[version-safety](../../references/version-safety.md) and
-[source-of-truth](../../references/source-of-truth.md).
+[version-safety](references/version-safety.md) and
+[source-of-truth](references/source-of-truth.md).
 
 ## Purpose
 
@@ -44,13 +44,24 @@ path (`Project.swift`/`Tuist.swift` present).
 
 ## Version Safety
 
-Apply [version-safety](../../references/version-safety.md) in full. This
+Apply [version-safety](references/version-safety.md) in full. This
 is **Existing Project Mode**
-(see [source-of-truth](../../references/source-of-truth.md)): the
+(see [source-of-truth](references/source-of-truth.md)): the
 project-pinned version is authoritative. If the active version differs
 from the pinned version, report the mismatch as a risk in the Output
 Contract and generate manifest syntax for the **pinned** version, not the
 active one.
+
+**Evidence script.** Collect the evidence with this skill's bundled
+script, run from the project root:
+`"${CLAUDE_SKILL_DIR}/scripts/collect-version-evidence.sh"` in Claude
+Code; other agents run `scripts/collect-version-evidence.sh` resolved
+against the directory that contains this SKILL.md. It only reads files
+and runs the version commands. Use its output as the Tool Version, Xcode
+and Swift evidence and add the Manifest compatibility axis yourself. If
+the script cannot run, follow the manual procedure in
+[version-safety](references/version-safety.md) and list "evidence script
+not used: <reason>" under Unverified Items.
 
 ## Workflow
 
@@ -60,7 +71,7 @@ active one.
    - Dependency declarations on those targets.
    - File/folder organization convention.
    - Test style in use (XCTest vs Swift Testing — see
-     [testing](../../references/testing.md)).
+     [testing](references/testing.md)).
    - Whether a Tuist scaffold/template already exists for features in
      this repo (check for a `Tuist/Templates/` or similar directory).
    - Target naming convention (e.g. `XFeature`, `XKit`, `Feature.X`).
@@ -84,7 +95,7 @@ active one.
    ```
 3. **Connect dependencies minimally** — attach only what the new feature
    actually needs, to the new feature's own target, following
-   [dependencies](../../references/dependencies.md)'s narrowest-target
+   [dependencies](references/dependencies.md)'s narrowest-target
    rule. Do not add dependencies the feature doesn't use "for
    consistency."
 4. **Validate** — generate, then build/test only the affected target(s),
@@ -123,7 +134,7 @@ Required before declaring the task complete:
 
 ## Failure Handling
 
-Same Evidence-Driven Debugging procedure as `ios-tuist-bootstrap`
+Apply [Evidence-Driven Debugging](references/evidence-driven-debugging.md)
 (Observed Facts -> Hypotheses -> Contradiction Search -> Minimal Change).
 First hypothesis to consider here specifically: a version mismatch
 between the project pin and the active toolchain causing a
@@ -132,7 +143,8 @@ touched.
 
 ## Output Contract
 
-Same structure as `ios-tuist-bootstrap`:
+Report, in this order (the standard sections in
+[output-contract](references/output-contract.md)):
 
 ```text
 Version Context

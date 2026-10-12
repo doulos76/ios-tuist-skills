@@ -19,7 +19,7 @@ is a findings report.
 
 Diagnose an existing Tuist project's target graph and report concrete,
 evidence-backed findings against
-[modularization](../../references/modularization.md)'s checklist and
+[modularization](references/modularization.md)'s checklist and
 graph rules — without changing any code.
 
 ## Trigger Conditions
@@ -45,11 +45,22 @@ command is unavailable in the environment).
 ## Version Safety
 
 Apply the detection portion of
-[version-safety](../../references/version-safety.md) so manifests are
+[version-safety](references/version-safety.md) so manifests are
 read and interpreted correctly for the version they were written
 against. This skill never writes manifests, so there is no
 pinned-vs-active mismatch to reconcile — if one exists, report it as a
 finding, nothing more.
+
+**Evidence script.** Collect the evidence with this skill's bundled
+script, run from the project root:
+`"${CLAUDE_SKILL_DIR}/scripts/collect-version-evidence.sh"` in Claude
+Code; other agents run `scripts/collect-version-evidence.sh` resolved
+against the directory that contains this SKILL.md. It only reads files
+and runs the version commands. Use its output as the Tool Version, Xcode
+and Swift evidence and add the Manifest compatibility axis yourself. If
+the script cannot run, follow the manual procedure in
+[version-safety](references/version-safety.md) and list "evidence script
+not used: <reason>" under Unverified Items.
 
 ## Workflow
 
@@ -57,7 +68,7 @@ finding, nothing more.
    and its linkage type. Use `tuist graph` output when available;
    otherwise read manifests directly.
 2. **Score each target** against
-   [modularization](../../references/modularization.md)'s pre-module
+   [modularization](references/modularization.md)'s pre-module
    checklist, applied in diagnostic mode: is this target's continued
    existence, boundary, and linkage still justified by the same bar a new
    extraction would need to clear?
@@ -99,8 +110,9 @@ inferred from naming alone.
 
 ## Failure Handling
 
-If `tuist graph` or manifest parsing fails, apply Evidence-Driven
-Debugging to that failure specifically (record the exact command and
+If `tuist graph` or manifest parsing fails, apply
+[Evidence-Driven Debugging](references/evidence-driven-debugging.md)
+to that failure specifically (record the exact command and
 error) before falling back to manual manifest reading. The review must
 not proceed on a guessed graph shape.
 

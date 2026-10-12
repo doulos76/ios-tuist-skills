@@ -21,7 +21,7 @@ the target version's real breaking changes force, nothing more.
 
 Move a project's pinned Tuist version forward to a user-specified target
 version: update the version-pin sources
-([version-safety](../../references/version-safety.md) evidence collection)
+([version-safety](references/version-safety.md) evidence collection)
 and the minimum set of manifest syntax changes the target version
 actually requires.
 
@@ -46,7 +46,7 @@ The request must name or clearly imply a specific target version.
 - The active installed Tuist version simply differs from the
   project-pinned version with no user request to change the pin — that's
   a mismatch to *report* via the normal
-  [version-safety](../../references/version-safety.md) procedure in
+  [version-safety](references/version-safety.md) procedure in
   whichever skill surfaced it, not an implicit invitation for this skill
   to run.
 
@@ -54,22 +54,33 @@ The request must name or clearly imply a specific target version.
 
 An existing Tuist project is present and readable; a target Tuist
 version is specified; the current project-pinned version is
-determinable via [version-safety](../../references/version-safety.md)'s
+determinable via [version-safety](references/version-safety.md)'s
 evidence collection.
 
 ## Version Safety
 
 This is the one skill in the repository permitted to change the outcome
-of [version-safety](../../references/version-safety.md)'s evidence
+of [version-safety](references/version-safety.md)'s evidence
 collection — every other skill treats the project-pinned version as fixed;
 this skill's entire job is changing it, deliberately and visibly. Still
 apply the full evidence collection first: an accurate starting point is
 required to know what actually needs to change between the two versions.
 
+**Evidence script.** Collect the evidence with this skill's bundled
+script, run from the project root:
+`"${CLAUDE_SKILL_DIR}/scripts/collect-version-evidence.sh"` in Claude
+Code; other agents run `scripts/collect-version-evidence.sh` resolved
+against the directory that contains this SKILL.md. It only reads files
+and runs the version commands. Use its output as the Tool Version, Xcode
+and Swift evidence and add the Manifest compatibility axis yourself. If
+the script cannot run, follow the manual procedure in
+[version-safety](references/version-safety.md) and list "evidence script
+not used: <reason>" under Unverified Items.
+
 ## Workflow
 
 1. **Establish current and target versions** — run
-   [version-safety](../../references/version-safety.md)'s evidence
+   [version-safety](references/version-safety.md)'s evidence
    collection for the current project-pinned version; take the target
    version from the user's request. If the request doesn't name one
    plainly (e.g. "the latest" without a resolved number), resolve it to
@@ -140,7 +151,7 @@ attributable to the migration, not pre-existing project state.
 
 ## Failure Handling
 
-Evidence-Driven Debugging, same procedure as the other skills. First
+Apply [Evidence-Driven Debugging](references/evidence-driven-debugging.md). First
 hypothesis to consider here specifically: a breaking change from an
 intermediate version in a multi-version jump was missed because only the
 endpoint versions' release notes were checked.

@@ -1463,7 +1463,7 @@ Run on the branch before editing:
 grep -rhn '\.\./\.\./' skills/ | wc -l                     # 46
 grep -rho '\.\./\.\./[a-z]*/[^) ]*' skills/ | sort | uniq -c | sort -rn
 grep -rn '](\.\./ios-tuist-' skills/*/SKILL.md | wc -l     # 7 sibling-skill links
-grep -rn 'Same structure as\|same procedure as\|Same Evidence-Driven' skills/ | wc -l   # 11
+grep -rn 'Same structure as\|same procedure as\|Same Evidence-Driven' skills/ | wc -l   # 10 (8 debugging refs + 2 "Same structure as"; the 9th debugging ref, architecture-review:102-103, wraps across two lines)
 find skills -name .gitkeep | wc -l                          # 10
 grep -n '](' references/*.md | grep -v http                 # 3 lines (below)
 ls scripts/skill/                                           # collect-version-evidence.sh check-consumer-edges.sh

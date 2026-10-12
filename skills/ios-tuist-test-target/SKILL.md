@@ -46,11 +46,11 @@ by clear implication, one test kind (unit / integration / UI).
   one.
 - The request is to add actual test *cases* / assertions to a test
   target that already exists — that's
-  [`ios-tuist-feature`](../ios-tuist-feature/SKILL.md); state this
+  `ios-tuist-feature`; state this
   explicitly rather than silently writing test logic here.
 - The request is to extract existing code (and its tests) into a new
   non-test module — that's
-  [`ios-tuist-module`](../ios-tuist-module/SKILL.md).
+  `ios-tuist-module`.
 - The request is a general audit of whether existing schemes have gaps,
   with no specific new target wanted — out of scope for this pass;
   state this rather than guessing at a broad audit.
@@ -65,11 +65,22 @@ UI) is stated or unambiguous from context.
 
 ## Version Safety
 
-Full [version-safety](../../references/version-safety.md) procedure,
+Full [version-safety](references/version-safety.md) procedure,
 Existing Project Mode. No version floor is introduced by this skill
 itself (test targets and `Scheme`/`TestAction` are long-stable
 `ProjectDescription` API); still confirm the pinned version to generate
 syntax the pinned version actually accepts, per the repo-wide rule.
+
+**Evidence script.** Collect the evidence with this skill's bundled
+script, run from the project root:
+`"${CLAUDE_SKILL_DIR}/scripts/collect-version-evidence.sh"` in Claude
+Code; other agents run `scripts/collect-version-evidence.sh` resolved
+against the directory that contains this SKILL.md. It only reads files
+and runs the version commands. Use its output as the Tool Version, Xcode
+and Swift evidence and add the Manifest compatibility axis yourself. If
+the script cannot run, follow the manual procedure in
+[version-safety](references/version-safety.md) and list "evidence script
+not used: <reason>" under Unverified Items.
 
 ## Workflow
 
@@ -84,7 +95,7 @@ syntax the pinned version actually accepts, per the repo-wide rule.
 3. **Check for an existing test target of the requested kind** for the
    named target. If found: report its name, make no changes, stop.
 4. **Resolve the test framework** per
-   [testing.md](../../references/testing.md): inspect the project's
+   [testing.md](references/testing.md): inspect the project's
    existing test targets first (Existing Project Mode — an established
    XCTest-only project keeps XCTest); if none exist yet and the detected
    Swift/Xcode version supports it, prefer Swift Testing for
@@ -109,7 +120,7 @@ syntax the pinned version actually accepts, per the repo-wide rule.
    the placeholder test runs and passes (a trivial, always-true
    assertion is the *point* here — it exists only to prove the target is
    wired correctly, per the labeled-smoke-test exception in
-   [testing.md](../../references/testing.md)); no other target's
+   [testing.md](references/testing.md)); no other target's
    manifest or generated output changes.
 
 ### Unit vs. integration: naming, not a distinct product
@@ -194,7 +205,7 @@ target and any custom scheme touched still build/test as before
 
 ## Failure Handling
 
-Evidence-Driven Debugging, same procedure as the other skills. First
+Apply [Evidence-Driven Debugging](references/evidence-driven-debugging.md). First
 hypothesis to consider here specifically: the new test target fails to
 resolve its host/target-under-test automatically because the named
 target's `product:` isn't one Tuist auto-hosts tests for (e.g. a
