@@ -208,6 +208,25 @@ just fixture CI — lives in
 It also documents a real methodology finding about baseline isolation inside
 this repository, worth reading before re-running or extending the benchmark.
 
+## Routing evaluation
+
+`tests/routing/cases.yaml` lists prompts with the skill that should be selected
+(or `none`, for requests that belong to no skill or to the official Tuist
+plugin). `scripts/run-routing-eval.sh run --condition plugin-only --out <dir> --yes`
+runs each prompt headless in a copy of its fixture (without `EXPECTATIONS.md`),
+records the first `Skill` call from Claude Code's stream-json output, and writes
+`summary.md` (accuracy, per-skill precision/recall, confusion matrix,
+forbidden-skill violations). Each case is capped with `--max-budget-usd`
+(default 0.30).
+
+**Rule:** a PR that changes any skill's `description:` must re-run the
+`plugin-only` evaluation and attach the summary next to the latest baseline
+under `docs/superpowers/benchmarks/*-routing/`.
+
+Codex is not evaluated: `codex exec --json` (0.160.0) has no skill event to observe.
+
+Baseline: [2026-10-13 plugin-only](docs/superpowers/benchmarks/2026-10-13-routing/plugin-only/summary.md) — 42/45 (93.3%), no forbidden-skill violations.
+
 ## Non-goals
 
 This plugin does not replace Tuist's official documentation, skills, MCP, or

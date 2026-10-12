@@ -3712,7 +3712,7 @@ Expected: `all routing-summarize tests passed` (8 ok lines), `all routing-observ
 
 - [ ] **Step 11: CI, .gitignore, README**
 
-`.github/workflows/lint.yml`, job `ci-scripts`. After the Task 1 step `Benchmark summarizer unit tests`, or after `Fixture selection unit tests` if Task 1 is not merged yet, add:
+`.github/workflows/lint.yml`, job `ci-scripts`. After its last step (`Benchmark prep excludes answer key`, added by Task 1), add:
 ```yaml
       - name: Routing cases schema
         run: ./scripts/check-routing-cases.sh

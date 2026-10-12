@@ -1,0 +1,3 @@
+{"type":"system","subtype":"init","claude_code_version":"2.1.296","model":"claude-opus-5","permissionMode":"plan","plugins":[{"name":"ios-tuist-skills","path":"/repo","source":"ios-tuist-skills@inline","version":"0.8.1"}],"skills":[]}
+{"type":"assistant","message":{"role":"assistant","content":[{"type":"text","text":"It declares an opaque result type."}]},"parent_tool_use_id":null}
+{"type":"result","subtype":"success","is_error":false,"num_turns":1,"total_cost_usd":0.1023225}
