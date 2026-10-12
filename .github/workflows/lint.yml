@@ -65,3 +65,7 @@ jobs:
           ./tests/skills/test-sync-skill-resources.sh
           ./tests/skills/test-standalone-copy.sh
           ./tests/skills/test-self-containment.sh
+      - name: Known-issues tests
+        run: |
+          ./tests/known-issues/test-known-issues.sh
+          ./tests/known-issues/test-compare.sh
