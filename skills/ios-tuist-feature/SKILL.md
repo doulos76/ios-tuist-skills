@@ -180,3 +180,11 @@ Not changed:
 - existing folder integration strategy (sources arrays, unchanged)
 - no other feature targets touched
 ```
+
+### Machine-readable result
+
+After the sections above, end the response with exactly one
+`ios-tuist-result` block as defined in
+[references/output-contract.md](references/output-contract.md#ios-tuist-result-block),
+with `skill: ios-tuist-feature`. The block repeats facts from the sections above for
+tools; it never replaces them and never adds a claim they do not support.

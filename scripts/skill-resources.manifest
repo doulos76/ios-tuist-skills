@@ -3,6 +3,7 @@
 # The root file is the original; never edit the copy under skills/.
 ios-tuist-architecture-review references/evidence-driven-debugging.md
 ios-tuist-architecture-review references/modularization.md
+ios-tuist-architecture-review references/output-contract.md
 ios-tuist-architecture-review references/version-safety.md
 ios-tuist-architecture-review scripts/skill/collect-version-evidence.sh
 
@@ -16,6 +17,7 @@ ios-tuist-bootstrap templates/minimal/
 ios-tuist-bootstrap scripts/skill/collect-version-evidence.sh
 
 ios-tuist-ci references/evidence-driven-debugging.md
+ios-tuist-ci references/output-contract.md
 ios-tuist-ci references/version-safety.md
 ios-tuist-ci scripts/skill/collect-version-evidence.sh
 
@@ -37,26 +39,31 @@ ios-tuist-feature references/version-safety.md
 ios-tuist-feature scripts/skill/collect-version-evidence.sh
 
 ios-tuist-migrate references/evidence-driven-debugging.md
+ios-tuist-migrate references/output-contract.md
 ios-tuist-migrate references/version-safety.md
 ios-tuist-migrate scripts/skill/collect-version-evidence.sh
 
 ios-tuist-module references/dependencies.md
 ios-tuist-module references/evidence-driven-debugging.md
 ios-tuist-module references/modularization.md
+ios-tuist-module references/output-contract.md
 ios-tuist-module references/source-of-truth.md
 ios-tuist-module references/version-safety.md
 ios-tuist-module scripts/skill/check-consumer-edges.sh
 ios-tuist-module scripts/skill/collect-version-evidence.sh
 
 ios-tuist-restyle references/evidence-driven-debugging.md
+ios-tuist-restyle references/output-contract.md
 ios-tuist-restyle references/version-safety.md
 ios-tuist-restyle scripts/skill/collect-version-evidence.sh
 
 ios-tuist-scaffold references/evidence-driven-debugging.md
+ios-tuist-scaffold references/output-contract.md
 ios-tuist-scaffold references/version-safety.md
 ios-tuist-scaffold scripts/skill/collect-version-evidence.sh
 
 ios-tuist-test-target references/evidence-driven-debugging.md
+ios-tuist-test-target references/output-contract.md
 ios-tuist-test-target references/testing.md
 ios-tuist-test-target references/version-safety.md
 ios-tuist-test-target scripts/skill/collect-version-evidence.sh

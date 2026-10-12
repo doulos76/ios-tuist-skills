@@ -7,7 +7,9 @@ failed=0
 for t in \
   tests/golden/test-version-evidence.sh \
   tests/golden/test-consumer-edges.sh \
-  tests/golden/test-read-only.sh; do
+  tests/golden/test-read-only.sh \
+  tests/output-contract/test-parse-skill-result.sh \
+  tests/output-contract/test-compare-skill-result.sh; do
   echo "## $t"
   "$REPO_ROOT/$t" || failed=$((failed + 1))
 done

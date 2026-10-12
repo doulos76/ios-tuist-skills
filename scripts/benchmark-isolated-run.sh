@@ -8,6 +8,7 @@ usage() {
   echo "Usage: $0 prep <fixture> <baseline|with-skill> <run-N> [--plugin-dir DIR]" >&2
   echo "       $0 collect <fixture> <baseline|with-skill> <run-N>" >&2
   echo "Run number: N or run-N (positive integer). collect requires BENCH_DIR=<date>-<name>." >&2
+  echo "Optional for collect: BENCH_TRANSCRIPT=<saved final response> parses its ios-tuist-result block." >&2
   exit 2
 }
 
@@ -241,6 +242,34 @@ changed_filtered=unknown
   echo "Changed files (raw): $changed_raw"
   echo "Changed files (excluding generated): $changed_filtered"
 } > "$REPORT" 2>&1
+# WS-E: the skill's own ios-tuist-result claims next to what this harness measured.
+if [ -n "${BENCH_TRANSCRIPT:-}" ]; then
+  RESULT_JSON="$OUTPUT_DIR/$fixture-$condition-run$run.result.json"
+  {
+    echo
+    echo "## Skill result (ios-tuist-result)"
+    echo
+    echo "Transcript: $BENCH_TRANSCRIPT"
+    if "$REPO_ROOT/scripts/parse-skill-result.sh" "$BENCH_TRANSCRIPT" > "$RESULT_JSON" 2> "$RESULT_JSON.err"; then
+      echo "Block: valid"
+      "$REPO_ROOT/scripts/skill/check-consumer-edges.sh" --json --before HEAD "$WORKDIR" > "$RESULT_JSON.edges" 2> /dev/null ||
+        : > "$RESULT_JSON.edges"
+      "$REPO_ROOT/scripts/compare-skill-result.sh" "$RESULT_JSON" "$REPORT" "$RESULT_JSON.edges"
+    else
+      case "$?" in
+        2) echo "Block: missing" ;;
+        3) echo "Block: malformed (YAML)" ;;
+        4) echo "Block: invalid (schema)" ;;
+        *) echo "Block: not parsed" ;;
+      esac
+      sed 's/^/  /' "$RESULT_JSON.err"
+      rm -f "$RESULT_JSON"
+    fi
+    rm -f "$RESULT_JSON.err" "$RESULT_JSON.edges"
+  } >> "$REPORT"
+else
+  printf '\nSkill result: not collected (set BENCH_TRANSCRIPT to parse the ios-tuist-result block)\n' >> "$REPORT"
+fi
 echo "Report: $REPORT"
 if [ "$resolve" = fail ] || [ "$generate" = fail ] || [ "$build" = fail ] || [ "$test" = fail ]; then
   exit 1
