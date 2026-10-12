@@ -99,8 +99,9 @@ inferred from naming alone.
 
 ## Failure Handling
 
-If `tuist graph` or manifest parsing fails, apply Evidence-Driven
-Debugging to that failure specifically (record the exact command and
+If `tuist graph` or manifest parsing fails, apply
+[Evidence-Driven Debugging](../../references/evidence-driven-debugging.md)
+to that failure specifically (record the exact command and
 error) before falling back to manual manifest reading. The review must
 not proceed on a guessed graph shape.
 

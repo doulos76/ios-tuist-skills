@@ -99,7 +99,7 @@ Required before declaring success:
 
 ## Failure Handling
 
-Evidence-Driven Debugging, same procedure as the other skills. First
+Apply [Evidence-Driven Debugging](../../references/evidence-driven-debugging.md). First
 hypothesis to consider here specifically: a caching key that doesn't
 account for the Tuist version or lockfile, causing stale cache hits that
 mask the real state of resolved dependencies.

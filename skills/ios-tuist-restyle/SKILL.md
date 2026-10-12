@@ -47,7 +47,7 @@ The request must name one or more specific targets.
   convention change into a folder-integration request.
 - The request is really a version migration ("upgrade Tuist and
   modernize the folder structure") — the version part belongs to
-  [`ios-tuist-migrate`](../ios-tuist-migrate/SKILL.md); if the user
+  `ios-tuist-migrate`; if the user
   wants both, they are two separate, sequential requests, not one
   combined operation.
 - No existing Tuist project, or the named target doesn't exist in the
@@ -214,7 +214,7 @@ identical generated output before and after).
 
 ## Failure Handling
 
-Evidence-Driven Debugging, same procedure as the other skills. First
+Apply [Evidence-Driven Debugging](../../references/evidence-driven-debugging.md). First
 hypothesis to consider here specifically: a file under the converted
 target's directory that was previously excluded by an array pattern is
 now silently included (or a file expected inside is missing from the

@@ -109,15 +109,16 @@ Required before declaring the task complete:
 
 ## Failure Handling
 
-Same Evidence-Driven Debugging procedure as the other two skills.
+Apply [Evidence-Driven Debugging](../../references/evidence-driven-debugging.md).
 Additional first hypothesis to consider here specifically: a version
 constraint conflict between the newly added dependency and an existing
 one in the graph.
 
 ## Output Contract
 
-Same structure as the other two skills, with "Dependency Changes"
-populated with specifics:
+Report, in this order (the standard sections in
+[output-contract](../../references/output-contract.md)), with
+"Dependency Changes" populated with specifics:
 
 ```text
 Version Context

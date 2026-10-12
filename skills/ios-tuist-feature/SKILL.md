@@ -123,7 +123,7 @@ Required before declaring the task complete:
 
 ## Failure Handling
 
-Same Evidence-Driven Debugging procedure as `ios-tuist-bootstrap`
+Apply [Evidence-Driven Debugging](../../references/evidence-driven-debugging.md)
 (Observed Facts -> Hypotheses -> Contradiction Search -> Minimal Change).
 First hypothesis to consider here specifically: a version mismatch
 between the project pin and the active toolchain causing a
@@ -132,7 +132,8 @@ touched.
 
 ## Output Contract
 
-Same structure as `ios-tuist-bootstrap`:
+Report, in this order (the standard sections in
+[output-contract](../../references/output-contract.md)):
 
 ```text
 Version Context

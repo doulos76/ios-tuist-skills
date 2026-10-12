@@ -140,7 +140,7 @@ attributable to the migration, not pre-existing project state.
 
 ## Failure Handling
 
-Evidence-Driven Debugging, same procedure as the other skills. First
+Apply [Evidence-Driven Debugging](../../references/evidence-driven-debugging.md). First
 hypothesis to consider here specifically: a breaking change from an
 intermediate version in a multi-version jump was missed because only the
 endpoint versions' release notes were checked.

@@ -153,7 +153,7 @@ Output Contract states "Changes Made: none — extraction refused" instead.
 
 ## Failure Handling
 
-Evidence-Driven Debugging, same procedure as the v0.1 skills (Observed
+Apply [Evidence-Driven Debugging](../../references/evidence-driven-debugging.md) (Observed
 Facts -> Hypotheses -> Contradiction Search -> Minimal Change). First
 hypothesis to consider here specifically: a circular dependency
 introduced between the new target and its former host (the extracted

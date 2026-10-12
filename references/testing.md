@@ -27,7 +27,7 @@ the current change. Do not generate placeholder tests such as:
 ```
 
 The one exception: an explicitly-labeled minimal smoke test inside a
-*template* (see [`templates/`](../templates/)), whose purpose is to prove
+*template* (the `templates/` bundled with `ios-tuist-bootstrap`), whose purpose is to prove
 the generated project builds and runs at least one test — label it
 clearly as a template smoke test in a comment so it is never mistaken
 for real coverage.

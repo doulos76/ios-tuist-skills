@@ -46,11 +46,11 @@ by clear implication, one test kind (unit / integration / UI).
   one.
 - The request is to add actual test *cases* / assertions to a test
   target that already exists — that's
-  [`ios-tuist-feature`](../ios-tuist-feature/SKILL.md); state this
+  `ios-tuist-feature`; state this
   explicitly rather than silently writing test logic here.
 - The request is to extract existing code (and its tests) into a new
   non-test module — that's
-  [`ios-tuist-module`](../ios-tuist-module/SKILL.md).
+  `ios-tuist-module`.
 - The request is a general audit of whether existing schemes have gaps,
   with no specific new target wanted — out of scope for this pass;
   state this rather than guessing at a broad audit.
@@ -194,7 +194,7 @@ target and any custom scheme touched still build/test as before
 
 ## Failure Handling
 
-Evidence-Driven Debugging, same procedure as the other skills. First
+Apply [Evidence-Driven Debugging](../../references/evidence-driven-debugging.md). First
 hypothesis to consider here specifically: the new test target fails to
 resolve its host/target-under-test automatically because the named
 target's `product:` isn't one Tuist auto-hosts tests for (e.g. a

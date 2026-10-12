@@ -49,16 +49,16 @@ generate.
   should generate rather than inventing a shape.
 - The request asks to *use* an existing template to generate actual
   project files right now — that's a plain `tuist scaffold` invocation
-  (or [`ios-tuist-feature`](../ios-tuist-feature/SKILL.md)'s existing
+  (or `ios-tuist-feature`'s existing
   "reuse the scaffold" branch when a new feature is being added); this
   skill only authors templates, it does not run them against the real
   project tree.
 - The request is to add real feature code/targets directly to
   `Project.swift` — that's
-  [`ios-tuist-feature`](../ios-tuist-feature/SKILL.md).
+  `ios-tuist-feature`.
 - The request is to extract existing code into a new build target
   (`.framework`, `.staticFramework`, etc.) — that's
-  [`ios-tuist-module`](../ios-tuist-module/SKILL.md).
+  `ios-tuist-module`.
 - The request is to create a resource-accessor-synthesis template
   (`Plugin.swift` + `ResourceSynthesizers/Strings.stencil` etc. for
   `tuist generate`'s resource synthesis) — a distinct Tuist mechanism
@@ -66,7 +66,7 @@ generate.
   skill.
 - No existing Tuist project, or the project has no `Tuist/` directory to
   place `Templates/` under (bootstrap first — that's
-  [`ios-tuist-bootstrap`](../ios-tuist-bootstrap/SKILL.md)).
+  `ios-tuist-bootstrap`).
 
 ## Preconditions
 
@@ -230,7 +230,7 @@ generated inside the real project tree by this skill.
 
 ## Failure Handling
 
-Evidence-Driven Debugging, same procedure as the other skills. First
+Apply [Evidence-Driven Debugging](../../references/evidence-driven-debugging.md). First
 hypothesis to consider here specifically: a `{{ attributeName }}`
 placeholder that doesn't match the attribute's declared name exactly
 (case or spelling) renders as literal, unsubstituted text rather than

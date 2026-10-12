@@ -140,25 +140,13 @@ created" is never sufficient evidence of success on its own.
 
 ## Failure Handling
 
-Apply Evidence-Driven Debugging:
-
-1. **Observed facts** — record: Tuist version (project + active), Xcode
-   version, Swift version, the exact failing command, the exact error
-   text, the affected manifest file.
-2. **Hypotheses** — when the cause isn't immediately obvious from the
-   error, generate at least two plausible hypotheses (e.g. "H1: active
-   Tuist version doesn't support this ProjectDescription API"; "H2: the
-   deployment target is incompatible with a dependency's minimum OS
-   version").
-3. **Contradiction search** — try to disprove the leading hypothesis
-   before changing code (e.g. check the Tuist changelog/docs for the
-   active version before assuming an API is unsupported).
-4. **Minimal change** — apply the smallest change that explains the
-   observed failure. Do not make speculative unrelated changes.
+Apply [Evidence-Driven Debugging](../../references/evidence-driven-debugging.md)
+(Observed Facts -> Hypotheses -> Contradiction Search -> Minimal Change).
 
 ## Output Contract
 
-Report, in this order:
+Report, in this order (the standard sections in
+[output-contract](../../references/output-contract.md)):
 
 ```text
 Version Context
