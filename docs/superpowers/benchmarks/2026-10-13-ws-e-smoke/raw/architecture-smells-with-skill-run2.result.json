@@ -1,0 +1,26 @@
+{
+  "schema": "ios-tuist-result/1",
+  "skill": "ios-tuist-architecture-review",
+  "outcome": "completed",
+  "version_evidence": {
+    "effective": "4.206.0",
+    "source": ".tool-versions",
+    "conflicts": [],
+    "collected_by": "script"
+  },
+  "files_changed": [],
+  "dependency_edges_added": [],
+  "dependency_edges_removed": [],
+  "validation": {
+    "generate": "not-run",
+    "build": "not-run",
+    "test": "not-run"
+  },
+  "unverified": [
+    "Resource ownership not evaluated: no resources declared or present in any target",
+    "External/binary dependencies not assessed: none present in the graph",
+    "App extension / widget linkage constraints not assessed: no extension targets exist",
+    "Test host configuration for FeatureATests/CoreKitTests not inspected (outside graph-direction scope)",
+    "tuist generate/build/test not run (read-only skill)"
+  ]
+}
