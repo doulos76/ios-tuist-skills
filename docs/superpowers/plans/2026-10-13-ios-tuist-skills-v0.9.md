@@ -65,7 +65,7 @@
 - Create: `scripts/bench-summarize.sh`. Pure text helpers, so they can be tested on Linux without Xcode.
 - Create: `tests/harness/test-bench-summarize.sh`
 - Create: canned inputs under `tests/harness/fixtures/`: `xctest-zero.log`, `mixed-swift-testing.log`, `xctest-nested.log`, `swift-testing-fail.log`, `no-summary.log`, `status-porcelain.txt`
-- Modify: `scripts/benchmark-isolated-run.sh`. Three regions: changed-file count (lines 144-147), test loop (lines 186-197), summary (lines 210-214). The line numbers are as of `develop` `a1dacba`.
+- Modify: `scripts/benchmark-isolated-run.sh`. Three regions: changed-file count (lines 144-147), test loop (lines 186-197), summary (lines 211-215). The line numbers are as of `develop` `a1dacba`.
 - Modify: `.github/workflows/lint.yml`. Add two steps to the `ci-scripts` job.
 - Create: `tests/harness/test-prep-excludes-expectations.sh`; modify `prep` in `scripts/benchmark-isolated-run.sh` (drop `EXPECTATIONS.md` from the workdir, Step 7b)
 - Modify (footnotes only): `docs/superpowers/benchmarks/2026-09-20-skill-effectiveness/AGGREGATE-SUMMARY.md`, `docs/superpowers/benchmarks/2026-10-06-ws6-smoke/README.md`
@@ -92,7 +92,7 @@
 ```bash
 sed -n 144,147p scripts/benchmark-isolated-run.sh   # must show the 4 lines quoted in Step 5
 sed -n 186,197p scripts/benchmark-isolated-run.sh   # must show the loop quoted in Step 6
-sed -n 210,214p scripts/benchmark-isolated-run.sh   # must show the summary quoted in Step 7
+sed -n 211,215p scripts/benchmark-isolated-run.sh   # must show the summary quoted in Step 7
 grep -n 'Executed 0 tests' docs/superpowers/benchmarks/2026-10-06-ws6-smoke/raw/extract-candidate-baseline-run1.md   # line 75
 grep -n 'Test run with 1 test in 0 suites' docs/superpowers/benchmarks/2026-10-06-ws6-smoke/raw/extract-candidate-with-skill-run2.md  # line 66
 ```
@@ -368,7 +368,7 @@ with:
 
 - [ ] **Step 7: Extend the summary**
 
-Replace these lines (210-214):
+Replace these lines (211-215):
 ```bash
   echo "Resolve: $resolve"
   echo "Generate: $generate"
