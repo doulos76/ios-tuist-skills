@@ -44,7 +44,7 @@ step).
 
 ## Version Safety
 
-Apply [version-safety](../../references/version-safety.md) in full. The
+Apply [version-safety](references/version-safety.md) in full. The
 project-pinned Tuist version is the source of truth the CI workflow's
 installed version must match. A workflow pinning a different version
 than the project is a finding to report, not something this skill
@@ -57,7 +57,7 @@ silently reconciles by picking one side.
    caching configuration (or its absence).
 2. **Cross-check version consistency** — the workflow-installed Tuist
    version vs. the project-pinned version
-   ([version-safety](../../references/version-safety.md)). Report any
+   ([version-safety](references/version-safety.md)). Report any
    mismatch as a risk.
 3. **Identify improvement candidates**, each backed by concrete evidence
    from the workflow file (never generic CI best-practice advice
@@ -99,7 +99,7 @@ Required before declaring success:
 
 ## Failure Handling
 
-Apply [Evidence-Driven Debugging](../../references/evidence-driven-debugging.md). First
+Apply [Evidence-Driven Debugging](references/evidence-driven-debugging.md). First
 hypothesis to consider here specifically: a caching key that doesn't
 account for the Tuist version or lockfile, causing stale cache hits that
 mask the real state of resolved dependencies.

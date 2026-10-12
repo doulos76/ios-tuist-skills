@@ -62,7 +62,7 @@ declares `sources:` and/or `resources:` as literal arrays (not already
 
 ## Version Safety
 
-Full [version-safety](../../references/version-safety.md) procedure,
+Full [version-safety](references/version-safety.md) procedure,
 Existing Project Mode. `buildableFolders` requires **Tuist 4.62.0 or
 later** (introduced in that release, mapping to Xcode 16's
 synchronized-groups feature). If the project-pinned Tuist version is
@@ -78,7 +78,7 @@ Non-Trigger Conditions above).
    and currently declares `sources:`/`resources:` arrays (not already
    `buildableFolders`).
 2. **Confirm the Tuist version floor** — project-pinned version ≥ 4.62.0
-   ([version-safety](../../references/version-safety.md)). Below the
+   ([version-safety](references/version-safety.md)). Below the
    floor: refuse all named targets, report why, stop.
 3. **Apply the per-target safety checklist** (below) to each named
    target independently — one target's refusal does not block another
@@ -214,7 +214,7 @@ identical generated output before and after).
 
 ## Failure Handling
 
-Apply [Evidence-Driven Debugging](../../references/evidence-driven-debugging.md). First
+Apply [Evidence-Driven Debugging](references/evidence-driven-debugging.md). First
 hypothesis to consider here specifically: a file under the converted
 target's directory that was previously excluded by an array pattern is
 now silently included (or a file expected inside is missing from the

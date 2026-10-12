@@ -13,7 +13,7 @@ description: >
 # Core Rule
 
 Do not generate a single manifest before establishing a Tuist Context
-(see [version-safety](../../references/version-safety.md)) and confirming
+(see [version-safety](references/version-safety.md)) and confirming
 this is genuinely a new project (no existing `Project.swift`,
 `Tuist.swift`, or `Workspace.swift` at the target path, and no
 `*.xcodeproj` or `*.xcworkspace` at the target path or in any directory
@@ -54,13 +54,13 @@ just a pile of generated files.
    generate nothing. An empty directory with none of these markers is
    not refused by this precondition.
 2. Environment inspection: run the live-command portion of
-   [version-safety](../../references/version-safety.md) (`tuist version`,
+   [version-safety](references/version-safety.md) (`tuist version`,
    `xcodebuild -version`, `swift --version`) to know what's actually
    available to generate/build/test with.
 
 ## Version Safety
 
-Apply [version-safety](../../references/version-safety.md) in full.
+Apply [version-safety](references/version-safety.md) in full.
 Because no project-pinned version exists yet (this is a new project), the
 active local Tuist version becomes the working version for this session —
 state that explicitly in the Output Contract rather than silently
@@ -68,7 +68,7 @@ treating "whatever is installed" as correct. If the active version seems
 unusually old or new for the user's stated needs, surface that as a note,
 not a blocker.
 
-Also apply [source-of-truth](../../references/source-of-truth.md)'s
+Also apply [source-of-truth](references/source-of-truth.md)'s
 **New Project Mode** procedure — current supported practice is the
 default here, not existing-convention preservation (there is no existing
 convention yet).
@@ -76,7 +76,7 @@ convention yet).
 ## Workflow
 
 1. **Environment** — establish the Tuist Context block (from
-   [version-safety](../../references/version-safety.md)). Note deployment-target
+   [version-safety](references/version-safety.md)). Note deployment-target
    defaults and package manager availability.
 2. **Requirements** — determine: app name, bundle identifier, platform,
    deployment target, SwiftUI vs UIKit, architecture profile, testing
@@ -88,17 +88,17 @@ convention yet).
    - `Tuist.swift` for project-wide configuration, only if project-wide
      configuration is actually needed.
    - Never `Config.swift` (see
-     [source-of-truth](../../references/source-of-truth.md)'s configuration
+     [source-of-truth](references/source-of-truth.md)'s configuration
      rule).
    - `Workspace.swift` only if justified per
-     [source-of-truth](../../references/source-of-truth.md)'s decision rule —
+     [source-of-truth](references/source-of-truth.md)'s decision rule —
      state the justification if created.
 4. **Architecture** — select one profile based on the user's request, or
    `minimal` if unspecified:
-   - `minimal` — [`templates/minimal/`](../../templates/minimal/)
+   - `minimal` — [`templates/minimal/`](templates/minimal/)
    - `feature-modular` —
-     [`templates/feature-modular/`](../../templates/feature-modular/)
-   - `clean` — [`templates/clean/`](../../templates/clean/)
+     [`templates/feature-modular/`](templates/feature-modular/)
+   - `clean` — [`templates/clean/`](templates/clean/)
    - `tca` / `custom` — no dedicated template in v0.1; use `minimal` as
      the structural base and apply the user's explicit direction on top.
      Never invent a TCA-specific structure without the user having
@@ -116,7 +116,7 @@ convention yet).
 - Prefer Buildable Folders over `sources`/`resources` arrays only when
   the detected Xcode/Tuist combination supports them (this is New Project
   Mode, so this preference applies by default — see
-  [source-of-truth](../../references/source-of-truth.md)).
+  [source-of-truth](references/source-of-truth.md)).
 - Create `ProjectDescriptionHelpers` only when behavior is repeated,
   naming conventions must be enforced, target creation must be
   standardized, settings are shared, or bundle identifiers follow a
@@ -140,13 +140,13 @@ created" is never sufficient evidence of success on its own.
 
 ## Failure Handling
 
-Apply [Evidence-Driven Debugging](../../references/evidence-driven-debugging.md)
+Apply [Evidence-Driven Debugging](references/evidence-driven-debugging.md)
 (Observed Facts -> Hypotheses -> Contradiction Search -> Minimal Change).
 
 ## Output Contract
 
 Report, in this order (the standard sections in
-[output-contract](../../references/output-contract.md)):
+[output-contract](references/output-contract.md)):
 
 ```text
 Version Context

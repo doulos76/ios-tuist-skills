@@ -77,7 +77,7 @@ in the project to model the template on.
 
 ## Version Safety
 
-Full [version-safety](../../references/version-safety.md) procedure,
+Full [version-safety](references/version-safety.md) procedure,
 Existing Project Mode. `Template`/`Template.Item`/`Template.Attribute`
 are long-stable `ProjectDescription` API; still confirm the pinned
 version so generated manifest syntax is one the pinned version actually
@@ -230,7 +230,7 @@ generated inside the real project tree by this skill.
 
 ## Failure Handling
 
-Apply [Evidence-Driven Debugging](../../references/evidence-driven-debugging.md). First
+Apply [Evidence-Driven Debugging](references/evidence-driven-debugging.md). First
 hypothesis to consider here specifically: a `{{ attributeName }}`
 placeholder that doesn't match the attribute's declared name exactly
 (case or spelling) renders as literal, unsubstituted text rather than

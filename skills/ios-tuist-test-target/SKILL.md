@@ -65,7 +65,7 @@ UI) is stated or unambiguous from context.
 
 ## Version Safety
 
-Full [version-safety](../../references/version-safety.md) procedure,
+Full [version-safety](references/version-safety.md) procedure,
 Existing Project Mode. No version floor is introduced by this skill
 itself (test targets and `Scheme`/`TestAction` are long-stable
 `ProjectDescription` API); still confirm the pinned version to generate
@@ -84,7 +84,7 @@ syntax the pinned version actually accepts, per the repo-wide rule.
 3. **Check for an existing test target of the requested kind** for the
    named target. If found: report its name, make no changes, stop.
 4. **Resolve the test framework** per
-   [testing.md](../../references/testing.md): inspect the project's
+   [testing.md](references/testing.md): inspect the project's
    existing test targets first (Existing Project Mode — an established
    XCTest-only project keeps XCTest); if none exist yet and the detected
    Swift/Xcode version supports it, prefer Swift Testing for
@@ -109,7 +109,7 @@ syntax the pinned version actually accepts, per the repo-wide rule.
    the placeholder test runs and passes (a trivial, always-true
    assertion is the *point* here — it exists only to prove the target is
    wired correctly, per the labeled-smoke-test exception in
-   [testing.md](../../references/testing.md)); no other target's
+   [testing.md](references/testing.md)); no other target's
    manifest or generated output changes.
 
 ### Unit vs. integration: naming, not a distinct product
@@ -194,7 +194,7 @@ target and any custom scheme touched still build/test as before
 
 ## Failure Handling
 
-Apply [Evidence-Driven Debugging](../../references/evidence-driven-debugging.md). First
+Apply [Evidence-Driven Debugging](references/evidence-driven-debugging.md). First
 hypothesis to consider here specifically: the new test target fails to
 resolve its host/target-under-test automatically because the named
 target's `product:` isn't one Tuist auto-hosts tests for (e.g. a

@@ -13,7 +13,7 @@ description: >
 
 Never attach a dependency to a wider target than necessary. Identify the
 actual consumer target before writing any manifest change. See
-[dependencies](../../references/dependencies.md).
+[dependencies](references/dependencies.md).
 
 ## Purpose
 
@@ -47,12 +47,12 @@ the codebase. If genuinely ambiguous, ask rather than guessing widely.
 
 ## Version Safety
 
-Apply [version-safety](../../references/version-safety.md) in full. The
+Apply [version-safety](references/version-safety.md) in full. The
 project's pinned Tuist version determines which dependency-declaration
 syntax is valid (Tuist-native `Tuist/Package.swift` integration vs
 Xcode-native SwiftPM integration). Generate for the pinned version.
 
-Apply [source-of-truth](../../references/source-of-truth.md)'s
+Apply [source-of-truth](references/source-of-truth.md)'s
 **Existing Project Mode** before changing any dependency declaration.
 
 ## Workflow
@@ -65,7 +65,7 @@ Apply [source-of-truth](../../references/source-of-truth.md)'s
    this repository (inspect existing `Tuist/Package.swift` or Xcode
    project SwiftPM references).
 3. **Classify the dependency** using
-   [dependencies](../../references/dependencies.md)'s taxonomy (Swift
+   [dependencies](references/dependencies.md)'s taxonomy (Swift
    package library, macro, build tool plugin, binary framework,
    XCFramework, local package, local Tuist project, system framework).
 4. **Determine the compatible declaration approach** for the detected
@@ -94,9 +94,9 @@ is `ios-tuist-restyle` only, on explicitly named targets).
   explicitly requires it.
 - Preserve existing version-constraint style unless the task requires
   changing it (see
-  [dependencies](../../references/dependencies.md)).
+  [dependencies](references/dependencies.md)).
 - If integrating a binary or local target requires an explicit linkage
-  choice, apply [modularization](../../references/modularization.md)'s
+  choice, apply [modularization](references/modularization.md)'s
   graph-based linkage decision rather than selecting a universal default.
 
 ## Validation
@@ -109,7 +109,7 @@ Required before declaring the task complete:
 
 ## Failure Handling
 
-Apply [Evidence-Driven Debugging](../../references/evidence-driven-debugging.md).
+Apply [Evidence-Driven Debugging](references/evidence-driven-debugging.md).
 Additional first hypothesis to consider here specifically: a version
 constraint conflict between the newly added dependency and an existing
 one in the graph.
@@ -117,7 +117,7 @@ one in the graph.
 ## Output Contract
 
 Report, in this order (the standard sections in
-[output-contract](../../references/output-contract.md)), with
+[output-contract](references/output-contract.md)), with
 "Dependency Changes" populated with specifics:
 
 ```text
