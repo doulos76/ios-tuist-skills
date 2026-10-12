@@ -93,8 +93,8 @@ required to know what actually needs to change between the two versions.
    if it "could look more modern" under the new version.
 5. **Propose the migration plan** — present, before editing anything:
    the version-pin sources that will change (e.g. `.mise.toml`,
-   `.tool-versions`, CI workflow install steps, any documented version
-   reference) and, file by file, exactly which manifest syntax will
+   `.tool-versions`, `.tuist-version`, CI workflow install steps, any
+   documented version reference) and, file by file, exactly which manifest syntax will
    change and why (which breaking change forces it). This is a shared,
    high-blast-radius, hard-to-reverse change — proposal before edit is
    required, not optional, regardless of auto-mode.

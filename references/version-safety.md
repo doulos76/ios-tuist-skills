@@ -24,10 +24,27 @@ Sources, highest authority first:
 1. `mise.toml` / `.mise.toml` (plus any additional mise config paths
    confirmed by the mise docs)
 2. `.tool-versions`
-3. CI workflow files (e.g. `.github/workflows/*.yml`) that pin or install
+3. `.tuist-version` (conditional — see below)
+4. CI workflow files (e.g. `.github/workflows/*.yml`) that pin or install
    a specific Tuist version
-4. Repository scripts (`Scripts/`, `Makefile`, `Brewfile`, bootstrap
+5. Repository scripts (`Scripts/`, `Makefile`, `Brewfile`, bootstrap
    scripts) that install or reference a specific Tuist version
+
+`.tuist-version` is honored only by:
+
+- `tuistenv`, the version-switching `tuist` shim of Tuist 2.x/3.x
+  installs. It searches the current directory and then each parent; a
+  `.tuist-bin/tuist` in the same directory wins over the file (checked
+  in tuist/tuist 2.7.2, 3.0.0, 3.42.2:
+  `Sources/TuistEnvKit/Versions/VersionResolver.swift`). Tuist 4.0.0
+  removed this resolver; Tuist 4.x itself never reads the file.
+- mise, when its `idiomatic_version_file_enable_tools` setting includes
+  `tuist` (default: empty, so off).
+
+Record it whenever it exists and label it `conditional`. If
+`.tuist-version` is the only Tool Version source, it gives the effective
+project version. When a higher source has a value, a differing
+`.tuist-version` is listed under `Conflicts` like any other source.
 
 The highest-authority source that has a value gives the **effective
 project version**. Any lower-authority source with a different value is
@@ -62,6 +79,9 @@ Run from the project root and record the cwd with each result:
 - `tuist version` (plain — what the user's shell resolves)
 - `mise exec -- tuist version` (only when a mise config was found; the
   two can differ because mise switches versions per directory)
+- `mise settings get idiomatic_version_file_enable_tools` (only when
+  `.tuist-version` exists and `mise` is installed; `tuist` in the list
+  means mise reads `.tuist-version`)
 - `xcodebuild -version`
 - `swift --version`
 
@@ -97,6 +117,7 @@ Tool Version Evidence (Tuist CLI — decides the effective version)
 -----------------------------------------------------------------
 mise.toml / .mise.toml      <ver|none>   PRIMARY candidate #1
 .tool-versions              <ver|none>   PRIMARY candidate #2
+.tuist-version               <ver|none>   (conditional: tuistenv on Tuist <= 3.x; mise idiomatic <on|off|n/a>)
 CI workflows                <ver|none>   (file path)
 Scripts / Makefile          <ver|none>   (file path)
 Active (plain)              <ver>        cmd: tuist version               cwd: <path>
