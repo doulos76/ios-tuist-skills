@@ -1,0 +1,1 @@
+{"schema":"ios-tuist-consumer-edges/1","added":[{"from":"App","to":"NetworkingKit","usage":"App/Sources/ExtractCandidateApp.swift:2"}],"removed":[],"note":"no usage found != dependency unnecessary (static search; @_exported, macros, resources not detected)"}
