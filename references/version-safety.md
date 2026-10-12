@@ -59,9 +59,26 @@ active Xcode is outside the declared range, report a risk.
 
 ### Swift axis (compatibility risk only)
 
-`Tuist.swift` `swiftVersion`; `// swift-tools-version:` in
-`Package.swift` and `Tuist/Package.swift`; `.swift-version` (Tuist does
-not consume it — evidence of project intent); the active Swift.
+`swiftVersion` in `Tuist.swift` (Tuist 4.x) or `Tuist/Config.swift` (Tuist 2.x/3.x);
+`// swift-tools-version:` in `Package.swift` and `Tuist/Package.swift`;
+`.swift-version` (Tuist does not consume it — evidence of project
+intent); the active Swift.
+
+What `swiftVersion` does depends on the Tuist version. Label it by the
+effective project version; if none was detected, use the active Tuist
+version and say so.
+
+| Tuist | Effect of `swiftVersion` | Checked tags (tuist/tuist) |
+|---|---|---|
+| 2.x / 3.x | consumed: Swift tools version for dependency resolution in `tuist fetch` (2.x: `tuist dependencies fetch/update`); below 5.6 selects the legacy generated `Package.swift`; when absent, the active Swift is used | 2.7.2, 3.0.0, 3.42.2 |
+| 4.0.0 – 4.184.0 | stored only; no reader found (4.0.0 takes the tools version from `Package.swift`) | 4.0.0, 4.62.0, 4.184.0 |
+| 4.184.1 and later | deprecated, ignored ("`swiftVersion` is unused and no longer affects generation") | 4.184.1, 4.206.0 |
+
+On 2.x/3.x, a `swiftVersion` that differs from the active Swift changes
+how dependencies resolve: report it as a risk to dependency resolution,
+not only as compatibility. On 4.184.1 and later, report it as
+deprecated and never remove it; only `ios-tuist-migrate` changes it.
+Versions between the checked tags are not verified.
 
 ### Manifest compatibility axis
 
@@ -133,7 +150,7 @@ Active                                  <ver>        cmd: xcodebuild -version   
 
 Swift Evidence (compatibility risk only)
 ----------------------------------------
-Tuist.swift swiftVersion               <ver|none>
+Tuist.swift / Config.swift swiftVersion <ver|none>   <consumed (2.x/3.x) | stored only (4.0.0-4.184.0) | deprecated, ignored (>= 4.184.1)>
 Package.swift swift-tools-version      <ver|none>
 Tuist/Package.swift swift-tools-version<ver|none>
 .swift-version                          <ver|none>   (Tuist does not consume; project intent)
