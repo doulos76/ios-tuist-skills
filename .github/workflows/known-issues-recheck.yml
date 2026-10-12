@@ -1,0 +1,39 @@
+name: Known issues recheck
+
+# Re-runs the build-observable entries of references/tuist-known-issues.md
+# against the pinned and the latest Tuist. A changed result fails the job
+# so a human re-verifies the entry; nothing is changed automatically.
+on:
+  schedule:
+    - cron: "0 18 1 * *"
+  workflow_dispatch:
+
+jobs:
+  probe:
+    name: probe (Tuist ${{ matrix.tuist }})
+    runs-on: macos-15
+    strategy:
+      fail-fast: false
+      matrix:
+        tuist: ["4.206.0", "latest"]
+    env:
+      XDG_CACHE_HOME: /tmp/tuist/cache
+      XDG_STATE_HOME: /tmp/tuist/state
+      XDG_DATA_HOME: /tmp/tuist/data
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install mise
+        run: brew install mise
+      - name: Resolve and install Tuist
+        id: tuist
+        run: |
+          # aqua is the registry default on a clean machine; naming it keeps
+          # "latest" from coming from an asdf plugin's non-semver tag list.
+          if [ "${{ matrix.tuist }}" = latest ]; then v="$(mise latest aqua:tuist/tuist)"; else v="${{ matrix.tuist }}"; fi
+          echo "Resolved Tuist: $v"
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+          mise install "tuist@$v"
+      - name: Probe
+        run: ./scripts/known-issues-probe.sh "${{ steps.tuist.outputs.version }}" | tee probe.txt
+      - name: Compare with expectations
+        run: ./scripts/known-issues-compare.sh probe.txt tests/known-issues/expected.json

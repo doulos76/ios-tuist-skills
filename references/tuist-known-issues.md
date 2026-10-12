@@ -1,0 +1,55 @@
+# Tuist known issues
+
+Version-specific Tuist behaviour that skill rules depend on. Skills state
+the rule and link the entry; the versions live here so they can be
+re-verified in one place without touching the rules.
+
+- `Last verified: unknown — re-verify` means the entry was carried over
+  from skill text (v0.8.1) without a recorded check.
+- Entries with a `Probe:` line are re-checked by
+  `.github/workflows/known-issues-recheck.yml` (monthly and on demand)
+  against the pinned and the latest Tuist; a changed result fails that
+  workflow and a human updates the entry. Nothing is updated automatically.
+
+### buildableFolders minimum version
+- Affects: Tuist earlier than 4.62.0 (`buildableFolders` is not available)
+- Fixed in: 4.62.0 (introduced; maps to Xcode 16's synchronized-groups feature)
+- Source: carried over from `ios-tuist-restyle` (v0.8.1); no release-note link recorded in this repository
+- Last verified: unknown — re-verify
+- Skill impact: `ios-tuist-restyle` version floor — below it, every named target is refused and no version bump is suggested.
+
+### buildableFolders has no per-path exclusion
+- Affects: every version the skill text was written against ("as of the project-pinned version"); no later version is known to add one
+- Fixed in: unknown
+- Source: `ios-tuist-restyle` checklist item "Exclude patterns"; fixture `tests/fixtures/restyle-candidate` (`ExcludeFeature` relies on `.glob(pattern:excluding:)`)
+- Last verified: unknown — re-verify
+- Skill impact: `ios-tuist-restyle` refuses a target whose `sources:`/`resources:` use `.glob(pattern:excluding:)` or any per-file compiler flag/setting.
+
+### Cross-target file references into a buildable folder
+- Affects: all versions with `buildableFolders` (issue closed as "not planned": the limitation is acknowledged and intentionally left as-is)
+- Fixed in: not planned
+- Source: https://github.com/tuist/tuist/issues/8337
+- Last verified: unknown — re-verify
+- Skill impact: `ios-tuist-restyle` refuses a target when another target's manifest references an individual file inside its source/resource directories.
+
+### Static framework resources with buildable folders (original defect)
+- Affects: versions before the fix (lower bound not recorded in the skill text)
+- Fixed in: ~4.100.0
+- Source: https://github.com/tuist/tuist/issues/8547
+- Last verified: unknown — re-verify
+- Skill impact: `ios-tuist-restyle` "Static framework + resources" item — never treated as clear only because the pinned version is newer than this fix (see the two regressions below).
+
+### Static framework resources regression: BundleNotFound
+- Affects: introduced in 4.128.2 (a `BundleNotFound` crash)
+- Fixed in: unknown
+- Source: https://github.com/tuist/tuist/issues/9156
+- Last verified: unknown — re-verify
+- Skill impact: same checklist item; reason the item is reported as checked-with-residual-risk rather than clear.
+
+### Static framework resources regression: missed resource-bundle copy
+- Affects: introduced in 4.133.1 (a missed resource-bundle copy)
+- Fixed in: unknown
+- Source: https://github.com/tuist/tuist/issues/9289
+- Last verified: 4.206.0 on 2026-10-13 (probe: present)
+- Probe: `cleanfeature-resource-in-app` (restyle-candidate `CleanFeature`, a `.staticFramework` with `resources:`, converted to `buildableFolders`; checks `dummy.txt` is inside the built `App.app`)
+- Skill impact: same checklist item.

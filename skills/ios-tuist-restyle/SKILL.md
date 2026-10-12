@@ -63,10 +63,11 @@ declares `sources:` and/or `resources:` as literal arrays (not already
 ## Version Safety
 
 Full [version-safety](references/version-safety.md) procedure,
-Existing Project Mode. `buildableFolders` requires **Tuist 4.62.0 or
-later** (introduced in that release, mapping to Xcode 16's
-synchronized-groups feature). If the project-pinned Tuist version is
-older than 4.62.0, refuse every named target and say so — do not
+Existing Project Mode. `buildableFolders` requires a minimum Tuist
+version, recorded with its source in
+[known issues: buildableFolders minimum version](references/tuist-known-issues.md#buildablefolders-minimum-version).
+If the project-pinned Tuist version is older than that minimum, refuse
+every named target and say so — do not
 proceed, and do not silently suggest a version bump (that decision
 belongs to `ios-tuist-migrate`, on a separate explicit request per the
 Non-Trigger Conditions above).
@@ -88,7 +89,8 @@ not used: <reason>" under Unverified Items.
    the request. For each, confirm it exists in the project's manifests
    and currently declares `sources:`/`resources:` arrays (not already
    `buildableFolders`).
-2. **Confirm the Tuist version floor** — project-pinned version ≥ 4.62.0
+2. **Confirm the Tuist version floor** — project-pinned version ≥ the
+   minimum in [known issues: buildableFolders minimum version](references/tuist-known-issues.md#buildablefolders-minimum-version)
    ([version-safety](references/version-safety.md)). Below the
    floor: refuse all named targets, report why, stop.
 3. **Apply the per-target safety checklist** (below) to each named
@@ -129,27 +131,30 @@ valid, complete outcome for that target.
   excluding: ["Sources/Generated/**"])]`) — or any per-file compiler
   flag/setting? `buildableFolders` has no supported equivalent for
   excluding specific files or paths within an included folder as of the
-  project-pinned version — a target relying on exclusion cannot be
+  project-pinned version
+  ([known issues: no per-path exclusion](references/tuist-known-issues.md#buildablefolders-has-no-per-path-exclusion))
+  — a target relying on exclusion cannot be
   safely converted without silently losing that exclusion.
 - **Cross-target file references:** Does any *other* target's manifest
   reference an individual file that lives inside this target's
   source/resource directories (rather than depending on the target as a
   whole)? Tuist's buildable-folders implementation can fail to add such
   a file to the right build phase once the owning target is converted —
-  a real Tuist defect (tuist/tuist#8337, closed as "not planned," i.e.
-  the limitation itself is acknowledged and intentionally left as-is,
-  not a bug awaiting a fix), not a hypothetical.
+  a real Tuist limitation, acknowledged and intentionally left as-is
+  rather than a bug awaiting a fix
+  ([known issues: cross-target file references](references/tuist-known-issues.md#cross-target-file-references-into-a-buildable-folder)),
+  not a hypothetical.
 - **Static framework + resources:** Is the target's `product:`
   `.staticFramework` (or `.staticLibrary`) AND does it declare
   `resources:`? Buildable-folder resource placement for static products
-  has a real history of breakage in Tuist — the original defect
-  (tuist/tuist#8547) was fixed in ~4.100.0, but the same resource-bundle
-  path has regressed at least twice since (tuist/tuist#9156, a
-  `BundleNotFound` crash introduced in 4.128.2; tuist/tuist#9289, a
-  missed resource-bundle copy introduced in 4.133.1) — so "fixed once"
-  does not mean "stable," and no single version floor can be cited as
-  safe going forward. Never wave this item through solely because the
-  project-pinned version is newer than 4.100.0. Instead: check Tuist's
+  has a real history of breakage in Tuist — an original defect was
+  fixed, but the same resource-bundle path has regressed at least twice
+  since (the three "Static framework resources" entries in
+  [known issues](references/tuist-known-issues.md#static-framework-resources-with-buildable-folders-original-defect))
+  — so "fixed once" does not mean "stable," and no single version floor
+  can be cited as safe going forward. Never wave this item through
+  solely because the project-pinned version is newer than the version
+  that fixed the original defect. Instead: check Tuist's
   release notes for the project-pinned version and any versions between
   it and the nearest prior stable point for a static-framework-resources
   regression; if none is found, note this item as checked-with-residual-
@@ -208,7 +213,7 @@ named targets).
 - Never move, rename, or edit the contents of any source or resource
   file — this skill only rewrites manifest declarations.
 - Never bundle a Tuist version bump into this conversion, even if the
-  project is below the 4.62.0 floor — refuse and point at
+  project is below the buildableFolders minimum version — refuse and point at
   `ios-tuist-migrate` as the separate, explicit next step if the user
   wants one.
 - A refusal (version floor not met, checklist risk found, no target
@@ -236,7 +241,7 @@ file membership before and after, not just "did it build."
 ## Output Contract
 
 ```text
-Version Context (Tuist version vs. the 4.62.0 buildableFolders floor)
+Version Context (Tuist version vs. the buildableFolders minimum version)
 Targets Requested
 Checklist Results (one per target: item-by-item findings)
 Targets Converted (manifest diff, per target)
