@@ -8,6 +8,9 @@ on:
     - cron: "0 18 1 * *"
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   probe:
     name: probe (Tuist ${{ matrix.tuist }})
@@ -26,10 +29,13 @@ jobs:
         run: brew install mise
       - name: Resolve and install Tuist
         id: tuist
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           # aqua is the registry default on a clean machine; naming it keeps
           # "latest" from coming from an asdf plugin's non-semver tag list.
           if [ "${{ matrix.tuist }}" = latest ]; then v="$(mise latest aqua:tuist/tuist)"; else v="${{ matrix.tuist }}"; fi
+          if [ -z "$v" ]; then echo "::error::could not resolve Tuist version for '${{ matrix.tuist }}' (see mise warnings above)"; exit 1; fi
           echo "Resolved Tuist: $v"
           echo "version=$v" >> "$GITHUB_OUTPUT"
           mise install "tuist@$v"

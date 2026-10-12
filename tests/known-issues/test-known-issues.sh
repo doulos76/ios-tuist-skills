@@ -41,5 +41,7 @@ links.each { |f, a| report.(anchors.include?(a), "#{f} -> ##{a} exists") }
 report.(File.read("scripts/skill-resources.manifest").include?("ios-tuist-restyle references/tuist-known-issues.md"), "manifest syncs known issues into restyle")
 pinned = JSON.parse(File.read("tests/fixtures/ci-matrix.json")).find { |e| e["fixture"] == "restyle-candidate" }["tuist"]
 report.(File.read(".github/workflows/known-issues-recheck.yml").include?(%(tuist: ["#{pinned}", "latest"])), "recheck control version matches ci-matrix (#{pinned})")
+report.(File.read(".github/workflows/known-issues-recheck.yml").include?('GITHUB_TOKEN: ${{ github.token }}'), "recheck authenticates GitHub API calls")
+report.(File.read(".github/workflows/known-issues-recheck.yml").include?("could not resolve Tuist version"), "recheck fails when Tuist version resolution is empty")
 exit(failures.zero? ? 0 : 1)
 RUBY
