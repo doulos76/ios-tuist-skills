@@ -1,0 +1,10 @@
+ M Project.swift
+?? App.xcodeproj/project.pbxproj
+?? App.xcworkspace/contents.xcworkspacedata
+?? Derived/InfoPlists/App-Info.plist
+?? Tuist/.build/workspace-state.json
+?? NetworkingKit/Sources/Client.swift
+R  App/Sources/Old.swift -> App/Sources/New.swift
+?? "App/Sources/Weird Name.swift"
+?? DerivedData/Logs/x.txt
+?? Test-App.xcresult/Info.plist

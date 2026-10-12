@@ -19,6 +19,10 @@ jobs:
       - uses: actions/checkout@v6
       - name: Fixture selection unit tests
         run: ./tests/ci/test-select-fixtures.sh
+      - name: Benchmark summarizer unit tests
+        run: ./tests/harness/test-bench-summarize.sh
+      - name: Benchmark prep excludes answer key
+        run: ./tests/harness/test-prep-excludes-expectations.sh
 
   check-pins:
     name: fixture pins match matrix
