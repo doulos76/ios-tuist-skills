@@ -54,6 +54,7 @@ ios-tuist-module scripts/skill/collect-version-evidence.sh
 
 ios-tuist-restyle references/evidence-driven-debugging.md
 ios-tuist-restyle references/output-contract.md
+ios-tuist-restyle references/tuist-known-issues.md
 ios-tuist-restyle references/version-safety.md
 ios-tuist-restyle scripts/skill/collect-version-evidence.sh
 
