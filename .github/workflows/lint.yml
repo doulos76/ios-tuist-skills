@@ -23,6 +23,14 @@ jobs:
         run: ./tests/harness/test-bench-summarize.sh
       - name: Benchmark prep excludes answer key
         run: ./tests/harness/test-prep-excludes-expectations.sh
+      - name: Routing cases schema
+        run: ./scripts/check-routing-cases.sh
+      - name: Routing eval unit tests
+        run: |
+          ./tests/routing/test-check-routing-cases.sh
+          ./tests/routing/test-routing-observe.sh
+          ./tests/routing/test-routing-summarize.sh
+          ./tests/routing/test-run-routing-eval.sh
 
   check-pins:
     name: fixture pins match matrix
