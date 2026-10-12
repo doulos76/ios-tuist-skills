@@ -52,6 +52,17 @@ from the pinned version, report the mismatch as a risk in the Output
 Contract and generate manifest syntax for the **pinned** version, not the
 active one.
 
+**Evidence script.** Collect the evidence with this skill's bundled
+script, run from the project root:
+`"${CLAUDE_SKILL_DIR}/scripts/collect-version-evidence.sh"` in Claude
+Code; other agents run `scripts/collect-version-evidence.sh` resolved
+against the directory that contains this SKILL.md. It only reads files
+and runs the version commands. Use its output as the Tool Version, Xcode
+and Swift evidence and add the Manifest compatibility axis yourself. If
+the script cannot run, follow the manual procedure in
+[version-safety](references/version-safety.md) and list "evidence script
+not used: <reason>" under Unverified Items.
+
 ## Workflow
 
 1. **Inspect neighboring features** before writing anything:

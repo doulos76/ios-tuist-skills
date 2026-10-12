@@ -56,6 +56,17 @@ project-pinned version is authoritative. If the active version differs
 from the pinned version, report the mismatch as a risk and generate
 manifest syntax for the pinned version, not the active one.
 
+**Evidence script.** Collect the evidence with this skill's bundled
+script, run from the project root:
+`"${CLAUDE_SKILL_DIR}/scripts/collect-version-evidence.sh"` in Claude
+Code; other agents run `scripts/collect-version-evidence.sh` resolved
+against the directory that contains this SKILL.md. It only reads files
+and runs the version commands. Use its output as the Tool Version, Xcode
+and Swift evidence and add the Manifest compatibility axis yourself. If
+the script cannot run, follow the manual procedure in
+[version-safety](references/version-safety.md) and list "evidence script
+not used: <reason>" under Unverified Items.
+
 ## Workflow
 
 1. **Identify the extraction candidate** — the code, files, or region
@@ -83,6 +94,10 @@ manifest syntax for the pinned version, not the active one.
    transitive graph, resources, extensions, binaries before choosing;
    never default to a single linkage type across the project.
 5. **Extract:**
+   - Record the pre-change state for the edge check in step 6: if the
+     project is a git work tree whose `Project.swift` files have no
+     uncommitted changes, note `git rev-parse HEAD`; otherwise copy every
+     `Project.swift` (keeping relative paths) into a temporary directory.
    - Before changing files, run the pre-existing test schemes (at least
      those covering the original target) to record which passed before
      extraction. If this is not possible, state that a baseline could
@@ -109,6 +124,15 @@ manifest syntax for the pinned version, not the active one.
    Risks / Follow-up and state plainly that validation did NOT fully pass.
    If a source-less test target's bundle can no longer load, leave the
    decision to remove the target or add tests to the user.
+   Then run the bundled edge check from the project root —
+   `"${CLAUDE_SKILL_DIR}/scripts/check-consumer-edges.sh" --before <rev-or-dir>`
+   in Claude Code (other agents: `scripts/check-consumer-edges.sh`
+   resolved against this SKILL.md's directory) — and put its per-edge
+   result in Dependency Changes. Report a `no usage found` edge under
+   Risks / Follow-up; never remove it automatically (the search is static
+   and can miss `@_exported` imports, macros and resource-only use). If
+   the script cannot run, rely on the usage-site search from step 5 and
+   say so under Unverified Items.
 
 ## Decision Rules
 

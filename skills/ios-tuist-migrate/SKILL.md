@@ -66,6 +66,17 @@ this skill's entire job is changing it, deliberately and visibly. Still
 apply the full evidence collection first: an accurate starting point is
 required to know what actually needs to change between the two versions.
 
+**Evidence script.** Collect the evidence with this skill's bundled
+script, run from the project root:
+`"${CLAUDE_SKILL_DIR}/scripts/collect-version-evidence.sh"` in Claude
+Code; other agents run `scripts/collect-version-evidence.sh` resolved
+against the directory that contains this SKILL.md. It only reads files
+and runs the version commands. Use its output as the Tool Version, Xcode
+and Swift evidence and add the Manifest compatibility axis yourself. If
+the script cannot run, follow the manual procedure in
+[version-safety](references/version-safety.md) and list "evidence script
+not used: <reason>" under Unverified Items.
+
 ## Workflow
 
 1. **Establish current and target versions** — run

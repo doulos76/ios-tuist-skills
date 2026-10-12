@@ -52,6 +52,17 @@ project's pinned Tuist version determines which dependency-declaration
 syntax is valid (Tuist-native `Tuist/Package.swift` integration vs
 Xcode-native SwiftPM integration). Generate for the pinned version.
 
+**Evidence script.** Collect the evidence with this skill's bundled
+script, run from the project root:
+`"${CLAUDE_SKILL_DIR}/scripts/collect-version-evidence.sh"` in Claude
+Code; other agents run `scripts/collect-version-evidence.sh` resolved
+against the directory that contains this SKILL.md. It only reads files
+and runs the version commands. Use its output as the Tool Version, Xcode
+and Swift evidence and add the Manifest compatibility axis yourself. If
+the script cannot run, follow the manual procedure in
+[version-safety](references/version-safety.md) and list "evidence script
+not used: <reason>" under Unverified Items.
+
 Apply [source-of-truth](references/source-of-truth.md)'s
 **Existing Project Mode** before changing any dependency declaration.
 
@@ -72,11 +83,24 @@ Apply [source-of-truth](references/source-of-truth.md)'s
    Tuist version and the existing integration mechanism. Do not convert
    the project from one integration mechanism to another unless the task
    explicitly requires it.
+   Before step 5, record the pre-change state for step 9: `git rev-parse
+   HEAD` when the `Project.swift` files have no uncommitted changes,
+   otherwise a copy of every `Project.swift` in a temporary directory.
 5. **Attach to the identified target only.** Never widen to the app
    target or to unrelated targets "to be safe."
 6. **Resolve/install** the dependency (e.g. `tuist install`).
 7. **Generate** (`tuist generate`).
 8. **Build** the affected target(s) and the app.
+9. **Edge check (local targets and projects only)** — if the change added
+   a `.target(name:)` or `.project(target:path:)` dependency, run the
+   bundled edge check from the project root:
+   `"${CLAUDE_SKILL_DIR}/scripts/check-consumer-edges.sh" --before <rev-or-dir>`
+   in Claude Code (other agents: `scripts/check-consumer-edges.sh`
+   resolved against this SKILL.md's directory), with the state recorded
+   in step 4. Put the result in Dependency Changes and report a
+   `no usage found` edge under Risks / Follow-up instead of removing it.
+   Package product dependencies are not covered by the script; verify
+   their consumer with the `import` search from step 1, as before.
 
 ## Decision Rules
 
