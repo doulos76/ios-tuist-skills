@@ -78,6 +78,8 @@ if [ "$command" = prep ]; then
   WORKDIR_PARENT="$(mktemp -d "$TMP_ROOT/tuist-bench.XXXXXX")" || exit 1
   WORKDIR="$WORKDIR_PARENT/$fixture"
   cp -R "$SRC" "$WORKDIR" || exit 1
+  # EXPECTATIONS.md is the grader's answer key; an agent that reads it is no longer measured.
+  rm -f -- "$WORKDIR/EXPECTATIONS.md"
   if ! isolation_guard; then
     rm -rf -- "$WORKDIR_PARENT"
     exit 1
@@ -124,6 +126,9 @@ resolve=skipped
 generate=skipped
 build=skipped
 test=skipped
+tests_executed=unknown
+changed_raw=unknown
+changed_filtered=unknown
 {
   echo "# $fixture — $condition — run$run"
   echo
@@ -143,8 +148,12 @@ test=skipped
   echo '```text'
   echo '--- git diff --stat HEAD ---'
   git diff --stat HEAD
-  echo '--- changed-file count (including untracked) ---'
-  git status --porcelain | wc -l
+  # -uall lists files inside untracked dirs; generated Tuist/Xcode output is counted separately.
+  git status --porcelain --untracked-files=all > "$WORKDIR/../status-after.txt"
+  read -r changed_raw changed_filtered < <("$REPO_ROOT/scripts/bench-summarize.sh" changed "$WORKDIR/../status-after.txt")
+  echo '--- changed files (untracked files listed individually) ---'
+  cat "$WORKDIR/../status-after.txt"
+  echo "Excluded as generated: $("$REPO_ROOT/scripts/bench-summarize.sh" patterns | tr '\n' ' ')"
   snapshot_edges > "$WORKDIR/../edges-after.txt" || exit 1
   echo '--- dependency edges (before / after) ---'
   diff "$WORKDIR/../edges-before.txt" "$WORKDIR/../edges-after.txt"
@@ -184,15 +193,31 @@ test=skipped
           ')"
           if [ -n "$SIMULATOR_ID" ]; then
             test=pass
+            tests_executed=0
             for scheme in $test_schemes; do
               echo "--- xcodebuild test (scheme $scheme) ---"
+              # The full log is needed to count executed tests; the report keeps only its tail.
+              test_log="$WORKDIR/../xcodebuild-test-$scheme.log"
               xcodebuild test \
                 -workspace "$workspace.xcworkspace" \
                 -scheme "$scheme" \
                 -destination "id=$SIMULATOR_ID" \
-                | tail -20
-              if [ "${PIPESTATUS[0]}" -ne 0 ]; then
+                > "$test_log" 2>&1
+              test_status=$?
+              tail -20 "$test_log"
+              echo "Full log: $test_log"
+              scheme_count="$("$REPO_ROOT/scripts/bench-summarize.sh" tests "$test_log")"
+              echo "Tests executed (scheme $scheme): $scheme_count"
+              if [ "$test_status" -ne 0 ]; then
                 test=fail
+              elif [ "$scheme_count" = 0 ] && [ "$test" = pass ]; then
+                # Exit 0 with nothing executed is not evidence that tests passed.
+                test=pass-empty
+              fi
+              if [ "$scheme_count" = unknown ] || [ "$tests_executed" = unknown ]; then
+                tests_executed=unknown
+              else
+                tests_executed=$((tests_executed + scheme_count))
               fi
             done
           else
@@ -212,6 +237,9 @@ test=skipped
   echo "Generate: $generate"
   echo "Build: $build"
   echo "Test: $test"
+  echo "Tests executed: $tests_executed"
+  echo "Changed files (raw): $changed_raw"
+  echo "Changed files (excluding generated): $changed_filtered"
 } > "$REPORT" 2>&1
 echo "Report: $REPORT"
 if [ "$resolve" = fail ] || [ "$generate" = fail ] || [ "$build" = fail ] || [ "$test" = fail ]; then

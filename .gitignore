@@ -32,3 +32,6 @@ Tuist/Dependencies/
 # Logs
 *.log
 npm-debug.log*
+
+# Canned xcodebuild logs used by tests/harness (v0.9 WS-H); must be tracked.
+!tests/harness/fixtures/*.log

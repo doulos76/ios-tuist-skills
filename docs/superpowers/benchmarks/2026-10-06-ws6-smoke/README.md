@@ -27,3 +27,5 @@ Same prompt, same fixture, with-skill: run 1 extracted, run 2 refused (it judged
 - "changed-file count (including untracked)" includes Tuist generation artifacts (`App.xcodeproj/`, `App.xcworkspace/`, `Derived/`): baseline 7, with-skill 6, versus 3 source files.
 - Model not recorded for runs 1-2 (BENCH_MODEL left `unrecorded`); run 3 ambiguous (see its session file).
 - N=1-3 per condition on one scenario; not evidence of a skill effect. The baseline also avoided the phantom `App` edge, so this scenario does not separate the conditions on that metric.
+
+Note (v0.9 WS-H): each run's workdir contained the fixture's `EXPECTATIONS.md` (the expected outcome); whether the agent read it was not checked. Results above are unchanged.

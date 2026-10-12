@@ -192,6 +192,7 @@ prior exposure to this repo.
 
 † Expected result corrected in v0.8 (WS1): `App` should not gain an edge to `NetworkingKit`. Scores above are unchanged.
 ‡ Not verified: whether this benchmark's baseline condition was isolated from an installed copy of the plugin (in v0.8 a plain `claude` session was found to load a user-scope installed plugin; the v0.8 isolated harness uses `--setting-sources project`). Scores above are unchanged.
+§ Not verified: whether agents read the fixture's `EXPECTATIONS.md` (the expected outcome), which was present in every run's working copy; v0.9 WS-H removes it from harness workdirs. Scores above are unchanged.
 
 ### A genuine ambiguity, not a defect either way
 
