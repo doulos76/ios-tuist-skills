@@ -67,6 +67,7 @@
 - Create: canned inputs under `tests/harness/fixtures/`: `xctest-zero.log`, `mixed-swift-testing.log`, `xctest-nested.log`, `swift-testing-fail.log`, `no-summary.log`, `status-porcelain.txt`
 - Modify: `scripts/benchmark-isolated-run.sh`. Three regions: changed-file count (lines 144-147), test loop (lines 186-197), summary (lines 211-215). The line numbers are as of `develop` `a1dacba`.
 - Modify: `.github/workflows/lint.yml`. Add two steps to the `ci-scripts` job.
+- Modify: `.gitignore`: append `!tests/harness/fixtures/*.log` with a comment. The repo ignores `*.log` (line 33), which would leave the canned logs out of the commit and fail CI (found during implementation, 2026-10-13).
 - Create: `tests/harness/test-prep-excludes-expectations.sh`; modify `prep` in `scripts/benchmark-isolated-run.sh` (drop `EXPECTATIONS.md` from the workdir, Step 7b)
 - Modify (footnotes only): `docs/superpowers/benchmarks/2026-09-20-skill-effectiveness/AGGREGATE-SUMMARY.md`, `docs/superpowers/benchmarks/2026-10-06-ws6-smoke/README.md`
 
@@ -478,7 +479,7 @@ Afterwards, delete the check output; it is not committed: `rm -rf docs/superpowe
 
 - [ ] **Step 11 [hand-off: Claude]: commit**
 ```bash
-git add scripts/bench-summarize.sh scripts/benchmark-isolated-run.sh tests/harness .github/workflows/lint.yml docs/superpowers/benchmarks/2026-09-20-skill-effectiveness/AGGREGATE-SUMMARY.md docs/superpowers/benchmarks/2026-10-06-ws6-smoke/README.md
+git add scripts/bench-summarize.sh scripts/benchmark-isolated-run.sh tests/harness .github/workflows/lint.yml .gitignore docs/superpowers/benchmarks/2026-09-20-skill-effectiveness/AGGREGATE-SUMMARY.md docs/superpowers/benchmarks/2026-10-06-ws6-smoke/README.md
 git commit -m "fix(bench): count executed tests, exclude generated files and the answer key"
 ```
 
