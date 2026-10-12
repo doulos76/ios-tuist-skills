@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.8.1] - 2026-10-12
+
+### Changed
+
+- version-safety (#48): `.tuist-version` is a conditional Tool Version source (#3, after
+  `.tool-versions`). It is honored only by `tuistenv` (Tuist 2.x/3.x) or by mise with
+  `idiomatic_version_file_enable_tools` including `tuist`; Tuist 4.x never reads it.
+  `ios-tuist-migrate` lists it among pin sources.
+- version-safety (#47): the Swift axis collects `swiftVersion` from `Tuist.swift` or
+  `Tuist/Config.swift` and labels it by Tuist version: consumed (2.x/3.x, dependency
+  resolution), stored only (4.0.0-4.184.0), deprecated, ignored (4.184.1+).
+- Output format: one new Tool Version Evidence row (`.tuist-version`) and a label column on
+  the `swiftVersion` row. Additive; no existing row is removed.
+
 ## [0.8.0] - 2026-10-06
 
 ### Added
