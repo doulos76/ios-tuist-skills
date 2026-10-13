@@ -6,6 +6,71 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-10-13
+
+### Added
+
+- WS-A (#54): read-only skill scripts `scripts/skill/collect-version-evidence.sh`
+  (version-safety evidence, `--json`, `--no-commands`) and `scripts/skill/check-consumer-edges.sh`
+  (added/removed local target edges with a static `import` search; "no usage found" is never
+  proof a dependency is unnecessary). Golden tests on every pinned fixture plus 8 synthetic
+  cases (`scripts/run-golden-tests.sh`, CI job `golden tests`).
+- WS-C (#57): routing evaluation. `tests/routing/cases.yaml` (45 cases: positive, negative,
+  adjacent-skill, official-plugin conflict, ambiguous; Korean and English) and
+  `scripts/run-routing-eval.sh`, which records the first `Skill` tool_use from
+  `claude -p --output-format stream-json` in fixture copies without `EXPECTATIONS.md`.
+  Baseline (plugin-only, Claude Code 2.1.296, plugin 0.8.1): 42/45 (93.3%), no
+  forbidden-skill violations; misses are under-selection of `ios-tuist-feature` (2) and
+  `ios-tuist-test-target` (1). A PR that changes a skill `description:` re-runs it.
+- WS-D (#58, #59): `references/tuist-known-issues.md` (minimum version, exclusion limit,
+  tuist/tuist#8337, #8547 and its regressions #9156, #9289) and a monthly
+  `known-issues-recheck` workflow (Tuist 4.206.0 and latest). First dispatch: 4.206.0 and
+  latest (resolved to 4.211.1) both pass; the #9289 entry is verified on 4.206.0.
+- WS-H (#53): benchmark `collect` reports `Tests executed` and `Test: pass-empty` (0 tests),
+  raw and generated-excluded changed-file counts.
+
+### Changed
+
+- **Output format (WS-E, #56):** every skill's Output Contract ends with exactly one
+  machine-readable `ios-tuist-result` block (spec in `references/output-contract.md`);
+  `scripts/parse-skill-result.sh` and `collect` (`BENCH_TRANSCRIPT`) compare its claims with
+  measured results.
+- **Skill folder structure (WS-B, #55):** each `skills/<skill>/` now contains generated
+  copies of the references, templates and scripts it uses
+  (`scripts/sync-skill-resources.sh` + `scripts/skill-resources.manifest`; edit the root
+  originals only). No `../../` links remain; cross-skill references were replaced by shared
+  `references/evidence-driven-debugging.md` and `references/output-contract.md`. Affects
+  anyone installing a single skill folder. Skills run the bundled scripts via
+  `${CLAUDE_SKILL_DIR}/scripts/...` and fall back to the manual procedure.
+- WS-D (#58): `ios-tuist-restyle` links known-issues entries instead of hard-coding
+  versions; rule meaning unchanged.
+
+### Fixed
+
+- WS-H (#53): benchmark `prep` no longer copies the fixture's `EXPECTATIONS.md` (the
+  grader's answer key) into the agent's workdir. The 2026-09-20 benchmark and the 2026-10-06
+  smoke run are footnoted (scores unchanged).
+
+### Verification gates
+
+- `${CLAUDE_SKILL_DIR}` expands to the skill directory (code.claude.com/docs/en/skills);
+  a single skill folder copied into a project's `.claude/skills/` ran its bundled script and
+  read its references (2026-10-13).
+- Skill selection is observable as a stream-json `Skill` tool_use (undocumented; observed on
+  Claude Code 2.1.296). `codex exec --json` (0.160.0) has no skill event: Codex routing
+  is not evaluated.
+- In headless runs without an allow-list, a skill cannot read its own references and
+  improvises the result block (`docs/superpowers/benchmarks/2026-10-13-ws-e-smoke/`).
+- CI on GitHub runners must authenticate mise's GitHub API calls (`GITHUB_TOKEN`); the shared
+  runner IP exhausts the anonymous limit.
+
+### Known limitations
+
+- Routing: 7 runs stopped at plan mode's own plan-file write (`~/.claude/plans/`), which can
+  end a case before a later `Skill` call; results are N=1 per case; pass thresholds not set.
+- `check-consumer-edges.sh` does not cover package (`.external`) edges.
+- Deferred to v0.9.x: WS-F (large-graph fixture, cross-agent harness), WS-G (hooks decision).
+
 ## [0.8.1] - 2026-10-12
 
 ### Changed
