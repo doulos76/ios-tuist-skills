@@ -49,16 +49,16 @@ generate.
   should generate rather than inventing a shape.
 - The request asks to *use* an existing template to generate actual
   project files right now — that's a plain `tuist scaffold` invocation
-  (or [`ios-tuist-feature`](../ios-tuist-feature/SKILL.md)'s existing
+  (or `ios-tuist-feature`'s existing
   "reuse the scaffold" branch when a new feature is being added); this
   skill only authors templates, it does not run them against the real
   project tree.
 - The request is to add real feature code/targets directly to
   `Project.swift` — that's
-  [`ios-tuist-feature`](../ios-tuist-feature/SKILL.md).
+  `ios-tuist-feature`.
 - The request is to extract existing code into a new build target
   (`.framework`, `.staticFramework`, etc.) — that's
-  [`ios-tuist-module`](../ios-tuist-module/SKILL.md).
+  `ios-tuist-module`.
 - The request is to create a resource-accessor-synthesis template
   (`Plugin.swift` + `ResourceSynthesizers/Strings.stencil` etc. for
   `tuist generate`'s resource synthesis) — a distinct Tuist mechanism
@@ -66,7 +66,7 @@ generate.
   skill.
 - No existing Tuist project, or the project has no `Tuist/` directory to
   place `Templates/` under (bootstrap first — that's
-  [`ios-tuist-bootstrap`](../ios-tuist-bootstrap/SKILL.md)).
+  `ios-tuist-bootstrap`).
 
 ## Preconditions
 
@@ -77,11 +77,22 @@ in the project to model the template on.
 
 ## Version Safety
 
-Full [version-safety](../../references/version-safety.md) procedure,
+Full [version-safety](references/version-safety.md) procedure,
 Existing Project Mode. `Template`/`Template.Item`/`Template.Attribute`
 are long-stable `ProjectDescription` API; still confirm the pinned
 version so generated manifest syntax is one the pinned version actually
 accepts, per the repo-wide rule.
+
+**Evidence script.** Collect the evidence with this skill's bundled
+script, run from the project root:
+`"${CLAUDE_SKILL_DIR}/scripts/collect-version-evidence.sh"` in Claude
+Code; other agents run `scripts/collect-version-evidence.sh` resolved
+against the directory that contains this SKILL.md. It only reads files
+and runs the version commands. Use its output as the Tool Version, Xcode
+and Swift evidence and add the Manifest compatibility axis yourself. If
+the script cannot run, follow the manual procedure in
+[version-safety](references/version-safety.md) and list "evidence script
+not used: <reason>" under Unverified Items.
 
 ## Workflow
 
@@ -230,7 +241,7 @@ generated inside the real project tree by this skill.
 
 ## Failure Handling
 
-Evidence-Driven Debugging, same procedure as the other skills. First
+Apply [Evidence-Driven Debugging](references/evidence-driven-debugging.md). First
 hypothesis to consider here specifically: a `{{ attributeName }}`
 placeholder that doesn't match the attribute's declared name exactly
 (case or spelling) renders as literal, unsubstituted text rather than
@@ -307,3 +318,11 @@ Risks / Follow-up:
   the template, confirm whether that import should be fixed content or
   a templated attribute.
 ```
+
+### Machine-readable result
+
+After the sections above, end the response with exactly one
+`ios-tuist-result` block as defined in
+[references/output-contract.md](references/output-contract.md#ios-tuist-result-block),
+with `skill: ios-tuist-scaffold`. The block repeats facts from the sections above for
+tools; it never replaces them and never adds a claim they do not support.

@@ -1,0 +1,1 @@
+{"schema":"ios-tuist-version-evidence/1","tool_version":{"sources":[],"effective":null,"conflicts":[]},"xcode":{"compatible_xcode_versions":".upToNextMajor(\"16.0\")","xcode_version_file":null},"swift":{"swift_version":{"value":"5.9","path":"Tuist.swift","label":"unknown","label_basis":"none"},"package_swift_tools":null,"tuist_package_swift_tools":null,"swift_version_file":null}}

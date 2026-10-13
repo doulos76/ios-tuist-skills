@@ -19,6 +19,18 @@ jobs:
       - uses: actions/checkout@v6
       - name: Fixture selection unit tests
         run: ./tests/ci/test-select-fixtures.sh
+      - name: Benchmark summarizer unit tests
+        run: ./tests/harness/test-bench-summarize.sh
+      - name: Benchmark prep excludes answer key
+        run: ./tests/harness/test-prep-excludes-expectations.sh
+      - name: Routing cases schema
+        run: ./scripts/check-routing-cases.sh
+      - name: Routing eval unit tests
+        run: |
+          ./tests/routing/test-check-routing-cases.sh
+          ./tests/routing/test-routing-observe.sh
+          ./tests/routing/test-routing-summarize.sh
+          ./tests/routing/test-run-routing-eval.sh
 
   check-pins:
     name: fixture pins match matrix
@@ -27,3 +39,33 @@ jobs:
       - uses: actions/checkout@v6
       - name: Compare .tool-versions with matrix
         run: ./scripts/check-fixture-pins.sh
+
+  golden-tests:
+    name: golden tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Golden tests for skill scripts
+        run: ./scripts/run-golden-tests.sh
+
+  skill-resources:
+    name: skill resources
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Sync is a no-op (copies match the root originals)
+        run: |
+          ./scripts/sync-skill-resources.sh
+          git diff --exit-code -- skills
+          test -z "$(git status --porcelain --untracked-files=all -- skills)"
+      - name: Skill links stay inside each skill
+        run: ./scripts/check-skill-links.sh
+      - name: Self-containment tests
+        run: |
+          ./tests/skills/test-sync-skill-resources.sh
+          ./tests/skills/test-standalone-copy.sh
+          ./tests/skills/test-self-containment.sh
+      - name: Known-issues tests
+        run: |
+          ./tests/known-issues/test-known-issues.sh
+          ./tests/known-issues/test-compare.sh

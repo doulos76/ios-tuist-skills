@@ -1,0 +1,76 @@
+# Output Contract
+
+Shared report structure. A skill's own `## Output Contract` section says
+which structure it uses and adds its skill-specific fields and example.
+
+## Standard report sections
+
+Used by `ios-tuist-bootstrap`, `ios-tuist-feature` and
+`ios-tuist-dependency`. Report, in this order:
+
+```text
+Version Context
+Changes Made
+Files Changed
+Dependency Changes
+Validation Performed
+Build Result
+Test Result
+Unverified Items
+Risks / Follow-up
+```
+
+## ios-tuist-result block
+
+Every skill ends its response with exactly one fenced block whose info
+string is `ios-tuist-result` and whose body is YAML. It restates facts
+that are already in the human-readable sections, so that tools
+(`scripts/parse-skill-result.sh`, the benchmark harness, the routing
+evaluation) can read them without an LLM grader. It never replaces the
+human-readable sections, and it never contains a claim those sections
+do not support.
+
+Shape (types, not a valid instance):
+
+```text
+skill: <skill name>
+outcome: completed | refused | blocked | partial
+version_evidence: unavailable | {effective, source, conflicts, collected_by}
+files_changed: [<path>, ...]
+dependency_edges_added: [{from, to, usage}, ...]
+dependency_edges_removed: [{from, to}, ...]
+validation: {generate: pass|fail|not-run, build: pass|fail|not-run, test: pass|fail|not-run}
+unverified: [<item>, ...]
+```
+
+| Field | Rule |
+|---|---|
+| `skill` | The responding skill's folder name, e.g. `ios-tuist-module`. |
+| `outcome` | `completed`: did what was asked. `refused`: a Decision Rule said no (e.g. the modularization checklist was not met). `blocked`: a precondition, permission or environment problem stopped the work. `partial`: some requested steps done, others not (list them in `unverified`). |
+| `version_evidence` | `unavailable` when no Tuist Context was established. Otherwise a mapping: `effective` (the effective project version, or `null` for "none detected"), `source` (the Tool Version source that gave it, or `null`), `conflicts` (list of `"<path>: <value>"`, `[]` when none), `collected_by` (`script` when `scripts/collect-version-evidence.sh` output was used, `manual` when the prose procedure was followed). |
+| `files_changed` | Paths, relative to the project root, that the skill created, modified or deleted. Exclude Tuist-generated artifacts (`*.xcodeproj`, `*.xcworkspace`, `Derived/`). `[]` for a read-only skill. |
+| `dependency_edges_added` | One `{from, to, usage}` per target dependency the skill added. `usage` is the `file:line` reported by `scripts/check-consumer-edges.sh`, or `none-found`. |
+| `dependency_edges_removed` | One `{from, to}` per removed target dependency. |
+| `validation` | What actually ran: `pass`/`fail` only with the command's output shown above; otherwise `not-run`. |
+| `unverified` | Every item the human-readable "Unverified" section lists, one string each; `[]` when none. |
+
+Example:
+
+```yaml
+skill: ios-tuist-module
+outcome: completed
+version_evidence:
+  effective: 4.206.0
+  source: .tool-versions
+  conflicts: []
+  collected_by: script
+files_changed: [Project.swift, NetworkingKit/Sources/Networking.swift]
+dependency_edges_added:
+  - {from: App, to: NetworkingKit, usage: "App/Sources/ExtractCandidateApp.swift:2"}
+dependency_edges_removed: []
+validation: {generate: pass, build: pass, test: pass}
+unverified: []
+```
+
+(In a response the fence info string is `ios-tuist-result`, not `yaml`. The
+example uses `yaml` so that this reference file is never parsed as a result.)

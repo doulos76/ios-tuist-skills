@@ -1,0 +1,296 @@
+# Routing evaluation cases (PRD v0.9 WS-C). Schema: scripts/check-routing-cases.sh.
+# expected_skill: a skills/ directory name or "none". forbidden_skills: selecting one is a violation.
+version: 1
+cases:
+  # --- positive: 2 per skill --------------------------------------------------
+  - id: pos-bootstrap-en
+    prompt: "Set up a new iOS app called Habit with Tuist in this empty folder."
+    fixture: new-project
+    expected_skill: ios-tuist-bootstrap
+    category: positive
+    note: "Empty directory, explicit new Tuist project."
+  - id: pos-bootstrap-ko
+    prompt: "이 빈 폴더에 Tuist로 새 iOS 앱 프로젝트를 만들어줘. 앱 이름은 Diary야."
+    fixture: new-project
+    expected_skill: ios-tuist-bootstrap
+    category: positive
+    note: "Korean variant of a new-project request."
+  - id: pos-feature-en
+    prompt: "Add a settings screen to the ProfileFeature target."
+    fixture: modular
+    expected_skill: ios-tuist-feature
+    category: positive
+    note: "Feature work inside an existing target."
+  - id: pos-feature-ko
+    prompt: "ProfileFeature에 프로필 편집 화면 기능을 추가해줘."
+    fixture: modular
+    expected_skill: ios-tuist-feature
+    category: positive
+    note: "Korean feature addition in an existing module."
+  - id: pos-dependency-en
+    prompt: "Add the Kingfisher Swift package and use it only in ProfileFeature."
+    fixture: modular
+    expected_skill: ios-tuist-dependency
+    category: positive
+    note: "External package scoped to one target."
+  - id: pos-dependency-ko
+    prompt: "SharedUI 타겟에 SnapKit 패키지 의존성을 추가해줘."
+    fixture: modular
+    expected_skill: ios-tuist-dependency
+    category: positive
+    note: "Korean package addition to a named target."
+  - id: pos-module-en
+    prompt: "Extract the networking code into its own module called NetworkingKit."
+    fixture: extract-candidate
+    expected_skill: ios-tuist-module
+    category: positive
+    note: "Same prompt as the WS6 smoke run."
+  - id: pos-module-ko
+    prompt: "App 타겟 안의 네트워킹 코드를 별도 모듈로 분리해줘."
+    fixture: extract-candidate
+    expected_skill: ios-tuist-module
+    category: positive
+    note: "Korean extraction request."
+  - id: pos-archreview-en
+    prompt: "Review this Tuist project's target graph and dependency direction. Report findings only."
+    fixture: architecture-smells
+    expected_skill: ios-tuist-architecture-review
+    category: positive
+    note: "Prompt from the 2026-10-13 observation experiment (selected architecture-review)."
+  - id: pos-archreview-ko
+    prompt: "이 프로젝트 모듈 구조에 문제가 없는지 진단만 해줘. 코드는 고치지 말고."
+    fixture: architecture-smells
+    expected_skill: ios-tuist-architecture-review
+    category: positive
+    note: "Korean diagnosis-only request."
+  - id: pos-ci-en
+    prompt: "Our GitHub Actions workflow for this Tuist project is slow. Audit it and suggest improvements."
+    fixture: ci-gaps
+    expected_skill: ios-tuist-ci
+    category: positive
+    note: "Existing workflow audit."
+  - id: pos-ci-ko
+    prompt: "이 프로젝트의 CI 워크플로가 매번 전체를 다시 빌드해. 점검해줘."
+    fixture: ci-gaps
+    expected_skill: ios-tuist-ci
+    category: positive
+    note: "Korean CI audit."
+  - id: pos-migrate-en
+    prompt: "Migrate this project from Tuist 3.42.2 to Tuist 4.206.0."
+    fixture: migrate-candidate
+    expected_skill: ios-tuist-migrate
+    category: positive
+    note: "Explicit, version-specific migration request."
+  - id: pos-migrate-ko
+    prompt: "이 프로젝트의 Tuist 버전을 4.206.0으로 올려줘."
+    fixture: migrate-candidate
+    expected_skill: ios-tuist-migrate
+    category: positive
+    note: "Korean explicit target version."
+  - id: pos-restyle-en
+    prompt: "Convert the CleanFeature target from sources/resources globs to buildableFolders."
+    fixture: restyle-candidate
+    expected_skill: ios-tuist-restyle
+    category: positive
+    note: "Named target, explicit buildableFolders conversion."
+  - id: pos-restyle-ko
+    prompt: "CleanFeature 타겟을 buildableFolders 방식으로 바꿔줘."
+    fixture: restyle-candidate
+    expected_skill: ios-tuist-restyle
+    category: positive
+    note: "Korean restyle of a named target."
+  - id: pos-testtarget-en
+    prompt: "Create a unit test target for FeatureB."
+    fixture: test-target-candidate
+    expected_skill: ios-tuist-test-target
+    category: positive
+    note: "FeatureB has no test target."
+  - id: pos-testtarget-ko
+    prompt: "FeatureB 타겟용 유닛 테스트 타겟을 추가해줘."
+    fixture: test-target-candidate
+    expected_skill: ios-tuist-test-target
+    category: positive
+    note: "Korean test-target creation."
+  - id: pos-scaffold-en
+    prompt: "Write a tuist scaffold template that generates a <Name>Label.swift file like the existing feature template does."
+    fixture: scaffold-candidate
+    expected_skill: ios-tuist-scaffold
+    category: positive
+    note: "One template, shape taken from the committed one."
+  - id: pos-scaffold-ko
+    prompt: "새 기능 모듈용 tuist scaffold 템플릿을 하나 만들어줘. name 속성 하나만 받게."
+    fixture: scaffold-candidate
+    expected_skill: ios-tuist-scaffold
+    category: positive
+    note: "Korean single-template request."
+  # --- negative: no skill of this plugin should be used -----------------------
+  - id: neg-swift-some
+    prompt: "What does the Swift keyword 'some' mean? Answer in one sentence."
+    fixture: modular
+    expected_skill: none
+    category: negative
+    note: "General Swift question (experiment: no tool, $0.10)."
+  - id: neg-swiftui-state-ko
+    prompt: "SwiftUI에서 @State와 @Binding 차이를 설명해줘."
+    fixture: modular
+    expected_skill: none
+    category: negative
+    note: "General SwiftUI question."
+  - id: neg-write-test-case
+    prompt: "Write a unit test for the request builder in Networking.swift."
+    fixture: extract-candidate
+    expected_skill: none
+    category: negative
+    note: "Adding test cases to an existing test target is out of test-target's scope."
+  - id: neg-typo
+    prompt: "Fix the typo in the title string in SettingsRow.swift."
+    fixture: extract-candidate
+    expected_skill: none
+    category: negative
+    note: "Plain source edit, no Tuist graph change."
+  - id: neg-rename-ko
+    prompt: "Networking.swift의 client 변수 이름을 apiClient로 바꿔줘."
+    fixture: extract-candidate
+    expected_skill: none
+    category: negative
+    note: "Korean plain rename."
+  - id: neg-explain-tuist
+    prompt: "Explain what Tuist is in two sentences."
+    fixture: modular
+    expected_skill: none
+    category: negative
+    note: "Informational question."
+  - id: neg-commit-msg-ko
+    prompt: "방금 바꾼 내용으로 Conventional Commits 형식의 커밋 메시지 초안을 써줘."
+    fixture: modular
+    expected_skill: none
+    category: negative
+    note: "Git chore."
+  - id: neg-instruments
+    prompt: "How do I profile memory leaks with Instruments?"
+    fixture: modular
+    expected_skill: none
+    category: negative
+    note: "Tooling question unrelated to Tuist manifests."
+  # --- adjacent: confusable skill pairs --------------------------------------
+  - id: adj-module-not-feature
+    prompt: "Move the ProfileFeature view code into a new module called ProfileUI."
+    fixture: modular
+    expected_skill: ios-tuist-module
+    category: adjacent
+    forbidden_skills: [ios-tuist-feature]
+    note: "Extraction into a new module, not feature work."
+  - id: adj-feature-not-module
+    prompt: "Add an avatar view to ProfileFeature. Keep the current module layout."
+    fixture: modular
+    expected_skill: ios-tuist-feature
+    category: adjacent
+    forbidden_skills: [ios-tuist-module]
+    note: "Feature inside an existing module."
+  - id: adj-dependency-not-module
+    prompt: "ProfileFeature에서만 Alamofire를 쓰고 싶어. 의존성만 추가해줘."
+    fixture: modular
+    expected_skill: ios-tuist-dependency
+    category: adjacent
+    forbidden_skills: [ios-tuist-module, ios-tuist-feature]
+    note: "Dependency wiring, no new module."
+  - id: adj-restyle-not-migrate
+    prompt: "Switch CleanFeature to buildableFolders. Do not change the Tuist version."
+    fixture: restyle-candidate
+    expected_skill: ios-tuist-restyle
+    category: adjacent
+    forbidden_skills: [ios-tuist-migrate]
+    note: "Restyle without a version bump."
+  - id: adj-migrate-not-restyle
+    prompt: "Tuist 4.206.0으로 마이그레이션해줘. 폴더 통합 방식은 바꾸지 말고."
+    fixture: migrate-candidate
+    expected_skill: ios-tuist-migrate
+    category: adjacent
+    forbidden_skills: [ios-tuist-restyle]
+    note: "Version migration without restyle."
+  - id: adj-testtarget-ui
+    prompt: "Add a UI test target for the App target."
+    fixture: test-target-candidate
+    expected_skill: ios-tuist-test-target
+    category: adjacent
+    forbidden_skills: [ios-tuist-feature, ios-tuist-module]
+    note: "New test target, not a feature or module."
+  - id: adj-review-not-change
+    prompt: "FeatureA가 CoreKit에 의존하는 방향이 맞는지 봐줘. 아무것도 바꾸지 마."
+    fixture: architecture-smells
+    expected_skill: ios-tuist-architecture-review
+    category: adjacent
+    forbidden_skills: [ios-tuist-module, ios-tuist-dependency]
+    note: "Read-only review, no edits."
+  # --- official-conflict: tuist/agent-plugin territory (038e54c) -------------
+  - id: off-migrate-xcode
+    prompt: "Migrate this Xcode project to Tuist."
+    fixture: existing-xcode
+    expected_skill: none
+    category: official-conflict
+    forbidden_skills: [ios-tuist-migrate, ios-tuist-bootstrap]
+    note: "Official 'migrate' skill; ios-tuist-migrate is version-to-version only."
+  - id: off-migrate-xcode-ko
+    prompt: "기존 Xcode 프로젝트를 Tuist generated workspace로 전환하고 싶어."
+    fixture: existing-xcode
+    expected_skill: none
+    category: official-conflict
+    forbidden_skills: [ios-tuist-migrate, ios-tuist-bootstrap]
+    note: "Korean adoption request; official migrate."
+  - id: off-generate-fails-ko
+    prompt: "tuist generate가 실패해요. 원인을 찾아줘."
+    fixture: modular
+    expected_skill: none
+    category: official-conflict
+    forbidden_skills: [ios-tuist-migrate]
+    note: "Official debug-generated-project."
+  - id: off-cache-compare
+    prompt: "Compare the last two tuist cache runs and explain the cache misses."
+    fixture: modular
+    expected_skill: none
+    category: official-conflict
+    forbidden_skills: [ios-tuist-ci]
+    note: "Official compare-cache-runs."
+  - id: off-flaky
+    prompt: "Fix the flaky tests reported by Tuist test insights."
+    fixture: test-target-candidate
+    expected_skill: none
+    category: official-conflict
+    forbidden_skills: [ios-tuist-test-target]
+    note: "Official fix-flaky-tests."
+  - id: off-generate-and-test
+    prompt: "Run tuist generate and then xcodebuild test for the App scheme."
+    fixture: legacy-tuist
+    expected_skill: none
+    category: official-conflict
+    forbidden_skills: [ios-tuist-migrate, ios-tuist-restyle]
+    note: "Official generated-projects (day-to-day commands)."
+  # --- ambiguous: vague modernization requests must not trigger migrate -------
+  - id: amb-latest-ko
+    prompt: "Tuist 최신으로 정리해줘."
+    fixture: legacy-tuist
+    expected_skill: none
+    category: ambiguous
+    forbidden_skills: [ios-tuist-migrate]
+    note: "No explicit target version; migrate requires one."
+  - id: amb-latest-tooling
+    prompt: "Make this project use the latest tooling."
+    fixture: version-mismatch
+    expected_skill: none
+    category: ambiguous
+    forbidden_skills: [ios-tuist-migrate]
+    note: "Vague upgrade wish."
+  - id: amb-version-warning-ko
+    prompt: "버전 경고가 뜨는데 알아서 맞춰줘."
+    fixture: version-mismatch
+    expected_skill: none
+    category: ambiguous
+    forbidden_skills: [ios-tuist-migrate]
+    note: "Mismatch must be reported, not silently fixed."
+  - id: amb-modernize
+    prompt: "Modernize the manifests."
+    fixture: legacy-tuist
+    expected_skill: none
+    category: ambiguous
+    forbidden_skills: [ios-tuist-migrate, ios-tuist-restyle]
+    note: "Restyle needs explicitly named targets; migrate needs a version."

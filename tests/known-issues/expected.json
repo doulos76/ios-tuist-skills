@@ -1,0 +1,5 @@
+{
+  "restyle-baseline-build": "pass",
+  "cleanfeature-buildablefolders-build": "pass",
+  "cleanfeature-resource-in-app": "present"
+}

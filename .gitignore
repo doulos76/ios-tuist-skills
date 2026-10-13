@@ -32,3 +32,11 @@ Tuist/Dependencies/
 # Logs
 *.log
 npm-debug.log*
+
+# Canned xcodebuild logs used by tests/harness (v0.9 WS-H); must be tracked.
+!tests/harness/fixtures/*.log
+
+# Routing evaluation: raw stream-json and stderr stay local (large, contain full transcripts)
+docs/superpowers/benchmarks/*-routing/*/raw/
+docs/superpowers/benchmarks/*-routing/*/stderr/
+docs/superpowers/benchmarks/*-routing/*/observe/

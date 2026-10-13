@@ -1,0 +1,2 @@
+{"type":"system","subtype":"init","claude_code_version":"2.1.296","model":"claude-opus-5","permissionMode":"plan","plugins":[{"name":"ios-tuist-skills","path":"/repo","source":"ios-tuist-skills@inline","version":"0.8.1"},{"name":"tuist","path":"/official","source":"tuist@inline","version":"0.0.0"}],"skills":[]}
+{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_01","name":"Skill","input":{"skill":"tuist:migrate"}}]},"parent_tool_use_id":null}

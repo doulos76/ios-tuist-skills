@@ -1,0 +1,70 @@
+# Shared files copied into each skill folder by scripts/sync-skill-resources.sh.
+# Format: <skill> <source>. Sources: references/<file>.md, templates/<profile>/, scripts/skill/<file>.
+# The root file is the original; never edit the copy under skills/.
+ios-tuist-architecture-review references/evidence-driven-debugging.md
+ios-tuist-architecture-review references/modularization.md
+ios-tuist-architecture-review references/output-contract.md
+ios-tuist-architecture-review references/version-safety.md
+ios-tuist-architecture-review scripts/skill/collect-version-evidence.sh
+
+ios-tuist-bootstrap references/evidence-driven-debugging.md
+ios-tuist-bootstrap references/output-contract.md
+ios-tuist-bootstrap references/source-of-truth.md
+ios-tuist-bootstrap references/version-safety.md
+ios-tuist-bootstrap templates/clean/
+ios-tuist-bootstrap templates/feature-modular/
+ios-tuist-bootstrap templates/minimal/
+ios-tuist-bootstrap scripts/skill/collect-version-evidence.sh
+
+ios-tuist-ci references/evidence-driven-debugging.md
+ios-tuist-ci references/output-contract.md
+ios-tuist-ci references/version-safety.md
+ios-tuist-ci scripts/skill/collect-version-evidence.sh
+
+ios-tuist-dependency references/dependencies.md
+ios-tuist-dependency references/evidence-driven-debugging.md
+ios-tuist-dependency references/modularization.md
+ios-tuist-dependency references/output-contract.md
+ios-tuist-dependency references/source-of-truth.md
+ios-tuist-dependency references/version-safety.md
+ios-tuist-dependency scripts/skill/check-consumer-edges.sh
+ios-tuist-dependency scripts/skill/collect-version-evidence.sh
+
+ios-tuist-feature references/dependencies.md
+ios-tuist-feature references/evidence-driven-debugging.md
+ios-tuist-feature references/output-contract.md
+ios-tuist-feature references/source-of-truth.md
+ios-tuist-feature references/testing.md
+ios-tuist-feature references/version-safety.md
+ios-tuist-feature scripts/skill/collect-version-evidence.sh
+
+ios-tuist-migrate references/evidence-driven-debugging.md
+ios-tuist-migrate references/output-contract.md
+ios-tuist-migrate references/version-safety.md
+ios-tuist-migrate scripts/skill/collect-version-evidence.sh
+
+ios-tuist-module references/dependencies.md
+ios-tuist-module references/evidence-driven-debugging.md
+ios-tuist-module references/modularization.md
+ios-tuist-module references/output-contract.md
+ios-tuist-module references/source-of-truth.md
+ios-tuist-module references/version-safety.md
+ios-tuist-module scripts/skill/check-consumer-edges.sh
+ios-tuist-module scripts/skill/collect-version-evidence.sh
+
+ios-tuist-restyle references/evidence-driven-debugging.md
+ios-tuist-restyle references/output-contract.md
+ios-tuist-restyle references/tuist-known-issues.md
+ios-tuist-restyle references/version-safety.md
+ios-tuist-restyle scripts/skill/collect-version-evidence.sh
+
+ios-tuist-scaffold references/evidence-driven-debugging.md
+ios-tuist-scaffold references/output-contract.md
+ios-tuist-scaffold references/version-safety.md
+ios-tuist-scaffold scripts/skill/collect-version-evidence.sh
+
+ios-tuist-test-target references/evidence-driven-debugging.md
+ios-tuist-test-target references/output-contract.md
+ios-tuist-test-target references/testing.md
+ios-tuist-test-target references/version-safety.md
+ios-tuist-test-target scripts/skill/collect-version-evidence.sh
