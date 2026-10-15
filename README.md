@@ -7,6 +7,9 @@ repository conventions; generate compatible manifests; and verify
 meaningful changes with generate, build, and test commands instead of
 silently assuming the latest syntax.
 
+Current release: **0.9.0** (2026-10-13). See [CHANGELOG.md](CHANGELOG.md) and
+[GitHub Releases](https://github.com/doulos76/ios-tuist-skills/releases).
+
 ## Install the plugin
 
 This repository is also a plugin marketplace
@@ -154,10 +157,24 @@ skills/               Bootstrap, feature, dependency, module,
                       test-target, and scaffold skills
 references/           Shared version and engineering decision procedures
 templates/            Minimal, feature-modular, and clean scaffolds
+scripts/              CI, benchmark, routing, and resource-sync tooling
+scripts/skill/        Read-only scripts bundled into skills
 examples/             Worked minimal and modular projects
 tests/fixtures/       Version- and convention-sensitive test projects
-.github/workflows/    Fixture generation, build, and test validation
+tests/golden/         Golden outputs for the bundled skill scripts
+tests/routing/        Skill-selection evaluation cases
+tests/known-issues/   Tuist known-issue probes and expectations
+.github/workflows/    Fixture, lint, and known-issues recheck workflows
 ```
+
+Each `skills/<skill>/` folder is self-contained: it carries generated copies
+of the references, templates, and scripts it uses, so a single skill folder
+copied into a project's `.claude/skills/` still works. Edit the root
+originals only and run `scripts/sync-skill-resources.sh` (driven by
+`scripts/skill-resources.manifest`); CI checks that the copies are in sync.
+
+Every skill's output ends with one machine-readable `ios-tuist-result` block,
+specified in [`references/output-contract.md`](references/output-contract.md).
 
 ## Fixtures and CI
 
@@ -198,6 +215,13 @@ workspace, builds it, and runs its tests. The fixtures cover:
 CI proves the committed fixture projects remain buildable. The expectation
 documents define the separate manual checks for a skill's behavior when it is
 run against each scenario. Workflow runs use GitHub-hosted `macos-15` runners.
+
+`lint.yml` also runs `golden tests` (`scripts/run-golden-tests.sh`, the
+bundled skill scripts against every pinned fixture plus synthetic cases) and
+`skill resources` (bundled copies and links). A monthly
+`known-issues-recheck` workflow re-probes the entries in
+[`references/tuist-known-issues.md`](references/tuist-known-issues.md) on
+Tuist 4.206.0 and the latest release.
 
 ## Skill effectiveness benchmark
 
@@ -262,3 +286,19 @@ The v0.7 milestone (Claude Code plugin marketplace distribution) added
 this repository can be installed with `/plugin marketplace add` instead
 of a session-scoped `--plugin-dir` load; see the
 [Install the plugin](#install-the-plugin) section above.
+
+The v0.8 milestone (Reliability & Coexistence: per-axis version evidence,
+coexistence with the official Tuist plugin, per-fixture version pins, and
+isolated benchmark runs) is specified in the
+[v0.8 design specification](docs/superpowers/specs/2026-10-01-ios-tuist-skills-v0.8-design.md)
+and its [addendum](docs/superpowers/specs/2026-10-01-ios-tuist-skills-v0.8-design-addendum-1.md).
+v0.8.1 added `.tuist-version` as a conditional Tool Version source and
+version-labeled `swiftVersion` evidence.
+
+The v0.9 milestone (Deterministic Core & Routing Evaluation: bundled
+read-only skill scripts with golden tests, self-contained skill folders,
+the `ios-tuist-result` output contract, routing evaluation, and the
+known-issues recheck) is specified in the
+[v0.9 design specification](docs/superpowers/specs/2026-10-02-ios-tuist-skills-v0.9-design.md).
+WS-F (large-graph fixture, cross-agent harness) and WS-G (hooks) are
+deferred to v0.9.x.
