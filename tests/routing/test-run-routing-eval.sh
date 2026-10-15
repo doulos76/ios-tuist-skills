@@ -61,6 +61,13 @@ check "meta.json records Claude and current plugin versions" ruby -rjson -e '
   abort "expected plugin_version=#{version.inspect}, got #{meta["plugin_version"].inspect}" unless meta["plugin_version"] == version
 ' "$T/rel/out/meta.json" "$REPO_ROOT/.claude-plugin/plugin.json"
 
+status=0
+(cd "$T" && PATH="$T/bin:$PATH" TMPDIR="$T" "$REPO_ROOT/scripts/run-routing-eval.sh" run \
+  --condition plugin-only --out codex/out --agent codex) > "$T/codex.log" 2>&1 || status=$?
+check "codex agent is reported unsupported (exit 3)" ruby -e 'abort "exit #{ARGV[0]}" unless ARGV[0] == "3"' "$status"
+check "unsupported message names the missing event" grep -q 'no skill-selection event' "$T/codex.log"
+check "unsupported run writes no results" test ! -e "$T/codex/out/results.jsonl"
+
 if [ "$failures" -eq 0 ]; then
   echo "all run-routing-eval tests passed"
 else

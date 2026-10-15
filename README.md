@@ -232,6 +232,13 @@ just fixture CI — lives in
 It also documents a real methodology finding about baseline isolation inside
 this repository, worth reading before re-running or extending the benchmark.
 
+`scripts/benchmark-isolated-run.sh prep ... --agent codex` prepares the same
+isolated workdir for Codex CLI: with-skill copies the skill folders into
+`.agents/skills/` (Codex project skills), and both conditions run
+`codex --disable plugins` so an installed plugin cannot leak into the
+baseline. The routing evaluation does not support Codex
+(`--agent codex` exits 3): `codex exec --json` has no skill-selection event.
+
 ## Routing evaluation
 
 `tests/routing/cases.yaml` lists prompts with the skill that should be selected

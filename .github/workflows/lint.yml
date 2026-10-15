@@ -23,6 +23,8 @@ jobs:
         run: ./tests/harness/test-bench-summarize.sh
       - name: Benchmark prep excludes answer key
         run: ./tests/harness/test-prep-excludes-expectations.sh
+      - name: Benchmark prep --agent
+        run: ./tests/harness/test-prep-agent.sh
       - name: Routing cases schema
         run: ./scripts/check-routing-cases.sh
       - name: Routing eval unit tests

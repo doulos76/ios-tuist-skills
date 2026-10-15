@@ -1,7 +1,7 @@
 #!/bin/bash
 # Routing evaluation (PRD v0.9 WS-C): which skill does a headless Claude Code session pick?
 #   run-routing-eval.sh run --condition plugin-only|plugin+official|none --out DIR \
-#       [--cases FILE] [--only id1,id2] [--budget USD] [--official-plugin-dir DIR] [--yes]
+#       [--agent claude|codex] [--cases FILE] [--only id1,id2] [--budget USD] [--official-plugin-dir DIR] [--yes]
 #   run-routing-eval.sh summarize DIR
 set -euo pipefail
 
@@ -106,10 +106,11 @@ isolation_guard() {
 }
 
 run() {
-  local condition="" out="" cases="$REPO_ROOT/tests/routing/cases.yaml" only="" budget="0.30" official="" yes=0
+  local condition="" out="" cases="$REPO_ROOT/tests/routing/cases.yaml" only="" budget="0.30" official="" yes=0 agent=claude
   while [ "$#" -gt 0 ]; do
     case "$1" in
       --condition) condition="$2"; shift 2 ;;
+      --agent) agent="$2"; shift 2 ;;
       --out) out="$2"; shift 2 ;;
       --cases) cases="$2"; shift 2 ;;
       --only) only="$2"; shift 2 ;;
@@ -120,6 +121,13 @@ run() {
     esac
   done
   [ -n "$condition" ] && [ -n "$out" ] || usage
+  case "$agent" in
+    claude) ;;
+    codex)
+      echo "unsupported: codex exec --json (0.160.0) emits no skill-selection event, so routing cannot be observed" >&2
+      exit 3 ;;
+    *) usage ;;
+  esac
   local plugin_args=()
   case "$condition" in
     plugin-only) plugin_args=(--plugin-dir "$REPO_ROOT") ;;
