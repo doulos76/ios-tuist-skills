@@ -243,6 +243,11 @@ records the first `Skill` call from Claude Code's stream-json output, and writes
 forbidden-skill violations). Each case is capped with `--max-budget-usd`
 (default 0.30).
 
+Plan mode writes its own plan file under `~/.claude/plans/` (or
+`$CLAUDE_CONFIG_DIR/plans/`). Those writes are listed under "Plan-mode plan
+files" and do not end a case; any other write before a `Skill` call still
+counts as acting without a skill.
+
 **Rule:** a PR that changes any skill's `description:` must re-run the
 `plugin-only` evaluation and attach the summary next to the latest baseline
 under `docs/superpowers/benchmarks/*-routing/`.

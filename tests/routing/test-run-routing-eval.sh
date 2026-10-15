@@ -49,6 +49,10 @@ check "single result selects architecture review and stops at skill" ruby -rjson
   abort "selected=#{row["selected"].inspect}, stop_reason=#{row["stop_reason"].inspect}" unless
     row["selected"] == "ios-tuist-architecture-review" && row["stop_reason"] == "skill"
 ' "$T/rel/out/results.jsonl"
+check "observer receives the plans dir" ruby -rjson -e '
+  row = JSON.parse(File.readlines(ARGV[0]).first)
+  abort "plan_writes missing: #{row.keys.inspect}" unless row.key?("plan_writes")
+' "$T/rel/out/results.jsonl"
 check "case stderr exists in caller output directory" test -f "$T/rel/out/stderr/pos-archreview-en.txt"
 check "meta.json records Claude and current plugin versions" ruby -rjson -e '
   meta = JSON.parse(File.read(ARGV[0]))
