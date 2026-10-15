@@ -5,10 +5,11 @@ set -uo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)" || exit 1
 
 usage() {
-  echo "Usage: $0 prep <fixture> <baseline|with-skill> <run-N> [--plugin-dir DIR]" >&2
+  echo "Usage: $0 prep <fixture> <baseline|with-skill> <run-N> [--plugin-dir DIR] [--agent claude|codex]" >&2
   echo "       $0 collect <fixture> <baseline|with-skill> <run-N>" >&2
   echo "Run number: N or run-N (positive integer). collect requires BENCH_DIR=<date>-<name>." >&2
   echo "Optional for collect: BENCH_TRANSCRIPT=<saved final response> parses its ios-tuist-result block." >&2
+  echo "--agent codex with-skill copies the plugin's skills into <workdir>/.agents/skills (Codex project skills)." >&2
   exit 2
 }
 
@@ -23,11 +24,18 @@ case "$fixture" in ""|*[!a-zA-Z0-9_-]*) usage ;; esac
 case "$condition" in baseline|with-skill) ;; *) usage ;; esac
 case "$run" in ""|*[!0-9]*|0*) usage ;; esac
 PLUGIN_DIR="${PLUGIN_DIR:-}"
-if [ "$command" = prep ] && [ "$#" -eq 2 ] && [ "$1" = --plugin-dir ]; then
-  PLUGIN_DIR="$2"
-  shift 2
+AGENT=claude
+if [ "$command" = prep ]; then
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --plugin-dir) [ "$#" -ge 2 ] || usage; PLUGIN_DIR="$2"; shift 2 ;;
+      --agent) [ "$#" -ge 2 ] || usage; AGENT="$2"; shift 2 ;;
+      *) usage ;;
+    esac
+  done
 fi
 [ "$#" -eq 0 ] || usage
+case "$AGENT" in claude|codex) ;; *) usage ;; esac
 SRC="$REPO_ROOT/tests/fixtures/$fixture"
 [ -d "$SRC" ] || { echo "No such fixture: tests/fixtures/$fixture" >&2; exit 2; }
 if [ "$command" = collect ]; then
@@ -65,7 +73,7 @@ snapshot_edges() {
   ruby -e '
     Dir.chdir(ARGV[0]) do
       Dir.glob("**/{Project,Tuist,Package}.swift", File::FNM_DOTMATCH).sort.each do |path|
-        next if path.split("/").include?(".git") || !File.file?(path)
+        next if path.split("/").include?(".git") || path.start_with?(".agents/") || !File.file?(path)
         File.foreach(path).with_index(1) do |line, number|
           puts "#{path}:#{number}:#{line.chomp}" if line.match?(/dependencies|\.target\(|\.project\(|\.external\(/)
         end
@@ -85,17 +93,28 @@ if [ "$command" = prep ]; then
     rm -rf -- "$WORKDIR_PARENT"
     exit 1
   fi
+  if [ "$AGENT" = codex ] && [ "$condition" = with-skill ]; then
+    # Codex reads project skills from .agents/skills; each skill folder is self-contained (v0.9 WS-B).
+    mkdir -p "$WORKDIR/.agents/skills" && cp -R "$PLUGIN_DIR/skills/." "$WORKDIR/.agents/skills/" || exit 1
+  fi
   git -C "$WORKDIR" init -q &&
     git -C "$WORKDIR" add -A &&
     git -C "$WORKDIR" -c user.name=bench -c user.email=bench@example.invalid commit -qm baseline || exit 1
   snapshot_edges > "$WORKDIR/../edges-before.txt" || exit 1
   printf '%s\n' "$WORKDIR" > "$STATE" || exit 1
   printf '%s\n' "${PLUGIN_DIR:-$REPO_ROOT}" > "$STATE.plugin-dir" || exit 1
+  printf '%s\n' "$AGENT" > "$STATE.agent" || exit 1
   echo "Workdir: $WORKDIR"
-  # The user-scope installed plugin would otherwise leak into the baseline.
-  printf 'cd %q && claude --setting-sources project' "$WORKDIR"
-  if [ "$condition" = with-skill ]; then
-    printf ' --plugin-dir %q' "$PLUGIN_DIR"
+  echo "Agent: $AGENT"
+  if [ "$AGENT" = codex ]; then
+    # Both conditions disable plugins, so the only difference is the project skills above.
+    printf 'cd %q && codex --disable plugins' "$WORKDIR"
+  else
+    # The user-scope installed plugin would otherwise leak into the baseline.
+    printf 'cd %q && claude --setting-sources project' "$WORKDIR"
+    if [ "$condition" = with-skill ]; then
+      printf ' --plugin-dir %q' "$PLUGIN_DIR"
+    fi
   fi
   printf '\nCollect (from another terminal, with BENCH_DIR set):\n'
   printf '%q collect %q %q %q\n' "$REPO_ROOT/scripts/benchmark-isolated-run.sh" "$fixture" "$condition" "$run"
@@ -105,6 +124,9 @@ fi
 [ -f "$STATE" ] && [ -f "$STATE.plugin-dir" ] || { echo "No saved prep state: $STATE" >&2; exit 2; }
 IFS= read -r WORKDIR < "$STATE" || exit 1
 IFS= read -r PLUGIN_DIR < "$STATE.plugin-dir" || exit 1
+# States written before --agent existed have no .agent file; they were Claude runs.
+AGENT=claude
+[ ! -f "$STATE.agent" ] || IFS= read -r AGENT < "$STATE.agent" || exit 1
 isolation_guard || exit 1
 MATRIX_FILE="$REPO_ROOT/tests/fixtures/ci-matrix.json"
 MATRIX_TSV="$(ruby -rjson -e '
@@ -135,7 +157,12 @@ changed_filtered=unknown
   echo
   echo "Date: $(date -u '+%Y-%m-%dT%H:%M:%SZ')"
   echo "Condition: $condition"
-  echo "Claude: $(claude --version 2>&1)"
+  echo "Agent: $AGENT"
+  if [ "$AGENT" = codex ]; then
+    echo "Codex: $(codex --version 2>&1)"
+  else
+    echo "Claude: $(claude --version 2>&1)"
+  fi
   echo "Model: ${BENCH_MODEL:-unrecorded}"
   echo "Workdir: $WORKDIR"
   if [ "$condition" = baseline ]; then
