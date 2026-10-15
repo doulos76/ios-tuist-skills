@@ -27,6 +27,7 @@ summarize() {
     by_cat = rows.group_by { |r| r["category"] }.sort.map { |c, rs| [c, rs.count(&correct), rs.size] }
     violations = rows.select { |r| (r["forbidden_skills"] || []).include?(r["selected"]) }
     anomalies = rows.select { |r| r["stop_reason"] == "eof" || r["nested"] }
+    plan_cases = rows.reject { |r| (r["plan_writes"] || []).empty? }
     skills = rows.flat_map { |r| [r["expected_skill"], r["selected"]] }.uniq
                  .reject { |s| s == "none" || s.to_s.start_with?("other:") }.sort
     per_skill = skills.map do |s|
@@ -46,6 +47,7 @@ summarize() {
     aggregate = {
       "cases" => rows.size, "correct" => n_correct, "by_category" => by_cat.map { |c, k, n| { "category" => c, "correct" => k, "total" => n } },
       "violations" => violations.map { |r| r["id"] }, "anomalies" => anomalies.map { |r| r["id"] },
+      "plan_write_cases" => plan_cases.map { |r| r["id"] },
       "per_skill" => per_skill, "confusion" => { "rows" => row_labels, "cols" => col_labels, "counts" => matrix },
       "known_cost_usd" => known.sum.round(4), "cost_known_cases" => known.size, "cost_unknown_cases" => rows.size - known.size,
       "plugin_versions" => plugin_versions
@@ -78,6 +80,9 @@ summarize() {
     md << ""
     md << "## Anomalies"
     md << (anomalies.empty? ? "- none" : anomalies.map { |r| r["nested"] ? "- #{r["id"]}: skill selected inside a subagent" : "- #{r["id"]}: stop_reason eof" })
+    md << ""
+    md << "## Plan-mode plan files (recorded, not a stop)"
+    md << (plan_cases.empty? ? "- none" : plan_cases.map { |r| "- #{r["id"]}: #{r["plan_writes"].size} plan-file write(s), then #{r["stop_reason"]}" })
     md << ""
     md << format("Known cost: $%.2f over %d cases; %d cases stopped before a result (cost unknown)", known.sum, known.size, rows.size - known.size)
     File.write(File.join(dir, "summary.md"), md.flatten.join("\n") + "\n")
@@ -171,7 +176,7 @@ run() {
     set +e
     (cd "$work" && claude -p "$prompt" "${plugin_args[@]}" --setting-sources project --permission-mode plan \
         --output-format stream-json --verbose --max-budget-usd "$budget" < /dev/null 2> "$out/stderr/$id.txt") \
-      | tee "$out/raw/$id.jsonl" | "$REPO_ROOT/scripts/routing-observe.sh" > "$out/observe/$id.json"
+      | tee "$out/raw/$id.jsonl" | "$REPO_ROOT/scripts/routing-observe.sh" ios-tuist-skills "$plans_dir" > "$out/observe/$id.json"
     statuses=("${PIPESTATUS[@]}")
     set -e
     claude_exit="${statuses[0]}"

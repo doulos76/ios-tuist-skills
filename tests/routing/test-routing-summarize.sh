@@ -20,8 +20,9 @@ want "precision of feature"    "| feature | 1 | 1 | 0 | 0.5 | 1.0 |"
 want "eof anomaly listed"      "- off-a: stop_reason eof"
 want "cost accounting"         "Known cost: \$0.30 over 2 cases; 3 cases stopped before a result (cost unknown)"
 want "plugin version recorded" "Plugin version: 0.9.0"
+want "plan-file writes listed"  "- neg-a: 1 plan-file write(s), then result"
 
-ruby -rjson -e 'd = JSON.parse(File.read(ARGV[0])); exit(d["cases"].size == 5 && d["aggregate"]["correct"] == 3 ? 0 : 1)' "$TMP/results.json" \
+ruby -rjson -e 'd = JSON.parse(File.read(ARGV[0])); exit(d["cases"].size == 5 && d["aggregate"]["correct"] == 3 && d["aggregate"]["plan_write_cases"] == ["neg-a"] ? 0 : 1)' "$TMP/results.json" \
   && echo "ok   - results.json aggregate" || { echo "FAIL - results.json aggregate"; failures=$((failures + 1)); }
 
 [ "$failures" -eq 0 ] && echo "all routing-summarize tests passed" || echo "$failures routing-summarize test(s) failed"
