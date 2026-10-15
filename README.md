@@ -211,6 +211,10 @@ workspace, builds it, and runs its tests. The fixtures cover:
   a minimal buildable project with a committed `tuist scaffold`
   template `ios-tuist-scaffold` must be able to author and run
   correctly
+- [large graph](tests/fixtures/large-graph/EXPECTATIONS.md): a synthetic
+  16-target, layered project with three local SwiftPM packages and
+  deliberately mixed conventions, for module extraction, dependency
+  addition and architecture review at a realistic size
 
 CI proves the committed fixture projects remain buildable. The expectation
 documents define the separate manual checks for a skill's behavior when it is
