@@ -19,15 +19,17 @@
 
 ## Order: automation first
 
-| Phase | Task | Runs unattended? | Cost | Needs the user for |
+| Phase | Task | Runs unattended? | Usage | Needs the user for |
 |---|---|---|---|---|
 | A | 1. Routing stop rule ignores plan-file writes | yes (Codex + CI) | $0 | merge |
 | A | 2. `--agent claude\|codex` in both harnesses | yes, plus one Codex check | $0 (Codex subscription) | merge |
 | A | 3. WS-F `large-graph` fixture | yes (Codex + local build + CI) | $0 | merge |
-| B | 4. Routing re-baseline with the fixed observer | yes, once started | ≤ $13.50 (45 × $0.30 cap) | OK to spend; pass-threshold decision |
-| B | 5. WS-F trial run (3 scenarios × Claude, Codex) | yes, once started | ≤ $9 Claude (3 × $3 cap) + Codex subscription | OK to spend |
+| B | 4. Routing re-baseline with the fixed observer | yes, once started | Claude Max plan usage; capped at $13.50 equivalent (45 × $0.30) | go-ahead when plan usage allows; pass-threshold decision |
+| B | 5. WS-F trial run (3 scenarios × Claude, Codex) | yes, once started | Claude Max plan usage, capped at $9 equivalent (3 × $3) + Codex subscription | go-ahead when plan usage allows |
 | C | 6. WS-G hooks decision record | research yes, decision no | $0 | adopt / defer / reject |
 | C | 7. Release v0.9.1 | no | $0 | merges, tag and Release |
+
+Usage note: `claude` here is logged in with the user's Claude Max subscription (user, 2026-10-16), so headless runs draw on plan usage limits; the dollar caps are `--max-budget-usd` values (`total_cost_usd` equivalents), not separate charges.
 
 Phase A tasks are independent of each other (different files) and can be merged in any order. Task 4 needs Task 1 merged. Task 5 needs Tasks 2 and 3 merged. Task 6 is independent. Task 7 comes last.
 
@@ -1528,7 +1530,7 @@ Expected: build exit 0, five `ok` lines. Then `git clean -fdX tests/fixtures/lar
 
 ---
 
-### Task 4: Routing re-baseline with the fixed observer (Phase B; needs Task 1 merged and the user's OK to spend ≤ $13.50)
+### Task 4: Routing re-baseline with the fixed observer (Phase B; needs Task 1 merged and the user's go-ahead)
 
 **Files:**
 - Create: `docs/superpowers/benchmarks/<YYYY-MM-DD>-routing/plugin-only/` (`meta.json`, `results.jsonl`, `results.json`, `summary.md`, `plans-created.txt`; `raw/`, `stderr/`, `observe/` stay ignored)
@@ -1554,7 +1556,7 @@ scripts/run-routing-eval.sh run --condition plugin-only --out "$D" --yes
 
 ---
 
-### Task 5: WS-F trial run on `large-graph` (Phase B; needs Tasks 2 and 3 merged and the user's OK to spend ≤ $9)
+### Task 5: WS-F trial run on `large-graph` (Phase B; needs Tasks 2 and 3 merged and the user's go-ahead)
 
 **Files:**
 - Create: `docs/superpowers/benchmarks/<YYYY-MM-DD>-large-graph-trial/` (`README.md`, `raw/<fixture>-<condition>-run<N>.md` from `collect`, `transcripts/`)
