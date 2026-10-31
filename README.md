@@ -265,7 +265,7 @@ under `docs/superpowers/benchmarks/*-routing/`.
 
 Codex is not evaluated: `codex exec --json` (0.160.0) has no skill event to observe.
 
-Baseline: [2026-10-13 plugin-only](docs/superpowers/benchmarks/2026-10-13-routing/plugin-only/summary.md) — 42/45 (93.3%), no forbidden-skill violations.
+Baseline: [2026-10-31 plugin-only](docs/superpowers/benchmarks/2026-10-31-routing/plugin-only/summary.md) — 42/45 (93.3%), no forbidden-skill violations, Claude Code 2.1.316, budget $0.60/case ([comparison](docs/superpowers/benchmarks/2026-10-31-routing/COMPARISON.md)). Previous: [2026-10-13](docs/superpowers/benchmarks/2026-10-13-routing/plugin-only/summary.md), 42/45.
 
 ## Non-goals
 
