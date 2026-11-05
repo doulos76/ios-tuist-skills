@@ -6,6 +6,61 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.9.1] - 2026-11-06
+
+### Fixed
+
+- Routing observer (#65): plan-mode plan files written under `~/.claude/plans/` (or
+  `$CLAUDE_CONFIG_DIR/plans/`) are recorded as `plan_writes` and no longer end a case
+  (7 of 45 cases stopped on them in the 2026-10-13 baseline). Any other write before a
+  `Skill` call still stops with `write-tool`.
+
+### Added
+
+- `--agent claude|codex` for `scripts/benchmark-isolated-run.sh` (#66). Codex with-skill
+  workdirs get the self-contained skill folders in `.agents/skills/`; run Codex with
+  `codex --disable plugins`. `run-routing-eval.sh --agent codex` exits 3 (unsupported):
+  `codex exec --json` has no skill-selection event.
+- `large-graph` fixture (#67): synthetic Tuist 4.206.0 project with 16 targets, 5 test
+  targets and 3 local SwiftPM packages (mixed folder conventions on purpose), pinned in
+  the fixture matrix and golden tests.
+
+### Changed
+
+- `scripts/run-routing-eval.sh` `--budget` default raised from 0.30 to 0.60 (#69): at
+  0.30, 20 cases ended on the cap and the run scored 39/45.
+
+### Benchmark and decision records
+
+- Routing re-baseline (#68, plugin-only, Claude Code 2.1.316, plugin 0.9.0 era, $0.60/case):
+  42/45 (93.3%), 0 forbidden-skill violations, 0 `eof` rows. Same accuracy as 2026-10-13;
+  `pos-testtarget-en` now passes, `pos-scaffold-en` was missed.
+- Routing pass rule adopted (#69): forbidden violations = 0; accuracy at most 2 cases below
+  the latest baseline; no `negative` case selects a plugin skill; fewer than 6 `eof` rows
+  and the run records its budget.
+- WS-F trial on `large-graph` (#70, N=1 per cell): Claude and Codex, three scenarios each;
+  generate, build and test pass in all six runs. Claude's `ios-tuist-result` block was
+  invalid in the dependency scenario (Codex: 3/3 valid). Both agents missed the
+  `SearchFeature` -> `CoreNetworking` review finding. Tests moved to a new target fall
+  outside the CI test schemes.
+- Hooks decision (#71): pin-file warning deferred, consumer-edge reminder rejected; no hook
+  is implemented (`docs/superpowers/specs/2026-11-06-hooks-decision.md`).
+
+### Verification gates
+
+- Codex 0.160.0 with `--disable plugins` listed 10 `ios-tuist-*` skills in a with-skill
+  workdir and 0 in the baseline workdir (#66).
+- The `large-graph` fixture generates, builds and passes its five test schemes on Tuist
+  4.206.0 (#67).
+
+### Known limitations
+
+- All benchmark and routing results are N=1 per case; a single flip is not a trend.
+- Codex's sandbox cannot run `tuist`/`xcodebuild`; the harness `collect` verifies its changes.
+- `scripts/skill/check-consumer-edges.sh` does not cover `.external` edges.
+- Routing misses remain under-selection of `ios-tuist-feature` and `ios-tuist-test-target`
+  descriptions; fixing them needs a separate change and a routing re-run.
+
 ## [0.9.0] - 2026-10-13
 
 ### Added

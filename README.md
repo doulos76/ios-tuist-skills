@@ -7,7 +7,7 @@ repository conventions; generate compatible manifests; and verify
 meaningful changes with generate, build, and test commands instead of
 silently assuming the latest syntax.
 
-Current release: **0.9.0** (2026-10-13). See [CHANGELOG.md](CHANGELOG.md) and
+Current release: **0.9.1** (2026-11-06). See [CHANGELOG.md](CHANGELOG.md) and
 [GitHub Releases](https://github.com/doulos76/ios-tuist-skills/releases).
 
 ## Install the plugin
@@ -211,6 +211,10 @@ workspace, builds it, and runs its tests. The fixtures cover:
   a minimal buildable project with a committed `tuist scaffold`
   template `ios-tuist-scaffold` must be able to author and run
   correctly
+- [large graph](tests/fixtures/large-graph/EXPECTATIONS.md): a synthetic
+  16-target, layered project with three local SwiftPM packages and
+  deliberately mixed conventions, for module extraction, dependency
+  addition and architecture review at a realistic size
 
 CI proves the committed fixture projects remain buildable. The expectation
 documents define the separate manual checks for a skill's behavior when it is
@@ -232,6 +236,13 @@ just fixture CI — lives in
 It also documents a real methodology finding about baseline isolation inside
 this repository, worth reading before re-running or extending the benchmark.
 
+`scripts/benchmark-isolated-run.sh prep ... --agent codex` prepares the same
+isolated workdir for Codex CLI: with-skill copies the skill folders into
+`.agents/skills/` (Codex project skills), and both conditions run
+`codex --disable plugins` so an installed plugin cannot leak into the
+baseline. The routing evaluation does not support Codex
+(`--agent codex` exits 3): `codex exec --json` has no skill-selection event.
+
 ## Routing evaluation
 
 `tests/routing/cases.yaml` lists prompts with the skill that should be selected
@@ -241,15 +252,25 @@ runs each prompt headless in a copy of its fixture (without `EXPECTATIONS.md`),
 records the first `Skill` call from Claude Code's stream-json output, and writes
 `summary.md` (accuracy, per-skill precision/recall, confusion matrix,
 forbidden-skill violations). Each case is capped with `--max-budget-usd`
-(default 0.30).
+(default 0.60; at 0.30 many cases end early and the run is not comparable).
+
+Plan mode writes its own plan file under `~/.claude/plans/` (or
+`$CLAUDE_CONFIG_DIR/plans/`). Those writes are listed under "Plan-mode plan
+files" and do not end a case; any other write before a `Skill` call still
+counts as acting without a skill.
 
 **Rule:** a PR that changes any skill's `description:` must re-run the
 `plugin-only` evaluation and attach the summary next to the latest baseline
 under `docs/superpowers/benchmarks/*-routing/`.
 
+**Pass rule** (adopted 2026-11-05): a run passes when (1) forbidden-skill
+violations = 0, (2) accuracy is at most 2 cases below the latest baseline,
+(3) no `negative` case selects a plugin skill, and (4) fewer than 6 rows end
+`eof` and the run records its budget.
+
 Codex is not evaluated: `codex exec --json` (0.160.0) has no skill event to observe.
 
-Baseline: [2026-10-13 plugin-only](docs/superpowers/benchmarks/2026-10-13-routing/plugin-only/summary.md) — 42/45 (93.3%), no forbidden-skill violations.
+Baseline: [2026-10-31 plugin-only](docs/superpowers/benchmarks/2026-10-31-routing/plugin-only/summary.md) — 42/45 (93.3%), no forbidden-skill violations, Claude Code 2.1.316, budget $0.60/case ([comparison](docs/superpowers/benchmarks/2026-10-31-routing/COMPARISON.md)). Previous: [2026-10-13](docs/superpowers/benchmarks/2026-10-13-routing/plugin-only/summary.md), 42/45.
 
 ## Non-goals
 

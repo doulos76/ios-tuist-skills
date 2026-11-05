@@ -8,5 +8,6 @@
   { "fixture": "migrate-candidate",     "tuist": "3.42.2",  "workspace": "MigrateCandidate",    "resolve_cmd": "fetch",   "test_schemes": "App" },
   { "fixture": "restyle-candidate",     "tuist": "4.206.0", "workspace": "RestyleCandidate",    "resolve_cmd": "install", "test_schemes": "App" },
   { "fixture": "test-target-candidate", "tuist": "4.206.0", "workspace": "TestTargetCandidate", "resolve_cmd": "install", "test_schemes": "App" },
-  { "fixture": "scaffold-candidate",    "tuist": "4.206.0", "workspace": "ScaffoldCandidate",   "resolve_cmd": "install", "test_schemes": "App" }
+  { "fixture": "scaffold-candidate",    "tuist": "4.206.0", "workspace": "ScaffoldCandidate",   "resolve_cmd": "install", "test_schemes": "App" },
+  { "fixture": "large-graph",           "tuist": "4.206.0", "workspace": "LargeGraph",          "resolve_cmd": "install", "test_schemes": "App HomeFeature CheckoutFeature CatalogDomain CoreNetworking" }
 ]

@@ -2,15 +2,19 @@
 # Reads `claude -p --output-format stream-json --verbose` on stdin and prints one JSON line:
 # which skill was selected and why reading stopped. Exits at the stop event so the producer
 # gets SIGPIPE instead of running (and spending) to the end.
-#   routing-observe.sh [plugin-name]   (default ios-tuist-skills)
+#   routing-observe.sh [plugin-name] [plans-dir]
+#   defaults: ios-tuist-skills, ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/plans
+# Plan mode writes its own plan file under plans-dir. That write is planning, not acting
+# without a skill: it is recorded in plan_writes and reading continues.
 set -euo pipefail
 
 exec ruby -rjson -e '
   plugin = ARGV[0] || "ios-tuist-skills"
+  plans_dir = ARGV[1].to_s.sub(%r{/+\z}, "")
   info = {
     "selected" => nil, "stop_reason" => "eof", "nested" => false, "tools_before_stop" => [],
-    "write_path" => nil, "plugin_version" => nil, "claude_code_version" => nil, "model" => nil,
-    "permission_mode" => nil, "cost_usd" => nil, "result_subtype" => nil
+    "write_path" => nil, "plan_writes" => [], "plugin_version" => nil, "claude_code_version" => nil,
+    "model" => nil, "permission_mode" => nil, "cost_usd" => nil, "result_subtype" => nil
   }
   emit = lambda do
     info["selected"] ||= "none"
@@ -43,7 +47,12 @@ exec ruby -rjson -e '
         info["tools_before_stop"] << name
         # A write before any skill means the model chose to act without one.
         if %w[Write Edit NotebookEdit].include?(name)
-          info["write_path"] = item.dig("input", "file_path") || item.dig("input", "notebook_path")
+          path = item.dig("input", "file_path") || item.dig("input", "notebook_path")
+          if !plans_dir.empty? && path.to_s.start_with?(plans_dir + "/")
+            info["plan_writes"] << path
+            next
+          end
+          info["write_path"] = path
           info["stop_reason"] = "write-tool"
           emit.call
         end
@@ -56,4 +65,4 @@ exec ruby -rjson -e '
     end
   end
   emit.call
-' "${1:-ios-tuist-skills}"
+' "${1:-ios-tuist-skills}" "${2:-${CLAUDE_CONFIG_DIR:-$HOME/.claude}/plans}"
