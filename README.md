@@ -7,7 +7,7 @@ repository conventions; generate compatible manifests; and verify
 meaningful changes with generate, build, and test commands instead of
 silently assuming the latest syntax.
 
-Current release: **0.9.0** (2026-10-13). See [CHANGELOG.md](CHANGELOG.md) and
+Current release: **0.9.1** (2026-11-06). See [CHANGELOG.md](CHANGELOG.md) and
 [GitHub Releases](https://github.com/doulos76/ios-tuist-skills/releases).
 
 ## Install the plugin
