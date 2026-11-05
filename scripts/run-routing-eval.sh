@@ -106,7 +106,7 @@ isolation_guard() {
 }
 
 run() {
-  local condition="" out="" cases="$REPO_ROOT/tests/routing/cases.yaml" only="" budget="0.30" official="" yes=0 agent=claude
+  local condition="" out="" cases="$REPO_ROOT/tests/routing/cases.yaml" only="" budget="0.60" official="" yes=0 agent=claude
   while [ "$#" -gt 0 ]; do
     case "$1" in
       --condition) condition="$2"; shift 2 ;;

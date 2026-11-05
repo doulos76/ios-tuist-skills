@@ -31,7 +31,7 @@ A first run at the old $0.30 budget scored 39/45: 20 cases ended with `error_max
 - Different Claude Code version than the old baseline.
 - 24 of 45 cases stop at the `Skill` call, so their cost is unknown.
 
-## Pass threshold proposal (PRD open question 3) — for the user to decide
+## Pass threshold (PRD open question 3) — adopted
 
 A routing run passes when:
 
@@ -40,4 +40,4 @@ A routing run passes when:
 3. no `negative` case selects a plugin skill;
 4. (added after this run) fewer than 6 rows ended with `eof`, and the run records its budget.
 
-This run meets 1–3. Not yet adopted; README records the rule only after the user answers.
+This run meets 1–3. Adopted by the user on 2026-11-05 as proposed, together with raising the `--budget` default from $0.30 to $0.60 (the $0.30 cap ended 20 cases early and gave a discarded 39/45). README records the rule.

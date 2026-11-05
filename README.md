@@ -252,7 +252,7 @@ runs each prompt headless in a copy of its fixture (without `EXPECTATIONS.md`),
 records the first `Skill` call from Claude Code's stream-json output, and writes
 `summary.md` (accuracy, per-skill precision/recall, confusion matrix,
 forbidden-skill violations). Each case is capped with `--max-budget-usd`
-(default 0.30).
+(default 0.60; at 0.30 many cases end early and the run is not comparable).
 
 Plan mode writes its own plan file under `~/.claude/plans/` (or
 `$CLAUDE_CONFIG_DIR/plans/`). Those writes are listed under "Plan-mode plan
@@ -262,6 +262,11 @@ counts as acting without a skill.
 **Rule:** a PR that changes any skill's `description:` must re-run the
 `plugin-only` evaluation and attach the summary next to the latest baseline
 under `docs/superpowers/benchmarks/*-routing/`.
+
+**Pass rule** (adopted 2026-11-05): a run passes when (1) forbidden-skill
+violations = 0, (2) accuracy is at most 2 cases below the latest baseline,
+(3) no `negative` case selects a plugin skill, and (4) fewer than 6 rows end
+`eof` and the run records its budget.
 
 Codex is not evaluated: `codex exec --json` (0.160.0) has no skill event to observe.
 
