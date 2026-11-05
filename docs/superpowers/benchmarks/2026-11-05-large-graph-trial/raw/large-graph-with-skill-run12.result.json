@@ -1,0 +1,33 @@
+{
+  "schema": "ios-tuist-result/1",
+  "skill": "ios-tuist-dependency",
+  "outcome": "partial",
+  "version_evidence": {
+    "effective": "4.206.0",
+    "source": ".tool-versions",
+    "conflicts": [],
+    "collected_by": "script"
+  },
+  "files_changed": [
+    "Project.swift"
+  ],
+  "dependency_edges_added": [
+    {
+      "from": "SearchFeature",
+      "to": "RetryKit",
+      "usage": "none-found"
+    }
+  ],
+  "dependency_edges_removed": [],
+  "validation": {
+    "generate": "fail",
+    "build": "fail",
+    "test": "not-run"
+  },
+  "unverified": [
+    "Package resolution",
+    "Generation",
+    "SearchFeature and App builds",
+    "Tests"
+  ]
+}

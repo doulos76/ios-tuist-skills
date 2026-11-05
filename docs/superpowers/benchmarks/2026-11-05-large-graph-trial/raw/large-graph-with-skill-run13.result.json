@@ -1,0 +1,24 @@
+{
+  "schema": "ios-tuist-result/1",
+  "skill": "ios-tuist-architecture-review",
+  "outcome": "completed",
+  "version_evidence": {
+    "effective": "4.206.0",
+    "source": ".tool-versions",
+    "conflicts": [],
+    "collected_by": "script"
+  },
+  "files_changed": [],
+  "dependency_edges_added": [],
+  "dependency_edges_removed": [],
+  "validation": {
+    "generate": "not-run",
+    "build": "not-run",
+    "test": "not-run"
+  },
+  "unverified": [
+    "Active Tuist, graph evaluation, and exact manifest compatibility could not be verified due to sandbox permissions.",
+    "Generated link behavior and duplicate static inclusion were not verified.",
+    "Build performance, startup impact, and team ownership were not verified."
+  ]
+}
