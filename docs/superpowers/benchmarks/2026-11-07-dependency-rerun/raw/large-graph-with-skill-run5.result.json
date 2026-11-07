@@ -1,0 +1,31 @@
+{
+  "schema": "ios-tuist-result/1",
+  "skill": "ios-tuist-dependency",
+  "outcome": "completed",
+  "version_evidence": {
+    "effective": "4.206.0",
+    "source": ".tool-versions",
+    "conflicts": [],
+    "collected_by": "script"
+  },
+  "files_changed": [
+    "Project.swift"
+  ],
+  "dependency_edges_added": [
+    {
+      "from": "SearchFeature",
+      "to": "RetryKit",
+      "usage": "none-found"
+    }
+  ],
+  "dependency_edges_removed": [],
+  "validation": {
+    "generate": "pass",
+    "build": "pass",
+    "test": "not-run"
+  },
+  "unverified": [
+    "Retry behaviour, because nothing uses RetryKit yet",
+    "import RetryKit from SearchFeature has not been compiled"
+  ]
+}
