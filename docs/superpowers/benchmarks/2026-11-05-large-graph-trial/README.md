@@ -46,7 +46,7 @@ Both added findings that are not in the expected list (unused `CoreUI` edge on `
 ## Findings
 
 1. Manifest edits are reliable on this 16-target graph: scenarios 1 and 2 passed in both agents with minimal diffs and no forbidden edits.
-2. Block validity: Codex 3/3 valid, Claude 2/3 valid (PRD open question 4: Codex can produce a valid block). The Claude failure is on the smallest scenario; with N=1 this may be noise, but it contradicts the all-valid WS-E smoke result and is worth a repeat run.
+2. Block validity: Codex 3/3 valid, Claude 2/3 valid (PRD open question 4: Codex can produce a valid block). The Claude failure is on the smallest scenario; with N=1 this may be noise, but it contradicts the all-valid WS-E smoke result and is worth a repeat run. *Repeat (2026-11-07, N=3): all three blocks valid; cause of this failure unconfirmed, see `../2026-11-07-dependency-rerun/README.md`.*
 3. Review quality differs per run and both missed the planned `SearchFeature` finding. Review output is the least stable result in this trial.
 4. The moved-test CI gap (scenario 1) is a skill gap to consider: extracting tests into a new target should prompt a test-scheme decision.
 5. Codex's reported `fail` in run 12 and the claimed pass in run 11 show the sandbox is not a stable verifier; keep using `collect`.
