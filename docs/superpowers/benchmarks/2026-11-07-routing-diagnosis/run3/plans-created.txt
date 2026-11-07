@@ -1,0 +1,3 @@
+pos-feature-ko	/Users/dave/.claude/plans/profilefeature-robust-dongarra.md
+pos-scaffold-en	/Users/dave/.claude/plans/write-a-tuist-scaffold-functional-otter.md
+adj-feature-not-module	/Users/dave/.claude/plans/add-an-avatar-view-moonlit-prism.md

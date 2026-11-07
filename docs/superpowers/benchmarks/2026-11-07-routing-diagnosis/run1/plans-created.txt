@@ -1,0 +1,3 @@
+pos-feature-ko	/Users/dave/.claude/plans/profilefeature-witty-hummingbird.md
+pos-scaffold-en	/Users/dave/.claude/plans/write-a-tuist-scaffold-pure-rabin.md
+adj-feature-not-module	/Users/dave/.claude/plans/add-an-avatar-view-giggly-wilkes.md

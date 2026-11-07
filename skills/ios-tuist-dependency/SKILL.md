@@ -91,16 +91,17 @@ Apply [source-of-truth](references/source-of-truth.md)'s
 6. **Resolve/install** the dependency (e.g. `tuist install`).
 7. **Generate** (`tuist generate`).
 8. **Build** the affected target(s) and the app.
-9. **Edge check (local targets and projects only)** — if the change added
-   a `.target(name:)` or `.project(target:path:)` dependency, run the
-   bundled edge check from the project root:
+9. **Edge check** — if the change added a `.target(name:)`,
+   `.project(target:path:)` or `.external(name:)` dependency, run the bundled
+   edge check from the project root:
    `"${CLAUDE_SKILL_DIR}/scripts/check-consumer-edges.sh" --before <rev-or-dir>`
    in Claude Code (other agents: `scripts/check-consumer-edges.sh`
    resolved against this SKILL.md's directory), with the state recorded
    in step 4. Put the result in Dependency Changes and report a
    `no usage found` edge under Risks / Follow-up instead of removing it.
-   Package product dependencies are not covered by the script; verify
-   their consumer with the `import` search from step 1, as before.
+   External usage is searched by product name only; the product name may
+   differ from the module name. Verify mismatches with the `import` search
+   from step 1 and report unresolved usage under Risks / Follow-up.
 
 ## Decision Rules
 

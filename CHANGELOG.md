@@ -6,6 +6,43 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.9.2] - 2026-11-07
+
+### Added
+
+- Consumer-edge checks cover `.external(name:)` dependencies and include
+  `kind` (`target`, `project`, `external`) on added and removed JSON edges.
+  External usage is searched by product name only; the report warns that
+  the product name may differ from the module name when no usage is found.
+- Shared CI test scheme coverage check for module extraction and new
+  test targets: report gaps or missing CI definitions in Unverified Items,
+  Risks / Follow-up and the result block's `unverified` list; never edit CI.
+
+### Fixed
+
+- Test-target scheme guidance: generated schemes belong to non-test
+  targets and include their dependent test targets; test targets do not
+  get schemes of their own.
+
+### Benchmark and decision records
+
+- Dependency scenario rerun (#77, Claude, N=3, `large-graph` scenario 2): all three
+  `ios-tuist-result` blocks valid, `Project.swift` only changed, `.external(name: "RetryKit")`
+  on `SearchFeature` only. The cause of the WS-F trial's invalid block is unconfirmed; no skill
+  change. Cost about $1.04.
+- Routing miss diagnosis (#78, 3 cases x 3 runs, `claude-opus-5-5`, `--budget 1.20`): 9/9
+  correct, `Skill` the first tool call every time. This does not confirm the earlier "budget"
+  reading and the model differs from the 2026-10-31 baseline (`claude-fable-5`). No
+  `description:` change; `--budget` default stays 0.60.
+
+### Known limitations
+
+- The 45-case routing baseline is on `claude-fable-5`; a like-for-like baseline on
+  `claude-opus-5-5` has not been run.
+- The `.external` edge check has golden tests. The CI test-scheme report is skill text only:
+  no test or paid run exercises it yet. The `.external` name-mismatch caveat appeared in 1 of
+  3 dependency-rerun reports.
+
 ## [0.9.1] - 2026-11-06
 
 ### Fixed
