@@ -1,0 +1,151 @@
+{
+  "meta": {
+    "condition": "plugin-only",
+    "date": "2026-11-07T03:03:53Z",
+    "repo_revision": "80e275e3a69d6003c05a0a22f4aa82309cf789df",
+    "claude_version": "2.1.319 (Claude Code)",
+    "budget_usd": 1.2,
+    "cases_sha256": "315a8d9d4501b6b302c422db8fe4e553d44eaaf8b085f9c1bcf3cd3cd35bff96",
+    "official_plugin_dir": null,
+    "plugin_version": "0.9.1"
+  },
+  "aggregate": {
+    "cases": 3,
+    "correct": 3,
+    "by_category": [
+      {
+        "category": "adjacent",
+        "correct": 1,
+        "total": 1
+      },
+      {
+        "category": "positive",
+        "correct": 2,
+        "total": 2
+      }
+    ],
+    "violations": [],
+    "anomalies": [],
+    "plan_write_cases": [],
+    "per_skill": [
+      {
+        "skill": "ios-tuist-feature",
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      {
+        "skill": "ios-tuist-scaffold",
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0
+      }
+    ],
+    "confusion": {
+      "rows": [
+        "ios-tuist-feature",
+        "ios-tuist-scaffold",
+        "none"
+      ],
+      "cols": [
+        "ios-tuist-feature",
+        "ios-tuist-scaffold",
+        "none"
+      ],
+      "counts": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    "known_cost_usd": 0,
+    "cost_known_cases": 0,
+    "cost_unknown_cases": 3,
+    "plugin_versions": [
+      "0.9.1"
+    ]
+  },
+  "cases": [
+    {
+      "id": "pos-feature-ko",
+      "category": "positive",
+      "fixture": "modular",
+      "expected_skill": "ios-tuist-feature",
+      "forbidden_skills": [],
+      "selected": "ios-tuist-feature",
+      "stop_reason": "skill",
+      "nested": false,
+      "tools_before_stop": [],
+      "write_path": null,
+      "plan_writes": [],
+      "plugin_version": "0.9.1",
+      "claude_code_version": "2.1.319",
+      "model": "claude-opus-5-5",
+      "permission_mode": "plan",
+      "cost_usd": null,
+      "result_subtype": null,
+      "elapsed_s": 40,
+      "claude_exit": 0
+    },
+    {
+      "id": "pos-scaffold-en",
+      "category": "positive",
+      "fixture": "scaffold-candidate",
+      "expected_skill": "ios-tuist-scaffold",
+      "forbidden_skills": [],
+      "selected": "ios-tuist-scaffold",
+      "stop_reason": "skill",
+      "nested": false,
+      "tools_before_stop": [],
+      "write_path": null,
+      "plan_writes": [],
+      "plugin_version": "0.9.1",
+      "claude_code_version": "2.1.319",
+      "model": "claude-opus-5-5",
+      "permission_mode": "plan",
+      "cost_usd": null,
+      "result_subtype": null,
+      "elapsed_s": 36,
+      "claude_exit": 0
+    },
+    {
+      "id": "adj-feature-not-module",
+      "category": "adjacent",
+      "fixture": "modular",
+      "expected_skill": "ios-tuist-feature",
+      "forbidden_skills": [
+        "ios-tuist-module"
+      ],
+      "selected": "ios-tuist-feature",
+      "stop_reason": "skill",
+      "nested": false,
+      "tools_before_stop": [],
+      "write_path": null,
+      "plan_writes": [],
+      "plugin_version": "0.9.1",
+      "claude_code_version": "2.1.319",
+      "model": "claude-opus-5-5",
+      "permission_mode": "plan",
+      "cost_usd": null,
+      "result_subtype": null,
+      "elapsed_s": 37,
+      "claude_exit": 0
+    }
+  ]
+}
