@@ -37,3 +37,23 @@ for real coverage.
 
 When adding a feature, test the feature's own new behavior. Do not
 expand test scope to unrelated existing code as part of the same change.
+
+## CI test scheme coverage
+
+After a new test target exists (including tests moved during extraction):
+
+1. Locate CI test commands and their scheme lists in
+   `.github/workflows/*.yml`, `fastlane/Fastfile`, `scripts/` and matrix
+   JSON; search for `-scheme`, `tuist test` and `test_schemes`.
+2. Check whether a listed scheme's TestAction runs the new test target;
+   use generated schemes or manifest evidence, not just a scheme name or
+   a build dependency. A scheme-less `tuist test` tests all testable
+   targets in its current project directory; confirm that scope includes
+   the new test target.
+3. If the target is outside CI coverage, report the target, missing
+   scheme coverage and CI list's `file:line` under both **Unverified
+   Items** and **Risks / Follow-up**, and in the `ios-tuist-result`
+   `unverified` list. If coverage cannot be determined, report that
+   uncertainty with available `file:line` evidence in the same places.
+   If no CI definition is found, report "CI test scheme list not found"
+   in those places. Never edit CI files.

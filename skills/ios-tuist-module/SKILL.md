@@ -176,6 +176,10 @@ passed and extraction proceeded):
    did NOT fully pass. A source-less test target whose bundle cannot load
    is a failure; leave removal of the target or adding tests to the user.
 
+6. If a new test target was created for the moved tests, apply
+   [CI test scheme coverage](references/testing.md#ci-test-scheme-coverage)
+   and report any coverage gap or uncertainty as required there.
+
 When extraction is refused, no build/test validation applies — the
 Output Contract states "Changes Made: none — extraction refused" instead.
 
