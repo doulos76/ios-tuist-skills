@@ -94,8 +94,9 @@ def parse_targets(text)
     deps = []
     if (m = body.match(/\bdependencies:\s*\[/))
       dbody = balanced(body, m.end(0) - 1) || ""
-      dbody.scan(/\.target\(\s*name:\s*"([^"]+)"/) { deps << $1 }
-      dbody.scan(/\.project\(\s*target:\s*"([^"]+)"/) { deps << $1 }
+      dbody.scan(/\.target\(\s*name:\s*"([^"]+)"/) { deps << [$1, "target"] }
+      dbody.scan(/\.project\(\s*target:\s*"([^"]+)"/) { deps << [$1, "project"] }
+      dbody.scan(/\.external\(\s*name:\s*"([^"]+)"/) { deps << [$1, "external"] }
     end
     dirs = []
     %w[buildableFolders sources].each do |key|
@@ -113,7 +114,7 @@ end
 
 def edges(manifests)
   manifests.flat_map do |rel, text|
-    parse_targets(text).flat_map { |t| t["deps"].map { |d| [rel, t["name"], d] } }
+    parse_targets(text).flat_map { |t| t["deps"].map { |name, kind| [rel, t["name"], name, kind] } }
   end
 end
 
@@ -139,17 +140,20 @@ after_manifests = manifests_from_dir(root)
 before_edges = edges(before_manifests)
 after_edges = edges(after_manifests)
 
-added = (after_edges - before_edges).map do |rel, from, to|
+added = (after_edges - before_edges).map do |rel, from, to, kind|
   target = parse_targets(after_manifests[rel]).find { |t| t["name"] == from }
-  { "from" => from, "to" => to, "usage" => first_usage(root, rel, target, to) }
+  { "from" => from, "to" => to, "kind" => kind, "usage" => first_usage(root, rel, target, to) }
 end
-removed = (before_edges - after_edges).map { |_, from, to| { "from" => from, "to" => to } }
+removed = (before_edges - after_edges).map { |_, from, to, kind| { "from" => from, "to" => to, "kind" => kind } }
 
 if json_mode
   puts JSON.pretty_generate("schema" => "ios-tuist-consumer-edges/1", "added" => added, "removed" => removed, "note" => NOTE)
 else
   puts "Added edges (#{added.size}):"
-  added.each { |e| puts "  #{e["from"]} -> #{e["to"]}: #{e["usage"] ? "usage found (#{e["usage"]})" : "no usage found"}" }
+  added.each do |e|
+    missing = e["kind"] == "external" ? "no usage found (external: product name may differ from module name)" : "no usage found"
+    puts "  #{e["from"]} -> #{e["to"]}: #{e["usage"] ? "usage found (#{e["usage"]})" : missing}"
+  end
   puts "Removed edges (#{removed.size}):"
   removed.each { |e| puts "  #{e["from"]} -> #{e["to"]}" }
   puts "note: #{NOTE}"
