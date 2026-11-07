@@ -48,6 +48,7 @@ ios-tuist-module references/evidence-driven-debugging.md
 ios-tuist-module references/modularization.md
 ios-tuist-module references/output-contract.md
 ios-tuist-module references/source-of-truth.md
+ios-tuist-module references/testing.md
 ios-tuist-module references/version-safety.md
 ios-tuist-module scripts/skill/check-consumer-edges.sh
 ios-tuist-module scripts/skill/collect-version-evidence.sh

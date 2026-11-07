@@ -72,6 +72,11 @@ Test schemes (CI matrix): `App`, `HomeFeature`, `CheckoutFeature`,
   target or kept in `CheckoutFeatureTests` through the new import).
   `CheckoutFeatureTests` is not emptied; if it were, it is reported, not
   deleted.
+- If tests move to a new test target outside the CI test schemes (for
+  example, `PricingKitTests` in the unlisted `PricingKit` scheme), report
+  the gap with the CI list's `file:line` under Unverified Items and
+  Risks / Follow-up, and in the `ios-tuist-result` `unverified` list.
+  Do not edit CI files.
 - `tuist install`, `tuist generate --no-open`, the `App` build and
   every pre-existing test scheme pass afterwards.
 

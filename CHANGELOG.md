@@ -12,6 +12,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `kind` (`target`, `project`, `external`) on added and removed JSON edges.
   External usage is searched by product name only; the report warns that
   the product name may differ from the module name when no usage is found.
+- Shared CI test scheme coverage check for module extraction and new
+  test targets: report gaps or missing CI definitions in Unverified Items,
+  Risks / Follow-up and the result block's `unverified` list; never edit CI.
+
+### Fixed
+
+- Test-target scheme guidance: generated schemes belong to non-test
+  targets and include their dependent test targets; test targets do not
+  get schemes of their own.
 
 ## [0.9.1] - 2026-11-06
 

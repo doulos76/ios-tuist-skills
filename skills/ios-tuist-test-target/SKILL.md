@@ -114,8 +114,12 @@ not used: <reason>" under Unverified Items.
      `testAction` target list.
    - If no custom scheme exists (the project relies on Tuist's default
      generated per-target schemes), state this explicitly in the Output
-     Contract — Tuist generates a default scheme for the new test target
-     automatically; no manifest scheme change is needed or made.
+     Contract — the new test target is enrolled in the named non-test
+     target's generated scheme via its dependency on that target; it
+     does not get a scheme of its own. No manifest scheme change is
+     needed or made.
+   - Apply [CI test scheme coverage](references/testing.md#ci-test-scheme-coverage)
+     and report any coverage gap or uncertainty as required there.
 7. **Validate** — `tuist generate` succeeds; the new test target builds;
    the placeholder test runs and passes (a trivial, always-true
    assertion is the *point* here — it exists only to prove the target is
@@ -137,10 +141,10 @@ so the user understands why the generated target's `product:` reads
 
 ### Scheme enrollment
 
-Most projects have no custom `Scheme` at all — Tuist generates one
-default scheme per target automatically, and that default scheme already
-includes the new test target's own default scheme the moment `tuist
-generate` runs; nothing needs to be written for this case. Enrollment
+When a project relies on Tuist's default generation, each non-test
+target gets a scheme whose TestAction includes its own test targets via
+their dependency on that non-test target. Test targets do not get schemes
+of their own. No manifest scheme change is needed in this case. Manifest enrollment
 work is only needed, and only performed, when the project already defines
 a **custom** `Scheme` (in `Project.swift`'s `schemes:` argument or a
 `Workspace.swift`) whose `testAction` bundles multiple test targets
