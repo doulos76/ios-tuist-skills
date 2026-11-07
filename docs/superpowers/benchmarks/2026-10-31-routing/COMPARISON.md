@@ -41,3 +41,7 @@ A routing run passes when:
 4. (added after this run) fewer than 6 rows ended with `eof`, and the run records its budget.
 
 This run meets 1–3. Adopted by the user on 2026-11-05 as proposed, together with raising the `--budget` default from $0.30 to $0.60 (the $0.30 cap ended 20 cases early and gave a discarded 39/45). README records the rule.
+
+## Follow-up diagnosis (2026-11-07)
+
+The three remaining misses were rerun 3x each at `--budget 1.20` on `claude-opus-5-5`: 9/9 correct, `Skill` as the first tool call every time. This does not confirm the "budget" reading above, and the model differs from this baseline (`claude-fable-5`), so it is not a like-for-like comparison. See `../2026-11-07-routing-diagnosis/README.md`. No description change; `--budget` default unchanged.
