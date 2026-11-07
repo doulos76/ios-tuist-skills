@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Consumer-edge checks cover `.external(name:)` dependencies and include
+  `kind` (`target`, `project`, `external`) on added and removed JSON edges.
+  External usage is searched by product name only; the report warns that
+  the product name may differ from the module name when no usage is found.
+
 ## [0.9.1] - 2026-11-06
 
 ### Fixed

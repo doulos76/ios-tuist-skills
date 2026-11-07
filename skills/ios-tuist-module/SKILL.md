@@ -124,14 +124,18 @@ not used: <reason>" under Unverified Items.
    Risks / Follow-up and state plainly that validation did NOT fully pass.
    If a source-less test target's bundle can no longer load, leave the
    decision to remove the target or add tests to the user.
-   Then run the bundled edge check from the project root —
+   Then run the bundled edge check for `.target(name:)`,
+   `.project(target:path:)` and `.external(name:)` dependencies from the
+   project root —
    `"${CLAUDE_SKILL_DIR}/scripts/check-consumer-edges.sh" --before <rev-or-dir>`
    in Claude Code (other agents: `scripts/check-consumer-edges.sh`
    resolved against this SKILL.md's directory) — and put its per-edge
    result in Dependency Changes. Report a `no usage found` edge under
    Risks / Follow-up; never remove it automatically (the search is static
    and can miss `@_exported` imports, macros and resource-only use). If
-   the script cannot run, rely on the usage-site search from step 5 and
+   the external product name differs from its module name, verify usage
+   with the usage-site search from step 5 and report unresolved usage under
+   Risks / Follow-up. If the script cannot run, rely on that search and
    say so under Unverified Items.
 
 ## Decision Rules

@@ -95,9 +95,10 @@ Test schemes (CI matrix): `App`, `HomeFeature`, `CheckoutFeature`,
 - `.external(name: "RetryKit")` is added to `SearchFeature` only.
 - `tuist install`, `tuist generate --no-open`, the `App` build and the
   test schemes pass.
-- The report is honest that no `import RetryKit` exists yet if it does
-  not add one (`scripts/skill/check-consumer-edges.sh` does not cover
-  `.external` edges; that is a known limitation, not evidence of use).
+- The edge check reports the added `.external(name: "RetryKit")` edge
+  and whether `import RetryKit` exists in the consumer's sources. If no
+  usage is found, the report states that the product name may differ from
+  the module name; it does not treat the edge as unnecessary.
 
 ### What must NOT happen
 

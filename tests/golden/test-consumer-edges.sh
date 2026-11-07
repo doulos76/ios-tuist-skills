@@ -1,6 +1,6 @@
 #!/bin/bash
 # Golden tests for scripts/skill/check-consumer-edges.sh on extract-candidate:
-# an added App -> NetworkingKit edge without and with an import in App.
+# added local and external edges without and with an import in App.
 set -uo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd -P)"
@@ -11,7 +11,7 @@ TMP="$(mktemp -d "${TMPDIR:-/tmp}/golden-ce.XXXXXX")"
 trap 'rm -rf "$TMP"' EXIT
 failures=0
 
-for case_name in no-usage with-usage; do
+for case_name in no-usage with-usage external-usage external-no-usage; do
   work="$TMP/$case_name"
   cp -R "$FIXTURE" "$work"
   # The case's after/ tree overlays the fixture copy (the "after" state).
@@ -29,6 +29,49 @@ for case_name in no-usage with-usage; do
     failures=$((failures + 1))
   fi
 done
+
+# Reversing each overlay reports a removal with the same edge kind.
+for case_name in no-usage with-usage external-usage external-no-usage; do
+  if "$EDGES" --json --before "$TMP/$case_name" "$FIXTURE" > "$TMP/removed.json" &&
+    ruby -rjson -e '
+      actual = JSON.parse(File.read(ARGV[0]))
+      expected = JSON.parse(File.read(ARGV[1]))
+      removed = expected["added"].map { |e| e.reject { |k, _| k == "usage" } }
+      exit(actual["added"].empty? && actual["removed"] == removed ? 0 : 1)
+    ' "$TMP/removed.json" "$GOLDEN/$case_name/expected.json"; then
+    echo "ok   - consumer edges removed $case_name"
+  else
+    echo "FAIL - consumer edges removed $case_name"
+    failures=$((failures + 1))
+  fi
+done
+
+if "$EDGES" --before "$FIXTURE" "$TMP/external-no-usage" |
+    grep -qF 'App -> LogKit: no usage found (external: product name may differ from module name)'; then
+  echo "ok   - external name-mismatch caveat"
+else
+  echo "FAIL - external name-mismatch caveat"
+  failures=$((failures + 1))
+fi
+
+# Changing only the edge kind must remain visible even with the same name.
+cp -R "$TMP/external-no-usage" "$TMP/project-edge"
+ruby -e '
+  p = ARGV[0]
+  File.write(p, File.read(p).sub(%q{.external(name: "LogKit")},
+                               %q{.project(target: "LogKit", path: "../LogKit")}))
+' "$TMP/project-edge/Project.swift"
+if "$EDGES" --json --before "$TMP/project-edge" "$TMP/external-no-usage" > "$TMP/kind.json" &&
+  ruby -rjson -e '
+    h = JSON.parse(File.read(ARGV[0]))
+    exit(h["added"] == [{"from" => "App", "to" => "LogKit", "kind" => "external", "usage" => nil}] &&
+         h["removed"] == [{"from" => "App", "to" => "LogKit", "kind" => "project"}] ? 0 : 1)
+  ' "$TMP/kind.json"; then
+  echo "ok   - same-name project to external edge change"
+else
+  echo "FAIL - same-name project to external edge change"
+  failures=$((failures + 1))
+fi
 
 # git-revision mode: an unchanged fixture has no added or removed edge.
 if "$EDGES" --json --before HEAD "$FIXTURE" | ruby -rjson -e '
