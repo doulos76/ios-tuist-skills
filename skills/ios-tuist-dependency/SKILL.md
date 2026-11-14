@@ -160,28 +160,53 @@ Risks / Follow-up
 Example:
 
 ```text
-Tuist: 4.x.y (project-pinned)
-Active Tuist: 4.x.y (matches)
-
-Changed:
-- attached Kingfisher (Swift package library) to ProfileFeature target only
-
+Version Context:
+- Tuist 4.206.0 from .tool-versions; no conflicts; evidence collected by script
+Changes Made:
+- Attached Kingfisher (Swift package library) to ProfileFeature only
+- App target's own dependency list and all other feature targets unchanged
+Files Changed:
+- Project.swift
 Dependency Changes:
-- Package: Kingfisher
-- Version constraint: from: "7.0.0" (matches repo's existing constraint style)
-- Attached to: ProfileFeature (only)
-- Integration mechanism: Tuist/Package.swift (existing repo convention, unchanged)
-
-Validation:
+- Kingfisher constraint: from: "7.0.0" (existing repo constraint style)
+- Added ProfileFeature -> Kingfisher; usage: ProfileFeature/Sources/ProfileView.swift:3
+- No dependency edges removed; Tuist/Package.swift convention unchanged
+Validation Performed:
 - tuist install: success
 - tuist generate: success
+Build Result:
 - ProfileFeature build: success
 - App build: success
-
-Not changed:
-- App target's own dependency list
-- Any other feature target
+Test Result:
+- Tests not run
+Unverified Items:
+- Tests not run
+- Kingfisher usage at call sites not checked beyond the edge script
+Risks / Follow-up:
+- No additional risks identified
 ```
+
+The example above shows human-readable sections only; the `ios-tuist-result` block keys come from references/output-contract.md and must not be derived from headings or labels in this example.
+
+```yaml
+skill: ios-tuist-dependency
+outcome: completed
+version_evidence:
+  effective: 4.206.0
+  source: .tool-versions
+  conflicts: []
+  collected_by: script
+files_changed: [Project.swift]
+dependency_edges_added:
+  - {from: ProfileFeature, to: Kingfisher, usage: "ProfileFeature/Sources/ProfileView.swift:3"}
+dependency_edges_removed: []
+validation: {generate: pass, build: pass, test: not-run}
+unverified:
+  - Tests not run
+  - Kingfisher usage at call sites not checked beyond the edge script
+```
+
+The fence uses `yaml` here to avoid parsing this skill file as a result; in a response it must be `ios-tuist-result`.
 
 ### Machine-readable result
 
