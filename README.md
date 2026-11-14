@@ -270,7 +270,7 @@ violations = 0, (2) accuracy is at most 2 cases below the latest baseline,
 
 Codex is not evaluated: `codex exec --json` (0.160.0) has no skill event to observe.
 
-Baseline: [2026-10-31 plugin-only](docs/superpowers/benchmarks/2026-10-31-routing/plugin-only/summary.md) — 42/45 (93.3%), no forbidden-skill violations, Claude Code 2.1.316, budget $0.60/case ([comparison](docs/superpowers/benchmarks/2026-10-31-routing/COMPARISON.md)). Previous: [2026-10-13](docs/superpowers/benchmarks/2026-10-13-routing/plugin-only/summary.md), 42/45.
+Baseline: [2026-11-14 plugin-only on claude-opus-5-5](docs/superpowers/benchmarks/2026-11-14-routing/plugin-only/summary.md) — 45/45 (100%), no forbidden-skill violations, Claude Code 2.1.325, budget $0.60/case ([comparison](docs/superpowers/benchmarks/2026-11-14-routing/COMPARISON.md)). Previous (claude-fable-5): [2026-10-31](docs/superpowers/benchmarks/2026-10-31-routing/plugin-only/summary.md), 42/45 ([comparison](docs/superpowers/benchmarks/2026-10-31-routing/COMPARISON.md)); [2026-10-13](docs/superpowers/benchmarks/2026-10-13-routing/plugin-only/summary.md), 42/45.
 
 ## Non-goals
 
