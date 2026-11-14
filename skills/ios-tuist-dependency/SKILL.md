@@ -99,6 +99,9 @@ Apply [source-of-truth](references/source-of-truth.md)'s
    resolved against this SKILL.md's directory), with the state recorded
    in step 4. Put the result in Dependency Changes and report a
    `no usage found` edge under Risks / Follow-up instead of removing it.
+   In the `ios-tuist-result` block, write `usage: none-found` for such an
+   edge (the script's `no usage found` wording is for the prose sections
+   only).
    External usage is searched by product name only; the product name may
    differ from the module name. Verify mismatches with the `import` search
    from step 1 and report unresolved usage under Risks / Follow-up.
