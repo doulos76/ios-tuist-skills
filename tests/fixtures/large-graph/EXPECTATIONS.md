@@ -43,7 +43,8 @@ Conventions that are deliberately not uniform (real projects drift):
   catalog requests.
 
 Test schemes (CI matrix): `App`, `HomeFeature`, `CheckoutFeature`,
-`CatalogDomain`, `CoreNetworking`.
+`CatalogDomain`, `CoreNetworking` are listed in `.github/workflows/ci.yml`
+(relative to the fixture root).
 
 ## Scenario 1 — module extraction (`ios-tuist-module`)
 
@@ -74,7 +75,8 @@ Test schemes (CI matrix): `App`, `HomeFeature`, `CheckoutFeature`,
   deleted.
 - If tests move to a new test target outside the CI test schemes (for
   example, `PricingKitTests` in the unlisted `PricingKit` scheme), report
-  the gap with the CI list's `file:line` under Unverified Items and
+  the gap with the `file:line` of `.github/workflows/ci.yml`'s test steps
+  (`PricingKitTests` is not run by any listed scheme) under Unverified Items and
   Risks / Follow-up, and in the `ios-tuist-result` `unverified` list.
   Do not edit CI files.
 - `tuist install`, `tuist generate --no-open`, the `App` build and
