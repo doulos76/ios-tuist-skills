@@ -6,6 +6,44 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.9.3] - 2026-11-14
+
+### Fixed
+
+- `ios-tuist-dependency`: the Output Contract example now uses the nine standard section names and
+  shows a schema-shaped result block (#83); step 9 says to write `usage: none-found` in the
+  `ios-tuist-result` block for an edge with no usage found (#84). Rerun after #84 (Claude, N=3):
+  3/3 blocks valid with `none-found`; before it, 0/3 (the `usage` value is not checked by
+  `parse-skill-result.sh`).
+
+### Changed
+
+- `tests/fixtures/large-graph` has a CI workflow listing its five test schemes, so the test-scheme
+  gap report can cite a `file:line` (#85); its version-evidence golden gained the `ci-workflow`
+  source. The scenario 2 expectation no longer requires the product-name caveat sentence, which
+  the skill never required (#87).
+
+### Benchmark and decision records
+
+- Routing baseline on `claude-opus-5-5` (#82, 45 cases, plugin 0.9.2, Claude Code 2.1.325):
+  45/45, 0 forbidden-skill violations, 0 budget-capped cases. Model, CLI and plugin version differ
+  from the 2026-10-31 baseline (`claude-fable-5`, 42/45), whose `description:` fields are
+  unchanged. This is the new baseline for opus-5-5 runs.
+- Test-scheme gap report smoke (#81, #85, N=1 each): "CI test scheme list not found" reported when
+  the fixture had no CI file; `.github/workflows/ci.yml:33-53` cited once it had one. CI files
+  were not edited in either run.
+- Follow-up 4 diagnosis (#86, read-only): the name-mismatch caveat appeared in 1 of 9 dependency
+  reports because the skill does not require it; the missed `SearchFeature` -> `CoreNetworking`
+  review finding follows from `ios-tuist-architecture-review` having no layer-skip rule.
+
+### Known limitations
+
+- The layer-skip review finding is still not detected; adding a rule is deferred (skill scope
+  decision).
+- `parse-skill-result.sh` does not validate the `usage` value. Only the dependency skill was
+  changed and measured; other skills that report added edges were not.
+- All new smoke and rerun results are N=1 or N=3 on one scenario.
+
 ## [0.9.2] - 2026-11-07
 
 ### Added
