@@ -243,6 +243,8 @@ isolated workdir for Codex CLI: with-skill copies the skill folders into
 baseline. The routing evaluation does not support Codex
 (`--agent codex` exits 3): `codex exec --json` has no skill-selection event.
 
+Latest targeted smoke: [2026-11-14 test-scheme gap report](docs/superpowers/benchmarks/2026-11-14-scheme-report-smoke/README.md) — the module skill reported "CI test scheme list not found" (N=1). The `large-graph` fixture has no CI definition, so the `file:line` branch is not yet exercised.
+
 ## Routing evaluation
 
 `tests/routing/cases.yaml` lists prompts with the skill that should be selected
