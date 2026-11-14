@@ -104,8 +104,10 @@ Test schemes (CI matrix): `App`, `HomeFeature`, `CheckoutFeature`,
   test schemes pass.
 - The edge check reports the added `.external(name: "RetryKit")` edge
   and whether `import RetryKit` exists in the consumer's sources. If no
-  usage is found, the report states that the product name may differ from
-  the module name; it does not treat the edge as unnecessary.
+  usage is found, the report lists the edge under Risks / Follow-up and
+  does not treat it as unnecessary. Stating that the product name may
+  differ from the module name is optional (the skill does not require
+  it; the script prints that caveat itself).
 
 ### What must NOT happen
 
