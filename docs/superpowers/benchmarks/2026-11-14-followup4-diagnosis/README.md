@@ -23,6 +23,7 @@ Read-only analysis of existing evidence. **No paid runs, no skill changes.** Sou
 - A rests on nine final messages from one scenario, one agent and mixed model/CLI versions; B rests on one trial (N=1 per agent).
 - I did not read Codex's transcripts again for A; only Claude runs were counted.
 
-## Needs a decision
+## Decision (2026-11-14, user)
 
-For each of A and B: change the expectation or change the skill. Neither change is made here.
+- **A: relax the expectation.** `tests/fixtures/large-graph/EXPECTATIONS.md` scenario 2 no longer requires the name-mismatch sentence; it requires the no-usage edge under Risks / Follow-up and that the edge is not called unnecessary. No skill change.
+- **B: deferred.** No change to the skill or the expectation. The layer-skip finding stays listed in scenario 3 and is expected to be missed until the skill's scope is decided.
