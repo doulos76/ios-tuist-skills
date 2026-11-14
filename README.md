@@ -7,7 +7,7 @@ repository conventions; generate compatible manifests; and verify
 meaningful changes with generate, build, and test commands instead of
 silently assuming the latest syntax.
 
-Current release: **0.9.2** (2026-11-07). See [CHANGELOG.md](CHANGELOG.md) and
+Current release: **0.9.3** (2026-11-14). See [CHANGELOG.md](CHANGELOG.md) and
 [GitHub Releases](https://github.com/doulos76/ios-tuist-skills/releases).
 
 ## Install the plugin
@@ -243,6 +243,8 @@ isolated workdir for Codex CLI: with-skill copies the skill folders into
 baseline. The routing evaluation does not support Codex
 (`--agent codex` exits 3): `codex exec --json` has no skill-selection event.
 
+Latest targeted smoke: [2026-11-14 test-scheme gap report](docs/superpowers/benchmarks/2026-11-14-scheme-report-smoke/README.md) — the module skill reported "CI test scheme list not found" (N=1). The `large-graph` fixture has no CI definition, so the `file:line` branch is not yet exercised.
+
 ## Routing evaluation
 
 `tests/routing/cases.yaml` lists prompts with the skill that should be selected
@@ -270,7 +272,7 @@ violations = 0, (2) accuracy is at most 2 cases below the latest baseline,
 
 Codex is not evaluated: `codex exec --json` (0.160.0) has no skill event to observe.
 
-Baseline: [2026-10-31 plugin-only](docs/superpowers/benchmarks/2026-10-31-routing/plugin-only/summary.md) — 42/45 (93.3%), no forbidden-skill violations, Claude Code 2.1.316, budget $0.60/case ([comparison](docs/superpowers/benchmarks/2026-10-31-routing/COMPARISON.md)). Previous: [2026-10-13](docs/superpowers/benchmarks/2026-10-13-routing/plugin-only/summary.md), 42/45.
+Baseline: [2026-11-14 plugin-only on claude-opus-5-5](docs/superpowers/benchmarks/2026-11-14-routing/plugin-only/summary.md) — 45/45 (100%), no forbidden-skill violations, Claude Code 2.1.325, budget $0.60/case ([comparison](docs/superpowers/benchmarks/2026-11-14-routing/COMPARISON.md)). Previous (claude-fable-5): [2026-10-31](docs/superpowers/benchmarks/2026-10-31-routing/plugin-only/summary.md), 42/45 ([comparison](docs/superpowers/benchmarks/2026-10-31-routing/COMPARISON.md)); [2026-10-13](docs/superpowers/benchmarks/2026-10-13-routing/plugin-only/summary.md), 42/45.
 
 ## Non-goals
 

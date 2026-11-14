@@ -43,7 +43,8 @@ Conventions that are deliberately not uniform (real projects drift):
   catalog requests.
 
 Test schemes (CI matrix): `App`, `HomeFeature`, `CheckoutFeature`,
-`CatalogDomain`, `CoreNetworking`.
+`CatalogDomain`, `CoreNetworking` are listed in `.github/workflows/ci.yml`
+(relative to the fixture root).
 
 ## Scenario 1 — module extraction (`ios-tuist-module`)
 
@@ -74,7 +75,8 @@ Test schemes (CI matrix): `App`, `HomeFeature`, `CheckoutFeature`,
   deleted.
 - If tests move to a new test target outside the CI test schemes (for
   example, `PricingKitTests` in the unlisted `PricingKit` scheme), report
-  the gap with the CI list's `file:line` under Unverified Items and
+  the gap with the `file:line` of `.github/workflows/ci.yml`'s test steps
+  (`PricingKitTests` is not run by any listed scheme) under Unverified Items and
   Risks / Follow-up, and in the `ios-tuist-result` `unverified` list.
   Do not edit CI files.
 - `tuist install`, `tuist generate --no-open`, the `App` build and
@@ -102,8 +104,10 @@ Test schemes (CI matrix): `App`, `HomeFeature`, `CheckoutFeature`,
   test schemes pass.
 - The edge check reports the added `.external(name: "RetryKit")` edge
   and whether `import RetryKit` exists in the consumer's sources. If no
-  usage is found, the report states that the product name may differ from
-  the module name; it does not treat the edge as unnecessary.
+  usage is found, the report lists the edge under Risks / Follow-up and
+  does not treat it as unnecessary. Stating that the product name may
+  differ from the module name is optional (the skill does not require
+  it; the script prints that caveat itself).
 
 ### What must NOT happen
 

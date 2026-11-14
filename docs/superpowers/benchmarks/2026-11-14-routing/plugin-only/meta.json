@@ -1,0 +1,10 @@
+{
+  "condition": "plugin-only",
+  "date": "2026-11-14T01:10:41Z",
+  "repo_revision": "d18ebd7acc368c0f8a22854c2a5e13351b752f85",
+  "claude_version": "2.1.325 (Claude Code)",
+  "budget_usd": 0.6,
+  "cases_sha256": "315a8d9d4501b6b302c422db8fe4e553d44eaaf8b085f9c1bcf3cd3cd35bff96",
+  "official_plugin_dir": null,
+  "plugin_version": "0.9.2"
+}
